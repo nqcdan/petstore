@@ -1,6 +1,6 @@
 
 <!-- Page Preloder -->
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ page pageEncoding="utf-8"%>
 <div id="preloder">
     <div class="loader"></div>

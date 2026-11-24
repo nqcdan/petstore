@@ -4,7 +4,7 @@ import com.fpt.petstore.core.dao.query.SqlQueryTemplate;
 import com.fpt.petstore.core.dao.repository.JDBCDAOSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.persistence.Table;
+import jakarta.persistence.Table;
 import java.util.List;
 
 /**

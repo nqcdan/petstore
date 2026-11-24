@@ -11,7 +11,6 @@ import com.fpt.petstore.core.dao.query.SqlQueryTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -21,7 +20,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
-import javax.persistence.Table;
+import jakarta.persistence.Table;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
@@ -35,13 +34,12 @@ import java.util.Map;
 public class JDBCDAOSupport extends org.springframework.jdbc.core.support.JdbcDaoSupport {
   static final Logger logger = LoggerFactory.getLogger(JDBCDAOSupport.class);
   
-  @Qualifier("transactionManager")
   @Autowired 
   private PlatformTransactionManager platformTransactionManager;
 
   private NamedParameterJdbcTemplate namedJdbcTemplate;
   
-  public JDBCDAOSupport(@Qualifier("datasource") DataSource dataSource) {
+  public JDBCDAOSupport(DataSource dataSource) {
     setDataSource(dataSource);
     namedJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
   }

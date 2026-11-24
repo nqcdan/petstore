@@ -9,10 +9,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
-import javax.mail.internet.MimeMessage;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.transaction.Transactional;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fpt.petstore.entities.BaseAccount;

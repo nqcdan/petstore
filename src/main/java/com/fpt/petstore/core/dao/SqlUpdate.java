@@ -3,7 +3,7 @@ package com.fpt.petstore.core.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Table;
+import jakarta.persistence.Table;
 
 import lombok.Getter;
 import lombok.Setter;

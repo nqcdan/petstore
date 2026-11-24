@@ -6,7 +6,7 @@ import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Table;
+import jakarta.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fpt.petstore.util.BeanInspector;
