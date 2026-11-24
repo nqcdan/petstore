@@ -2,10 +2,9 @@ import { Search } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams, useSearchParams } from 'react-router-dom'
-import { toast } from 'sonner'
 import { useCatalog } from '@/api/queries'
 import type { CatalogItem, CatalogKind, CatalogQuery } from '@/api/types'
-import { useCart } from '@/cart/context'
+import { useAddToCart } from '@/cart/useAddToCart'
 import { PageHeader } from '@/components/PageHeader'
 import { Pager } from '@/components/Pager'
 import { ProductCard } from '@/components/ProductCard'
@@ -28,7 +27,7 @@ export function Shop() {
 
 function ShopList({ kind }: { kind: CatalogKind }) {
   const { t } = useTranslation()
-  const { add } = useCart()
+  const addToCart = useAddToCart()
   const [params, setParams] = useSearchParams()
   const page = Math.max(1, Number(params.get('page') ?? 1))
   const sort = (params.get('sort') ?? 'default') as 'default' | NonNullable<CatalogQuery['sort']>
@@ -93,7 +92,7 @@ function ShopList({ kind }: { kind: CatalogKind }) {
                   <h2 className="text-lg font-semibold">{open.name}</h2>
                   <p className="text-xl font-semibold text-primary">{formatVnd(open.price)}</p>
                   <p className="max-h-48 overflow-y-auto text-sm text-muted-foreground">{open.description}</p>
-                  <Button className="mt-auto" onClick={() => { add(kind, open); toast.success(t('shop.added', { name: open.name })); setOpen(null) }}>{t('shop.add')}</Button>
+                  <Button className="mt-auto" onClick={() => { if (addToCart(kind, open)) setOpen(null) }}>{t('shop.add')}</Button>
                 </div>
               </div>
             </>

@@ -8,7 +8,7 @@ export interface CatalogItem {
   name: string
   sortName: string
   price: number // VND, integer
-  imageUrl: string | null // "/img/product/x.jpg" (bundled) or an uploaded photo under {API_BASE}/photos/**; render through imgUrl()
+  imageUrl: string | null // "/img/product/x.jpg" (bundled) or an uploaded photo under /api/v1/photos/catalog/**; render through imgUrl()
   description: string | null
   type: string | null
 }

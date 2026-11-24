@@ -80,8 +80,7 @@ describe('contract URLs', () => {
   it('maps image URLs through one helper', () => {
     expect(imgUrl(null)).toBe('/img/product/snack.jpg')
     expect(imgUrl('/img/product/food.jpg')).toBe('/img/product/food.jpg')
-    expect(imgUrl('/user-photos/abc.png')).toBe('http://localhost/api/v1/photos/abc.png')
-    expect(imgUrl('/api/v1/photos/abc.png')).toBe('/api/v1/photos/abc.png')
+    expect(imgUrl('/api/v1/photos/catalog/abc.png')).toBe('/api/v1/photos/catalog/abc.png')
   })
 
   it('sends the contact form to POST /api/v1/contact', async () => {

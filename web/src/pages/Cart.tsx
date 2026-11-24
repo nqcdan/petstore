@@ -6,6 +6,7 @@ import { PageHeader } from '@/components/PageHeader'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { imgUrl } from '@/api/urls'
+import { MAX_QUANTITY } from '@/lib/limits'
 import { formatVnd } from '@/lib/format'
 
 export function Cart() {
@@ -36,7 +37,7 @@ export function Cart() {
                     <div className="flex items-center gap-1">
                       <Button variant="outline" size="icon-sm" aria-label="-" onClick={() => setQuantity(kind, item.id, quantity - 1)}><Minus /></Button>
                       <span className="w-8 text-center tabular-nums" aria-label={t('cart.quantity')}>{quantity}</span>
-                      <Button variant="outline" size="icon-sm" aria-label="+" onClick={() => setQuantity(kind, item.id, quantity + 1)}><Plus /></Button>
+                      <Button variant="outline" size="icon-sm" aria-label="+" disabled={quantity >= MAX_QUANTITY} onClick={() => setQuantity(kind, item.id, quantity + 1)}><Plus /></Button>
                     </div>
                     <p className="hidden w-32 text-right font-semibold sm:block">{formatVnd(item.price * quantity)}</p>
                     <Button variant="ghost" size="icon-sm" aria-label={t('cart.remove')} onClick={() => remove(kind, item.id)}><Trash2 /></Button>

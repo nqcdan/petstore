@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
+import { errorMessage } from '@/api/errors'
 import { useAdminOrder, useAdminOrders, useSetOrderState } from '@/api/queries'
 import type { OrderState, OrderSummary } from '@/api/types'
 import { StateBadge } from '@/components/StateBadge'
@@ -13,6 +14,7 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { canMove } from '@/lib/orderState'
 import { formatDate, formatVnd } from '@/lib/format'
 import { DataTable } from './DataTable'
 
@@ -34,10 +36,10 @@ function OrderDialog({ id, onClose }: { id: number; onClose: () => void }) {
             <div className="flex items-center gap-3">
               <Label htmlFor="state-select">{t('admin.changeState')}</Label>
               <Select value={data.state} onValueChange={(state) => setState.mutate({ id, state: state as OrderState }, {
-                onSuccess: () => toast.success(t('admin.stateChanged')), onError: (e) => toast.error(e.message),
+                onSuccess: () => toast.success(t('admin.stateChanged')), onError: (e) => toast.error(errorMessage(e)),
               })}>
                 <SelectTrigger id="state-select" className="w-64"><SelectValue /></SelectTrigger>
-                <SelectContent>{STATES.map((s) => <SelectItem key={s} value={s}>{t(`state.${s}`)}</SelectItem>)}</SelectContent>
+                <SelectContent>{STATES.map((s) => <SelectItem key={s} value={s} disabled={!canMove(data.state, s)}>{t(`state.${s}`)}</SelectItem>)}</SelectContent>
               </Select>
             </div>
             <div className="max-h-72 overflow-auto rounded-lg border">

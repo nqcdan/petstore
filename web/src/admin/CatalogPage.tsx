@@ -7,6 +7,9 @@ import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
+import { errorMessage, imageProblemMessage } from '@/api/errors'
+import { checkImage } from '@/lib/image'
+import { MAX_PRICE } from '@/lib/limits'
 import { z } from 'zod'
 import { useAdminCatalog, useDeleteCatalog, useSaveCatalog } from '@/api/queries'
 import { adminApi } from '@/api/shop'
@@ -27,7 +30,7 @@ const TYPES: Record<CatalogKind, string[]> = { products: ['CAT', 'DOG', 'CLOTHES
 const schema = z.object({
   name: z.string().min(1),
   type: z.string().min(1),
-  price: z.number().int().min(0),
+  price: z.number().int().min(0).max(MAX_PRICE),
   description: z.string(),
 })
 type Values = z.infer<typeof schema>
@@ -44,6 +47,17 @@ function ItemForm({ kind, item, onClose }: { kind: CatalogKind; item: CatalogIte
     defaultValues: { name: item?.name ?? '', type: item?.type ?? TYPES[kind][0], price: item?.price ?? 0, description: item?.description ?? '' },
   })
 
+  const pickFile = async (f?: File) => {
+    if (!f) return setFile(null)
+    const problem = await checkImage(f)
+    if (problem) {
+      toast.error(imageProblemMessage(problem))
+      if (fileRef.current) fileRef.current.value = ''
+      return
+    }
+    setFile(f)
+  }
+
   // The image endpoint needs an existing id, so upload happens after the item is saved.
   const submit = async (input: Values) => {
     try {
@@ -55,7 +69,7 @@ function ItemForm({ kind, item, onClose }: { kind: CatalogKind; item: CatalogIte
       toast.success(t('common.saved'))
       onClose()
     } catch (e) {
-      toast.error((e as Error).message)
+      toast.error(errorMessage(e))
     }
   }
 
@@ -84,7 +98,7 @@ function ItemForm({ kind, item, onClose }: { kind: CatalogKind; item: CatalogIte
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="price">{t('admin.price')} ({t('common.currency')})</Label>
-              <Input id="price" type="number" min={0} step={1000} {...register('price', { valueAsNumber: true })} aria-invalid={!!errors.price} />
+              <Input id="price" type="number" min={0} max={MAX_PRICE} step={1000} {...register('price', { valueAsNumber: true })} aria-invalid={!!errors.price} />
               {errors.price && <p className="text-xs text-destructive">{t('admin.priceInvalid')}</p>}
             </div>
           </div>
@@ -92,7 +106,7 @@ function ItemForm({ kind, item, onClose }: { kind: CatalogKind; item: CatalogIte
             <Label>{t('admin.image')}</Label>
             <div className="flex items-center gap-3">
               <img src={preview} alt="" className="size-16 rounded-md border object-cover" />
-              <input ref={fileRef} type="file" accept="image/png,image/jpeg,image/webp" hidden data-testid="image-input" onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
+              <input ref={fileRef} type="file" accept="image/png,image/jpeg,image/webp" hidden data-testid="image-input" onChange={(e) => void pickFile(e.target.files?.[0])} />
               <Button type="button" variant="outline" size="sm" onClick={() => fileRef.current?.click()}><Upload /> {t('admin.uploadImage')}</Button>
               <span className="truncate text-xs text-muted-foreground">{file?.name ?? (item ? '' : t('admin.imageAfterSave'))}</span>
             </div>
@@ -164,7 +178,7 @@ export function CatalogPage({ kind }: { kind: CatalogKind }) {
             <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
             <AlertDialogAction variant="destructive" onClick={() => deleting && del.mutate(deleting.id, {
               onSuccess: () => toast.success(t('admin.deleted')),
-              onError: (e) => toast.error(e.message),
+              onError: (e) => toast.error(errorMessage(e)),
             })}>{t('common.delete')}</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

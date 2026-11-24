@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
+import { errorMessage } from '@/api/errors'
 import { useMe } from '@/api/queries'
 import { shopApi } from '@/api/shop'
 import type { PaymentMethod } from '@/api/types'
@@ -36,7 +37,7 @@ export function Checkout() {
       toast.success(t('checkout.success'))
       navigate(`/orders/${order.code}`)
     },
-    onError: (e) => toast.error(e.message),
+    onError: (e) => toast.error(errorMessage(e)),
   })
 
   if (lines.length === 0) {

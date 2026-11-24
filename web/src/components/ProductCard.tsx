@@ -1,8 +1,7 @@
 import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { toast } from 'sonner'
 import type { CatalogItem, CatalogKind } from '@/api/types'
-import { useCart } from '@/cart/context'
+import { useAddToCart } from '@/cart/useAddToCart'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -11,7 +10,7 @@ import { formatVnd } from '@/lib/format'
 
 export function ProductCard({ kind, item, onOpen }: { kind: CatalogKind; item: CatalogItem; onOpen?: (i: CatalogItem) => void }) {
   const { t } = useTranslation()
-  const { add } = useCart()
+  const addToCart = useAddToCart()
   return (
     <Card className="group overflow-hidden pt-0" data-testid="product-card">
       <button type="button" onClick={() => onOpen?.(item)} className="relative block aspect-square overflow-hidden bg-muted text-left">
@@ -22,7 +21,7 @@ export function ProductCard({ kind, item, onOpen }: { kind: CatalogKind; item: C
         <h3 className="line-clamp-2 min-h-10 text-sm font-medium leading-5">{item.name}</h3>
         <div className="mt-auto flex items-center justify-between gap-2">
           <span className="font-semibold text-primary">{formatVnd(item.price)}</span>
-          <Button size="sm" onClick={() => { add(kind, item); toast.success(t('shop.added', { name: item.name })) }}>
+          <Button size="sm" onClick={() => addToCart(kind, item)}>
             <Plus /> <span className="sr-only sm:not-sr-only">{t('shop.add')}</span>
           </Button>
         </div>

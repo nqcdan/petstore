@@ -11,7 +11,8 @@ export interface CartState {
   lines: CartLine[]
   count: number
   total: number
-  add: (kind: CatalogKind, item: CatalogItem) => void
+  // 'lines' / 'quantity' when a server limit would be exceeded, nothing is added then
+  add: (kind: CatalogKind, item: CatalogItem) => 'ok' | 'lines' | 'quantity'
   setQuantity: (kind: CatalogKind, id: number, quantity: number) => void
   remove: (kind: CatalogKind, id: number) => void
   clear: () => void

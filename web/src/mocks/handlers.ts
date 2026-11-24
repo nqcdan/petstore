@@ -2,6 +2,8 @@ import { http, HttpResponse, type HttpHandler } from 'msw'
 import { API_BASE } from '@/api/http'
 import type { Account, AccountInput, AccountKind, AdminStats, CatalogInput, CatalogItem, CatalogKind, OrderDetail, OrderRequest, OrderState, OrderSummary, Page } from '@/api/types'
 import { CONTACT_PATH } from '@/api/urls'
+import { MAX_ORDER_LINES, MAX_QUANTITY } from '@/lib/limits'
+import { canMove } from '@/lib/orderState'
 import { db, MOCK_USERNAME } from './db'
 
 // Mirrors the real /api/v1 contract (see src/api/types.ts); used for dev without a backend and for unit tests.
@@ -129,6 +131,7 @@ export const handlers: HttpHandler[] = [
   })),
   http.post(url('/orders'), withUser(async ({ request }) => {
     const input = (await request.json()) as OrderRequest
+    if (input.items.length > MAX_ORDER_LINES || input.items.some((l) => l.quantity < 1 || l.quantity > MAX_QUANTITY)) return HttpResponse.json({ title: 'Bad Request', detail: 'Quantity is limited' }, { status: 400 })
     const items = input.items.flatMap((l) => {
       const it = db.catalog[l.type === 'FOOD' ? 'foods' : 'products'].find((c) => c.id === l.id)
       return it ? [{ name: it.name, type: l.type, quantity: l.quantity, total: it.price * l.quantity }] : []
@@ -158,7 +161,9 @@ export const handlers: HttpHandler[] = [
   http.patch(url('/admin/orders/:id/state'), withAdmin(async ({ request, params }) => {
     const o = db.orders.find((x) => x.id === Number(params.id))
     if (!o) return notFound()
-    o.state = ((await request.json()) as { state: OrderState }).state
+    const next = ((await request.json()) as { state: OrderState }).state
+    if (!canMove(o.state, next)) return HttpResponse.json({ title: 'Conflict', detail: `An order cannot go from ${o.state} to ${next}` }, { status: 409 })
+    o.state = next
     return HttpResponse.json(o)
   })),
   ...accountAdmin('customers'),

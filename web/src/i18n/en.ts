@@ -61,6 +61,14 @@ export const en: Resources = {
   },
   blog: { title: 'Our blog', detail: 'Blog post', share: 'Share', notFound: 'Post not found' },
   footer: { tagline: 'Care and grooming for your pets.', links: 'Links', follow: 'Follow us', rights: 'PETS Store. All rights reserved.' },
+  errors: {
+    network: 'Cannot reach the server. Check your connection and try again.', unknown: 'Something went wrong.',
+    badRequest: 'Invalid data: {{detail}}', unauthorized: 'Your session has expired, please sign in again.',
+    forbidden: 'You are not allowed to do this.', notFound: 'The requested data was not found.',
+    conflict: 'The change conflicts with existing data (for example the account already exists or the order status is not allowed).',
+    tooLarge: 'The image is too large, 2 MB at most.', unsupportedType: 'Only PNG, JPEG or WebP images are accepted.',
+    server: 'The server hit an error, please try again later.', maxQuantity: 'At most {{max}} of each item.', maxLines: 'The cart holds at most {{max}} lines.',
+  },
   notFound: { title: 'Page not found', text: 'The page you are looking for does not exist.' },
   admin: {
     createAccount: 'Add account', editAccount: 'Edit account', gender: 'Gender', male: 'Male', female: 'Female', birthday: 'Birthday', address: 'Address', unset: 'Not set', phoneInvalid: '10 digits starting with 0',
@@ -68,7 +76,7 @@ export const en: Resources = {
     kpi: { revenue: 'Revenue, 30 days', orders: 'Orders', customers: 'Customers', avg: 'Average order value' },
     revenue30: 'Revenue, last 30 days (paid orders)', ordersByState: 'Orders by status', topItems: 'Top items', sold: 'Sold',
     name: 'Name', type: 'Type', price: 'Price', description: 'Description', image: 'Image', uploadImage: 'Upload image', imageAfterSave: 'Image upload after saving', verified: 'Verified', createItem: 'Add item', editItem: 'Edit item',
-    confirmDelete: 'Delete "{{name}}"?', confirmDeleteText: 'This cannot be undone.', deleted: 'Deleted', priceInvalid: 'Price must be an integer >= 0',
+    confirmDelete: 'Delete "{{name}}"?', confirmDeleteText: 'This cannot be undone.', deleted: 'Deleted', priceInvalid: 'Price is an integer from 0 to 100,000,000',
     filterState: 'Filter by status', changeState: 'Change status', stateChanged: 'Status updated', customer: 'Customer', orderCount: 'Orders', username: 'Username',
     role: 'Role', phone: 'Phone', email: 'Email', fullName: 'Full name', date: 'Date', code: 'Code', total: 'Total', state: 'Status',
   },

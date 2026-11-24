@@ -4,6 +4,7 @@ import { MapPin, Phone } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import { errorMessage } from '@/api/errors'
 import { z } from 'zod'
 import { shopApi } from '@/api/shop'
 import { PageHeader } from '@/components/PageHeader'
@@ -22,7 +23,7 @@ export function Contact() {
   const send = useMutation({
     mutationFn: shopApi.sendContact,
     onSuccess: () => { toast.success(t('contact.sent')); reset() },
-    onError: (e) => toast.error(e.message),
+    onError: (e) => toast.error(errorMessage(e)),
   })
   const err = (m?: string) => m && <p className="text-xs text-destructive">{m === 'email' ? t('contact.emailInvalid') : t('contact.required')}</p>
 

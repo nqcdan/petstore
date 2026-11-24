@@ -59,6 +59,14 @@ export const vi = {
   },
   blog: { title: 'Blog của chúng tôi', detail: 'Chi tiết blog', share: 'Chia sẻ', notFound: 'Không tìm thấy bài viết' },
   footer: { tagline: 'Chăm sóc và làm đẹp cho thú cưng.', links: 'Liên kết', follow: 'Theo dõi chúng tôi', rights: 'Bản quyền thuộc PETS Store.' },
+  errors: {
+    network: 'Không kết nối được máy chủ. Kiểm tra mạng rồi thử lại.', unknown: 'Đã có lỗi xảy ra.',
+    badRequest: 'Dữ liệu không hợp lệ: {{detail}}', unauthorized: 'Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại.',
+    forbidden: 'Bạn không có quyền thực hiện thao tác này.', notFound: 'Không tìm thấy dữ liệu yêu cầu.',
+    conflict: 'Thao tác xung đột với dữ liệu hiện có (ví dụ tài khoản đã tồn tại hoặc trạng thái đơn không hợp lệ).',
+    tooLarge: 'Ảnh quá lớn, tối đa 2 MB.', unsupportedType: 'Chỉ nhận ảnh PNG, JPEG hoặc WebP.',
+    server: 'Máy chủ gặp lỗi, vui lòng thử lại sau.', maxQuantity: 'Tối đa {{max}} sản phẩm mỗi loại.', maxLines: 'Giỏ hàng tối đa {{max}} dòng sản phẩm.',
+  },
   notFound: { title: 'Không tìm thấy trang', text: 'Trang bạn tìm không tồn tại.' },
   admin: {
     createAccount: 'Thêm tài khoản', editAccount: 'Sửa tài khoản', gender: 'Giới tính', male: 'Nam', female: 'Nữ', birthday: 'Ngày sinh', address: 'Địa chỉ', unset: 'Không chọn', phoneInvalid: 'Số điện thoại gồm 10 chữ số, bắt đầu bằng 0',
@@ -66,7 +74,7 @@ export const vi = {
     kpi: { revenue: 'Doanh thu 30 ngày', orders: 'Đơn hàng', customers: 'Khách hàng', avg: 'Giá trị đơn trung bình' },
     revenue30: 'Doanh thu 30 ngày (đơn đã thanh toán)', ordersByState: 'Đơn theo trạng thái', topItems: 'Sản phẩm bán chạy', sold: 'Đã bán',
     name: 'Tên', type: 'Loại', price: 'Giá', description: 'Mô tả', image: 'Ảnh', uploadImage: 'Tải ảnh lên', imageAfterSave: 'Ảnh tải lên sau khi lưu', verified: 'Xác minh', createItem: 'Thêm sản phẩm', editItem: 'Sửa sản phẩm',
-    confirmDelete: 'Xóa "{{name}}"?', confirmDeleteText: 'Hành động này không thể hoàn tác.', deleted: 'Đã xóa', priceInvalid: 'Giá phải là số nguyên >= 0',
+    confirmDelete: 'Xóa "{{name}}"?', confirmDeleteText: 'Hành động này không thể hoàn tác.', deleted: 'Đã xóa', priceInvalid: 'Giá là số nguyên từ 0 đến 100.000.000',
     filterState: 'Lọc trạng thái', changeState: 'Đổi trạng thái', stateChanged: 'Đã cập nhật trạng thái', customer: 'Khách hàng', orderCount: 'Số đơn', username: 'Tài khoản',
     role: 'Vai trò', phone: 'Điện thoại', email: 'Email', fullName: 'Họ và tên', date: 'Ngày', code: 'Mã', total: 'Tổng', state: 'Trạng thái',
   },

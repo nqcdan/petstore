@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
+import { MAX_ORDER_LINES, MAX_QUANTITY } from '@/lib/limits'
 import { CartContext, type CartLine, type CartState } from './context'
 
 const KEY = 'petstore.cart'
@@ -19,15 +20,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
   useEffect(() => localStorage.setItem(KEY, JSON.stringify(lines)), [lines])
 
   const add = useCallback<CartState['add']>((kind, item) => {
-    setLines((prev) => {
-      const found = prev.find((l) => l.kind === kind && l.item.id === item.id)
-      return found
-        ? prev.map((l) => (l === found ? { ...l, quantity: l.quantity + 1 } : l))
-        : [...prev, { kind, item, quantity: 1 }]
-    })
-  }, [])
+    const found = lines.find((l) => l.kind === kind && l.item.id === item.id)
+    if (found && found.quantity >= MAX_QUANTITY) return 'quantity'
+    if (!found && lines.length >= MAX_ORDER_LINES) return 'lines'
+    setLines(found ? lines.map((l) => (l === found ? { ...l, quantity: l.quantity + 1 } : l)) : [...lines, { kind, item, quantity: 1 }])
+    return 'ok'
+  }, [lines])
   const setQuantity = useCallback<CartState['setQuantity']>((kind, id, quantity) => {
-    setLines((prev) => prev.map((l) => (l.kind === kind && l.item.id === id ? { ...l, quantity: Math.max(1, quantity) } : l)))
+    setLines((prev) => prev.map((l) => (l.kind === kind && l.item.id === id ? { ...l, quantity: Math.min(MAX_QUANTITY, Math.max(1, quantity)) } : l)))
   }, [])
   const remove = useCallback<CartState['remove']>((kind, id) => {
     setLines((prev) => prev.filter((l) => !(l.kind === kind && l.item.id === id)))

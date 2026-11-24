@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router-dom'
+import { errorMessage } from '@/api/errors'
 import { useMyOrder, useMyOrders } from '@/api/queries'
 import { PageHeader } from '@/components/PageHeader'
 import { StateBadge } from '@/components/StateBadge'
@@ -48,13 +49,13 @@ export function OrderHistory() {
 export function OrderDetail() {
   const { t } = useTranslation()
   const { code } = useParams()
-  const { data, isPending, isError } = useMyOrder(code ?? '')
+  const { data, isPending, isError, error } = useMyOrder(code ?? '')
   return (
     <>
       <PageHeader title={t('history.detail')} sub={data?.code} />
       <div className="mx-auto max-w-4xl space-y-6 px-4 py-8">
         <Button asChild variant="ghost" size="sm"><Link to="/orders">← {t('common.back')}</Link></Button>
-        {isPending ? <Skeleton className="h-48" /> : isError || !data ? <p>{t('common.error')}</p> : (
+        {isPending ? <Skeleton className="h-48" /> : isError || !data ? <p role="alert">{errorMessage(error)}</p> : (
           <>
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
               <StateBadge state={data.state} />

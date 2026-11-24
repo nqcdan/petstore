@@ -6,6 +6,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
+import { errorMessage } from '@/api/errors'
 import { z } from 'zod'
 import { useAdminAccounts, useDeleteAccount, useSaveAccount } from '@/api/queries'
 import type { Account, AccountInput, AccountKind } from '@/api/types'
@@ -69,7 +70,7 @@ function AccountForm({ kind, account, onClose }: { kind: AccountKind; account: A
         <form id="account-form" className="grid gap-4 sm:grid-cols-2" noValidate
           onSubmit={handleSubmit((v) => save.mutate({ id: account?.id, input: toInput(v, kind) }, {
             onSuccess: () => { toast.success(t('common.saved')); onClose() },
-            onError: (e) => toast.error(e.message),
+            onError: (e) => toast.error(errorMessage(e)),
           }))}>
           <div className="space-y-1.5">
             <Label htmlFor="username">{t('admin.username')}</Label>
@@ -189,7 +190,7 @@ function AccountsPage({ kind }: { kind: AccountKind }) {
             <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
             <AlertDialogAction variant="destructive" onClick={() => deleting && del.mutate(deleting.id, {
               onSuccess: () => toast.success(t('admin.deleted')),
-              onError: (e) => toast.error(e.message),
+              onError: (e) => toast.error(errorMessage(e)),
             })}>{t('common.delete')}</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
