@@ -1,6 +1,6 @@
 # Production stack for a single VM behind nginx/Cloudflare (works on arm64 and amd64).
 # Everything binds to 127.0.0.1; the reverse proxy is the only public entry point.
-#   app 8481, keycloak 8482 (web frontend 8483 is deployed separately)
+#   app 8481, keycloak 8482, admin site 8484 (web frontend 8483 is deployed separately)
 # Usage: cp .env.example .env, edit it, then: docker compose -f compose.prod.yml --env-file .env up -d --build
 name: petstore
 
@@ -86,13 +86,23 @@ services:
       KEYCLOAK_ISSUER_URI: ${KEYCLOAK_ISSUER_URI:?set KEYCLOAK_ISSUER_URI}
       # Keys are fetched inside the compose network, no round trip through Cloudflare
       SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:8080/realms/petstore/protocol/openid-connect/certs
-      PETSTORE_CORS_ORIGINS: ${PETSTORE_WEB_ORIGIN}
+      PETSTORE_CORS_ORIGINS: ${PETSTORE_WEB_ORIGIN},${PETSTORE_ADMIN_ORIGIN:-https://petstore-admin.nqcdan.com}
       MAIL_USERNAME: ${MAIL_USERNAME:-}
       MAIL_PASSWORD: ${MAIL_PASSWORD:-}
     volumes:
       - uploads:/app/user-photos
     ports:
       - "127.0.0.1:8481:8081"
+
+  # Admin-only SPA (https://petstore-admin.nqcdan.com via the host nginx); /api is proxied by the host like the shop's
+  admin:
+    image: ghcr.io/nqcdan/petstore-admin:${PETSTORE_ADMIN_VERSION:-latest}
+    restart: unless-stopped
+    mem_limit: 64m
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    ports:
+      - "127.0.0.1:8484:80"
 
 volumes:
   pgdata:
