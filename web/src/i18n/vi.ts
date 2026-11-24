@@ -61,6 +61,7 @@ export const vi = {
   footer: { tagline: 'Chăm sóc và làm đẹp cho thú cưng.', links: 'Liên kết', follow: 'Theo dõi chúng tôi', rights: 'Bản quyền thuộc PETS Store.' },
   notFound: { title: 'Không tìm thấy trang', text: 'Trang bạn tìm không tồn tại.' },
   admin: {
+    createAccount: 'Thêm tài khoản', editAccount: 'Sửa tài khoản', gender: 'Giới tính', male: 'Nam', female: 'Nữ', birthday: 'Ngày sinh', address: 'Địa chỉ', unset: 'Không chọn', phoneInvalid: 'Số điện thoại gồm 10 chữ số, bắt đầu bằng 0',
     title: 'Quản trị', dashboard: 'Tổng quan', products: 'Vật phẩm', foods: 'Thức ăn', orders: 'Đơn hàng', customers: 'Khách hàng', employees: 'Nhân viên', backToShop: 'Về cửa hàng',
     kpi: { revenue: 'Doanh thu 30 ngày', orders: 'Đơn hàng', customers: 'Khách hàng', avg: 'Giá trị đơn trung bình' },
     revenue30: 'Doanh thu 30 ngày (đơn đã thanh toán)', ordersByState: 'Đơn theo trạng thái', topItems: 'Sản phẩm bán chạy', sold: 'Đã bán',

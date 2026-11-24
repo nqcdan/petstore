@@ -27,7 +27,7 @@ test('demo-admin: create, edit and delete a product', async ({ page }) => {
   const row = page.getByRole('row', { name: new RegExp(NAME) })
   await expect(row).toBeVisible()
   await expect(row).toContainText('123.000')
-  await expect(row.locator('img')).toHaveAttribute('src', /user-photos/)
+  await expect(row.locator('img')).toHaveAttribute('src', /\/photos\//)
 
   await row.getByRole('button', { name: 'Sửa' }).click()
   await page.getByLabel(/Giá/).fill('150000')
@@ -65,14 +65,39 @@ test('demo-admin: filter orders and change an order state', async ({ page }) => 
   await expect(page.getByRole('row', { name: new RegExp(code) })).toContainText('Thành công')
 })
 
-test('demo-admin: customers and employees lists', async ({ page }) => {
+test('demo-admin: accounts CRUD (customer and employee)', async ({ page }) => {
   await prefs(page)
   await login(page, 'demo-admin', '/admin/customers')
   await page.goto('/admin/customers')
   await expect(page.getByRole('row').nth(1)).toBeVisible()
   await shot(page, '15-admin-customers')
-  await page.goto('/admin/employees')
-  await expect(page.getByRole('row').nth(1)).toBeVisible()
+
+  for (const [path, label] of [['customers', 'Khách hàng'], ['employees', 'Nhân viên']] as const) {
+    const username = `e2e-${path}-${Date.now()}`
+    await page.goto(`/admin/${path}`)
+    await expect(page.getByRole('heading', { name: label })).toBeVisible()
+    await page.getByRole('button', { name: 'Thêm mới' }).click()
+    const dialog = page.getByRole('dialog')
+    await dialog.getByRole('button', { name: 'Lưu' }).click()
+    await expect(dialog.getByText('Bắt buộc')).toHaveCount(2)
+    await dialog.getByLabel('Tài khoản').fill(username)
+    await dialog.getByLabel('Họ và tên').fill('E2E Account')
+    await dialog.getByLabel('Điện thoại').fill('0912345678')
+    await dialog.getByRole('button', { name: 'Lưu' }).click()
+    await expect(dialog).toBeHidden()
+
+    await page.getByRole('textbox', { name: 'Tìm kiếm...' }).fill(username)
+    const row = page.getByRole('row', { name: new RegExp(username) })
+    await expect(row).toContainText('E2E Account')
+    await row.getByRole('button', { name: 'Sửa' }).click()
+    await page.getByLabel('Họ và tên').fill('E2E Renamed')
+    await page.getByRole('button', { name: 'Lưu' }).click()
+    await expect(row).toContainText('E2E Renamed')
+
+    await row.getByRole('button', { name: 'Xóa' }).click()
+    await page.getByRole('alertdialog').getByRole('button', { name: 'Xóa' }).click()
+    await expect(page.getByRole('row', { name: new RegExp(username) })).toHaveCount(0)
+  }
 })
 
 // Last on purpose: the earlier tests mark today's order PAID (seed PAID orders are from 2020-21), giving the chart a data point.

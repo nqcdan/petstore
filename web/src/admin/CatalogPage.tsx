@@ -18,7 +18,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { formatVnd, imgUrl } from '@/lib/format'
+import { imgUrl } from '@/api/urls'
+import { formatVnd } from '@/lib/format'
 import { DataTable } from './DataTable'
 
 const TYPES: Record<CatalogKind, string[]> = { products: ['CAT', 'DOG', 'CLOTHES'], foods: ['DRY', 'SNACK', 'MILK', 'WET'] }

@@ -63,6 +63,7 @@ export const en: Resources = {
   footer: { tagline: 'Care and grooming for your pets.', links: 'Links', follow: 'Follow us', rights: 'PETS Store. All rights reserved.' },
   notFound: { title: 'Page not found', text: 'The page you are looking for does not exist.' },
   admin: {
+    createAccount: 'Add account', editAccount: 'Edit account', gender: 'Gender', male: 'Male', female: 'Female', birthday: 'Birthday', address: 'Address', unset: 'Not set', phoneInvalid: '10 digits starting with 0',
     title: 'Admin', dashboard: 'Dashboard', products: 'Accessories', foods: 'Food', orders: 'Orders', customers: 'Customers', employees: 'Employees', backToShop: 'Back to shop',
     kpi: { revenue: 'Revenue, 30 days', orders: 'Orders', customers: 'Customers', avg: 'Average order value' },
     revenue30: 'Revenue, last 30 days (paid orders)', ordersByState: 'Orders by status', topItems: 'Top items', sold: 'Sold',

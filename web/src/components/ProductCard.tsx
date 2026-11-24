@@ -6,7 +6,8 @@ import { useCart } from '@/cart/context'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { formatVnd, imgUrl } from '@/lib/format'
+import { imgUrl } from '@/api/urls'
+import { formatVnd } from '@/lib/format'
 
 export function ProductCard({ kind, item, onOpen }: { kind: CatalogKind; item: CatalogItem; onOpen?: (i: CatalogItem) => void }) {
   const { t } = useTranslation()

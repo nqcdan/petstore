@@ -1,6 +1,7 @@
 import { http, HttpResponse, type HttpHandler } from 'msw'
 import { API_BASE } from '@/api/http'
-import type { AdminStats, CatalogInput, CatalogItem, CatalogKind, OrderDetail, OrderRequest, OrderState, OrderSummary, Page } from '@/api/types'
+import type { Account, AccountInput, AccountKind, AdminStats, CatalogInput, CatalogItem, CatalogKind, OrderDetail, OrderRequest, OrderState, OrderSummary, Page } from '@/api/types'
+import { CONTACT_PATH } from '@/api/urls'
 import { db, MOCK_USERNAME } from './db'
 
 // Mirrors the real /api/v1 contract (see src/api/types.ts); used for dev without a backend and for unit tests.
@@ -82,10 +83,35 @@ const catalogAdmin = (kind: CatalogKind): HttpHandler[] => [
   })),
 ]
 
+const accountAdmin = (kind: AccountKind): HttpHandler[] => [
+  http.get(url(`/admin/${kind}`), withAdmin(({ request }) => {
+    const params = new URL(request.url).searchParams
+    const q = params.get('q')
+    return HttpResponse.json(paginate(db[kind].filter((c) => matches(q, c.fullName, c.email, c.username)), params))
+  })),
+  http.post(url(`/admin/${kind}`), withAdmin(async ({ request }) => {
+    const input = (await request.json()) as AccountInput
+    if (db[kind].some((a) => a.username === input.username)) return HttpResponse.json({ title: 'Conflict', detail: 'The change conflicts with existing data' }, { status: 409 })
+    const account: Account = { gender: null, role: null, email: null, phone: null, address: null, birthday: null, ...input, id: db.nextId++, verified: false } as Account
+    db[kind].unshift(account)
+    return HttpResponse.json(account, { status: 201 })
+  })),
+  http.put(url(`/admin/${kind}/:id`), withAdmin(async ({ request, params }) => {
+    const idx = db[kind].findIndex((a) => a.id === Number(params.id))
+    if (idx < 0) return notFound()
+    db[kind][idx] = { ...db[kind][idx], ...((await request.json()) as AccountInput) } as Account
+    return HttpResponse.json(db[kind][idx])
+  })),
+  http.delete(url(`/admin/${kind}/:id`), withAdmin(({ params }) => {
+    db[kind] = db[kind].filter((a) => a.id !== Number(params.id))
+    return new HttpResponse(null, { status: 204 })
+  })),
+]
+
 export const handlers: HttpHandler[] = [
   http.get(url('/products'), ({ request }) => HttpResponse.json(paginate(filterCatalog('products', new URL(request.url).searchParams), new URL(request.url).searchParams))),
   http.get(url('/foods'), ({ request }) => HttpResponse.json(paginate(filterCatalog('foods', new URL(request.url).searchParams), new URL(request.url).searchParams))),
-  http.post('/contact', () => new HttpResponse(null, { status: 200 })),
+  http.post(url(CONTACT_PATH), () => new HttpResponse(null, { status: 204 })),
 
   http.get(url('/me'), withUser(() => {
     const admin = role() === 'admin'
@@ -135,14 +161,6 @@ export const handlers: HttpHandler[] = [
     o.state = ((await request.json()) as { state: OrderState }).state
     return HttpResponse.json(o)
   })),
-  http.get(url('/admin/customers'), withAdmin(({ request }) => {
-    const params = new URL(request.url).searchParams
-    const q = params.get('q')
-    return HttpResponse.json(paginate(db.customers.filter((c) => matches(q, c.fullName, c.email, c.username)), params))
-  })),
-  http.get(url('/admin/employees'), withAdmin(({ request }) => {
-    const params = new URL(request.url).searchParams
-    const q = params.get('q')
-    return HttpResponse.json(paginate(db.employees.filter((e) => matches(q, e.fullName, e.email, e.username)), params))
-  })),
+  ...accountAdmin('customers'),
+  ...accountAdmin('employees'),
 ]

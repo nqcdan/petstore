@@ -1,6 +1,7 @@
+import { CONTACT_PATH } from './urls'
 import { del, get, patch, post, put, request } from './http'
 import type {
-  Account, AdminOrderQuery, AdminStats, CatalogInput, CatalogItem, CatalogKind, CatalogQuery, ContactInput, Me, OrderDetail,
+  Account, AccountInput, AccountKind, AdminOrderQuery, AdminStats, CatalogInput, CatalogItem, CatalogKind, CatalogQuery, ContactInput, Me, OrderDetail,
   OrderRequest, OrderState, OrderSummary, Page, PageParams,
 } from './types'
 
@@ -11,11 +12,7 @@ export const shopApi = {
   myOrders: () => get<Page<OrderSummary>>('/orders', { size: 100 }),
   myOrder: (code: string) => get<OrderDetail>(`/orders/${encodeURIComponent(code)}`),
   createOrder: (input: OrderRequest) => post<OrderDetail>('/orders', input),
-  // Not in the REST API yet: the legacy JSP form post (/contact) is used instead.
-  sendContact: async (input: ContactInput) => {
-    const res = await fetch('/contact', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ ...input }) })
-    if (!res.ok) throw new Error(res.statusText)
-  },
+  sendContact: (input: ContactInput) => post<void>(CONTACT_PATH, input),
 }
 
 // Admin endpoints (role admin)
@@ -36,4 +33,7 @@ export const adminApi = {
   setOrderState: (id: number, state: OrderState) => patch<OrderDetail>(`/admin/orders/${id}/state`, { state }),
   listCustomers: (q: PageParams) => get<Page<Account>>('/admin/customers', { ...q }),
   listEmployees: (q: PageParams) => get<Page<Account>>('/admin/employees', { ...q }),
+  createAccount: (kind: AccountKind, input: AccountInput) => post<Account>(`/admin/${kind}`, input),
+  updateAccount: (kind: AccountKind, id: number, input: AccountInput) => put<Account>(`/admin/${kind}/${id}`, input),
+  deleteAccount: (kind: AccountKind, id: number) => del(`/admin/${kind}/${id}`),
 }

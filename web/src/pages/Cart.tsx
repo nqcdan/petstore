@@ -5,7 +5,8 @@ import { useCart } from '@/cart/context'
 import { PageHeader } from '@/components/PageHeader'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { formatVnd, imgUrl } from '@/lib/format'
+import { imgUrl } from '@/api/urls'
+import { formatVnd } from '@/lib/format'
 
 export function Cart() {
   const { t } = useTranslation()

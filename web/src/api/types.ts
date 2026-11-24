@@ -8,7 +8,7 @@ export interface CatalogItem {
   name: string
   sortName: string
   price: number // VND, integer
-  imageUrl: string | null // "/img/product/x.jpg" (bundled) or "/user-photos/..." (uploaded)
+  imageUrl: string | null // "/img/product/x.jpg" (bundled) or an uploaded photo under {API_BASE}/photos/**; render through imgUrl()
   description: string | null
   type: string | null
 }
@@ -97,6 +97,19 @@ export interface Account {
   role: 'Admin' | 'Moderator' | 'Write' | 'Read' | null
   birthday: string | null
   verified: boolean
+}
+
+export type AccountKind = 'customers' | 'employees'
+
+export interface AccountInput {
+  username: string
+  fullName: string
+  email?: string
+  phone?: string
+  address?: string
+  gender?: 'Male' | 'Female'
+  role?: 'Admin' | 'Moderator' | 'Write' | 'Read'
+  birthday?: string // yyyy-MM-dd
 }
 
 export interface AdminStats {

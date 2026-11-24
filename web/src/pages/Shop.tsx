@@ -14,7 +14,8 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
-import { formatVnd, imgUrl } from '@/lib/format'
+import { imgUrl } from '@/api/urls'
+import { formatVnd } from '@/lib/format'
 import { NotFound } from './NotFound'
 
 const PAGE_SIZE = 12
