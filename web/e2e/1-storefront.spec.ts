@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { login, prefs, shot } from './helpers'
+import { login, open, prefs, shot } from './helpers'
 
 test('anonymous: landing, shop and demo accounts box', async ({ page }) => {
   await prefs(page)
@@ -20,11 +20,11 @@ test('demo-user buys, reaches checkout and sees the order in history', async ({ 
   await login(page, 'demo-user')
   await expect(page.getByRole('link', { name: 'Quản trị', exact: true })).toHaveCount(0)
 
-  await page.goto('/shop/foods')
+  await open(page, '/shop/foods', 'demo-user')
   await expect(page.getByTestId('product-card').first()).toBeVisible()
   await page.getByTestId('product-card').nth(0).getByRole('button').last().click()
   await page.getByTestId('product-card').nth(1).getByRole('button').last().click()
-  await page.goto('/cart')
+  await open(page, '/cart', 'demo-user')
   await expect(page.getByTestId('cart-line')).toHaveCount(2)
   await shot(page, '03-cart')
 
@@ -41,7 +41,7 @@ test('demo-user buys, reaches checkout and sees the order in history', async ({ 
   await expect(page.getByText(/Thanh toán: Thanh toán khi nhận hàng/)).toBeVisible()
   await shot(page, '05-order-detail')
 
-  await page.goto('/orders')
+  await open(page, '/orders', 'demo-user')
   await expect(page.getByRole('cell', { name: code })).toBeVisible()
   await shot(page, '06-orders')
 })
@@ -49,9 +49,9 @@ test('demo-user buys, reaches checkout and sees the order in history', async ({ 
 test('demo-user pays by ATM transfer', async ({ page }) => {
   await prefs(page)
   await login(page, 'demo-user')
-  await page.goto('/shop/products')
+  await open(page, '/shop/products', 'demo-user')
   await page.getByTestId('product-card').first().getByRole('button').last().click()
-  await page.goto('/checkout')
+  await open(page, '/checkout', 'demo-user')
   await page.getByLabel(/Chuyển khoản ATM/).click()
   await page.getByRole('button', { name: 'Đặt hàng' }).click()
   await expect(page).toHaveURL(/\/orders\/OD-/)
@@ -73,11 +73,10 @@ test("demo-user cannot see another user's order", async ({ page, browser }) => {
 
   await prefs(page)
   await login(page, 'demo-user')
-  await page.goto(`/orders/${code}`)
+  await open(page, `/orders/${code}`, 'demo-user')
   await expect(page.getByRole('alert')).toContainText('Không tìm thấy dữ liệu yêu cầu')
-  await page.goto('/orders')
+  await open(page, '/orders', 'demo-user')
   await expect(page.getByRole('cell', { name: code })).toHaveCount(0)
-  await expect(page.getByRole('button', { name: 'Demo User' })).toBeVisible() // token ready
   const status = await page.evaluate(async (c) => {
     const { shopApi } = await import('/src/api/shop.ts')
     try { await shopApi.myOrder(c); return 200 } catch (e) { return (e as { status: number }).status }

@@ -53,9 +53,9 @@ test('demo-admin: every product and food picture in the lists loads (no broken i
   await signIn(page, 'demo-admin')
   for (const path of ['products', 'foods']) {
     await page.goto(`/${path}`)
-    await expect(page.getByRole('row').nth(1)).toBeVisible()
+    // while the list loads the table shows skeleton rows: wait for the first real picture, not just a second row
     const imgs = page.locator('table img')
-    expect(await imgs.count()).toBeGreaterThan(0)
+    await expect(imgs.first()).toBeVisible()
     // an <img> whose URL answers HTML (SPA fallback) or 404 ends with naturalWidth 0
     await expect.poll(() => imgs.evaluateAll((els) => els.filter((e) => !(e as HTMLImageElement).complete || (e as HTMLImageElement).naturalWidth === 0).length)).toBe(0)
   }
