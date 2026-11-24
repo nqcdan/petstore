@@ -182,6 +182,13 @@ link is switched with `VITE_ADMIN_URL=https://petstore-admin.nqcdan.com`.
 - Build: `VITE_KEYCLOAK_URL=https://sso.example.com make images` builds all three images; the admin one also takes `VITE_SHOP_URL`
   (back-to-shop link, hidden when empty) and `VITE_API_BASE`.
 
+## Slides
+
+Two slide decks (PDF, 16:9) with screenshots of the live demo, how they are made in [docs/slides](docs/slides):
+
+- [Admin walkthrough](docs/slides/petstore-admin-walkthrough.pdf): dashboard, catalogue, orders, people, access control
+- [Storefront flow](docs/slides/petstore-storefront-flow.pdf): browse, cart, SSO sign-in, checkout, order history, mobile
+
 ## Tests
 
 `make test` runs the web lint and vitest suite, then `./mvnw verify` in a JDK container next to a throwaway
