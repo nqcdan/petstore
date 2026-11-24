@@ -27,7 +27,7 @@ export function Cart() {
               {lines.map(({ kind, item, quantity }) => (
                 <Card key={`${kind}-${item.id}`} data-testid="cart-line">
                   <CardContent className="flex items-center gap-4">
-                    <img src={imgUrl(item.pic)} alt="" className="size-20 rounded-md object-cover" />
+                    <img src={imgUrl(item.imageUrl)} alt="" className="size-20 rounded-md object-cover" />
                     <div className="min-w-0 flex-1">
                       <p className="line-clamp-2 font-medium">{item.name}</p>
                       <p className="text-sm text-muted-foreground">{formatVnd(item.price)}</p>

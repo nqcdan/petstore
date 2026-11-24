@@ -22,7 +22,7 @@ export function OrderHistory() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>{t('history.code')}</TableHead><TableHead>{t('history.name')}</TableHead><TableHead>{t('history.date')}</TableHead>
+                  <TableHead>{t('history.code')}</TableHead><TableHead>{t('history.date')}</TableHead>
                   <TableHead className="text-right">{t('history.total')}</TableHead><TableHead>{t('history.state')}</TableHead><TableHead />
                 </TableRow>
               </TableHeader>
@@ -30,11 +30,10 @@ export function OrderHistory() {
                 {data.map((o) => (
                   <TableRow key={o.id}>
                     <TableCell className="font-mono text-xs">{o.code}</TableCell>
-                    <TableCell>{o.label}</TableCell>
                     <TableCell>{formatDate(o.transactionDate)}</TableCell>
                     <TableCell className="text-right">{formatVnd(o.total)}</TableCell>
                     <TableCell><StateBadge state={o.state} /></TableCell>
-                    <TableCell className="text-right"><Button asChild variant="ghost" size="sm"><Link to={`/orders/${o.id}`}>{t('common.view')}</Link></Button></TableCell>
+                    <TableCell className="text-right"><Button asChild variant="ghost" size="sm"><Link to={`/orders/${o.code}`}>{t('common.view')}</Link></Button></TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -48,8 +47,8 @@ export function OrderHistory() {
 
 export function OrderDetail() {
   const { t } = useTranslation()
-  const { id } = useParams()
-  const { data, isPending, isError } = useMyOrder(Number(id))
+  const { code } = useParams()
+  const { data, isPending, isError } = useMyOrder(code ?? '')
   return (
     <>
       <PageHeader title={t('history.detail')} sub={data?.code} />
@@ -60,15 +59,14 @@ export function OrderDetail() {
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
               <StateBadge state={data.state} />
               <span>{formatDate(data.transactionDate)}</span>
-              <span>{t('history.payment')}: {data.paymentMethod}</span>
               {data.note && <span className="text-muted-foreground">{t('history.note')}: {data.note}</span>}
             </div>
             <div className="overflow-x-auto rounded-lg border">
               <Table>
                 <TableHeader><TableRow><TableHead>{t('history.item')}</TableHead><TableHead className="text-right">{t('history.quantity')}</TableHead><TableHead className="text-right">{t('history.total')}</TableHead></TableRow></TableHeader>
                 <TableBody>
-                  {data.items?.map((it) => (
-                    <TableRow key={it.id}><TableCell>{it.name}</TableCell><TableCell className="text-right">{it.quantity}</TableCell><TableCell className="text-right">{formatVnd(it.total)}</TableCell></TableRow>
+                  {data.items.map((it) => (
+                    <TableRow key={it.name}><TableCell>{it.name}</TableCell><TableCell className="text-right">{it.quantity}</TableCell><TableCell className="text-right">{formatVnd(it.total)}</TableCell></TableRow>
                   ))}
                   <TableRow><TableCell colSpan={2} className="text-right font-semibold">{t('history.total')}</TableCell><TableCell className="text-right font-semibold text-primary">{formatVnd(data.total)}</TableCell></TableRow>
                 </TableBody>

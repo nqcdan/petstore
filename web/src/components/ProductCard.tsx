@@ -14,7 +14,7 @@ export function ProductCard({ kind, item, onOpen }: { kind: CatalogKind; item: C
   return (
     <Card className="group overflow-hidden pt-0" data-testid="product-card">
       <button type="button" onClick={() => onOpen?.(item)} className="relative block aspect-square overflow-hidden bg-muted text-left">
-        <img src={imgUrl(item.pic)} alt={item.name} loading="lazy" className="size-full object-cover transition-transform duration-300 group-hover:scale-105" />
+        <img src={imgUrl(item.imageUrl)} alt={item.name} loading="lazy" className="size-full object-cover transition-transform duration-300 group-hover:scale-105" />
         {item.type && <Badge variant="secondary" className="absolute left-2 top-2">{item.type}</Badge>}
       </button>
       <CardContent className="flex flex-1 flex-col gap-3">

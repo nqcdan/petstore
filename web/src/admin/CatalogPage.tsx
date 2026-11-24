@@ -1,8 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import type { ColumnDef } from '@tanstack/react-table'
 import { Pencil, Plus, Trash2, Upload } from 'lucide-react'
-import { useRef, useState } from 'react'
-import { Controller, useForm, useWatch } from 'react-hook-form'
+import { useQueryClient } from '@tanstack/react-query'
+import { useMemo, useRef, useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
@@ -26,24 +27,32 @@ const schema = z.object({
   name: z.string().min(1),
   type: z.string().min(1),
   price: z.number().int().min(0),
-  pic: z.string().min(1),
   description: z.string(),
 })
 type Values = z.infer<typeof schema>
 
 function ItemForm({ kind, item, onClose }: { kind: CatalogKind; item: CatalogItem | null; onClose: () => void }) {
   const { t } = useTranslation()
+  const qc = useQueryClient()
   const save = useSaveCatalog(kind)
   const fileRef = useRef<HTMLInputElement>(null)
-  const { register, control, handleSubmit, setValue, formState: { errors } } = useForm<Values>({
+  const [file, setFile] = useState<File | null>(null)
+  const preview = useMemo(() => (file ? URL.createObjectURL(file) : imgUrl(item?.imageUrl ?? null)), [file, item])
+  const { register, control, handleSubmit, formState: { errors } } = useForm<Values>({
     resolver: zodResolver(schema),
-    defaultValues: { name: item?.name ?? '', type: item?.type ?? TYPES[kind][0], price: item?.price ?? 0, pic: item?.pic ?? 'snack.jpg', description: item?.description ?? '' },
+    defaultValues: { name: item?.name ?? '', type: item?.type ?? TYPES[kind][0], price: item?.price ?? 0, description: item?.description ?? '' },
   })
-  const pic = useWatch({ control, name: 'pic' })
 
-  const upload = async (file: File) => {
+  // The image endpoint needs an existing id, so upload happens after the item is saved.
+  const submit = async (input: Values) => {
     try {
-      setValue('pic', (await adminApi.uploadImage(file)).filename)
+      const saved = await save.mutateAsync({ id: item?.id, input })
+      if (file) {
+        await adminApi.uploadImage(kind, saved.id, file)
+        await qc.invalidateQueries({ queryKey: ['admin', kind] })
+      }
+      toast.success(t('common.saved'))
+      onClose()
     } catch (e) {
       toast.error((e as Error).message)
     }
@@ -56,15 +65,11 @@ function ItemForm({ kind, item, onClose }: { kind: CatalogKind; item: CatalogIte
           <DialogTitle>{item ? t('admin.editItem') : t('admin.createItem')}</DialogTitle>
           <DialogDescription className="sr-only">{t(`admin.${kind}`)}</DialogDescription>
         </DialogHeader>
-        <form id="catalog-form" className="grid gap-4" noValidate
-          onSubmit={handleSubmit((input) => save.mutate({ id: item?.id, input }, {
-            onSuccess: () => { toast.success(t('common.saved')); onClose() },
-            onError: (e) => toast.error(e.message),
-          }))}>
+        <form id="catalog-form" className="grid gap-4" noValidate onSubmit={handleSubmit(submit)}>
           <div className="space-y-1.5">
             <Label htmlFor="name">{t('admin.name')}</Label>
             <Input id="name" {...register('name')} aria-invalid={!!errors.name} />
-            {errors.name && <p className="text-xs text-destructive">{t('profile.required')}</p>}
+            {errors.name && <p className="text-xs text-destructive">{t('contact.required')}</p>}
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-1.5">
@@ -85,10 +90,10 @@ function ItemForm({ kind, item, onClose }: { kind: CatalogKind; item: CatalogIte
           <div className="space-y-1.5">
             <Label>{t('admin.image')}</Label>
             <div className="flex items-center gap-3">
-              <img src={imgUrl(pic)} alt="" className="size-16 rounded-md border object-cover" />
-              <input ref={fileRef} type="file" accept="image/*" hidden onChange={(e) => e.target.files?.[0] && void upload(e.target.files[0])} />
+              <img src={preview} alt="" className="size-16 rounded-md border object-cover" />
+              <input ref={fileRef} type="file" accept="image/png,image/jpeg,image/webp" hidden data-testid="image-input" onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
               <Button type="button" variant="outline" size="sm" onClick={() => fileRef.current?.click()}><Upload /> {t('admin.uploadImage')}</Button>
-              <span className="truncate text-xs text-muted-foreground">{pic}</span>
+              <span className="truncate text-xs text-muted-foreground">{file?.name ?? (item ? '' : t('admin.imageAfterSave'))}</span>
             </div>
           </div>
           <div className="space-y-1.5">
@@ -125,7 +130,7 @@ export function CatalogPage({ kind }: { kind: CatalogKind }) {
   }
 
   const columns: ColumnDef<CatalogItem>[] = [
-    { id: 'pic', header: t('admin.image'), cell: ({ row }) => <img src={imgUrl(row.original.pic)} alt="" className="size-10 rounded-md object-cover" /> },
+    { id: 'pic', header: t('admin.image'), cell: ({ row }) => <img src={imgUrl(row.original.imageUrl)} alt="" className="size-10 rounded-md object-cover" /> },
     { accessorKey: 'name', header: t('admin.name'), cell: ({ row }) => <span className="line-clamp-2 max-w-md">{row.original.name}</span> },
     { accessorKey: 'type', header: t('admin.type') },
     { accessorKey: 'price', header: t('admin.price'), cell: ({ row }) => <span className="tabular-nums">{formatVnd(row.original.price)}</span> },

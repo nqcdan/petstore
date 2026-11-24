@@ -89,18 +89,18 @@ describe('access control', () => {
 describe('admin API (mock contract)', () => {
   it('creates, updates and deletes a catalog item', async () => {
     localStorage.setItem('petstore.mock-user', 'admin')
-    const created = await adminApi.createCatalog('products', { name: 'Test toy', type: 'CAT', price: 10000, pic: 'snack.jpg', description: '' })
+    const created = await adminApi.createCatalog('products', { name: 'Test toy', type: 'CAT', price: 10000, description: '' })
     expect(created.id).toBeGreaterThan(0)
-    const updated = await adminApi.updateCatalog('products', created.id, { ...created, price: 20000 })
+    const updated = await adminApi.updateCatalog('products', created.id, { name: created.name, type: 'CAT', price: 20000, description: '' })
     expect(updated.price).toBe(20000)
     await adminApi.deleteCatalog('products', created.id)
     const page = await adminApi.listCatalog('products', { q: 'Test toy' })
-    expect(page.totalElements).toBe(0)
+    expect(page.totalItems).toBe(0)
   })
 
   it('changes the order state', async () => {
     localStorage.setItem('petstore.mock-user', 'admin')
-    const { content } = await adminApi.listOrders({ state: 'DUE', size: 1 })
+    const { items: content } = await adminApi.listOrders({ state: 'DUE', size: 1 })
     const order = await adminApi.setOrderState(content[0].id, 'PAID')
     expect(order.state).toBe('PAID')
   })

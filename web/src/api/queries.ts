@@ -5,9 +5,9 @@ import type { AdminOrderQuery, CatalogInput, CatalogKind, CatalogQuery, OrderSta
 export const useCatalog = (kind: CatalogKind, q: CatalogQuery) =>
   useQuery({ queryKey: ['catalog', kind, q], queryFn: () => shopApi.listCatalog(kind, q), placeholderData: keepPreviousData })
 
-export const useProfile = (enabled = true) => useQuery({ queryKey: ['me'], queryFn: shopApi.me, enabled })
-export const useMyOrders = () => useQuery({ queryKey: ['orders'], queryFn: shopApi.myOrders })
-export const useMyOrder = (id: number) => useQuery({ queryKey: ['orders', id], queryFn: () => shopApi.myOrder(id) })
+export const useMe = () => useQuery({ queryKey: ['me'], queryFn: shopApi.me })
+export const useMyOrders = () => useQuery({ queryKey: ['orders'], queryFn: shopApi.myOrders, select: (p) => p.items })
+export const useMyOrder = (code: string) => useQuery({ queryKey: ['orders', code], queryFn: () => shopApi.myOrder(code) })
 
 export const useAdminStats = () => useQuery({ queryKey: ['admin', 'stats'], queryFn: adminApi.stats })
 export const useAdminCatalog = (kind: CatalogKind, q: PageParams) =>

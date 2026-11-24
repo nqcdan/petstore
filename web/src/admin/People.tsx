@@ -2,9 +2,8 @@ import type { ColumnDef } from '@tanstack/react-table'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 import { useAdminCustomers, useAdminEmployees } from '@/api/queries'
-import type { Customer, Employee } from '@/api/types'
+import type { Account } from '@/api/types'
 import { Badge } from '@/components/ui/badge'
-import { formatDate } from '@/lib/format'
 import { DataTable } from './DataTable'
 
 function usePaging() {
@@ -26,13 +25,12 @@ export function CustomersPage() {
   const { t } = useTranslation()
   const { page, q, onPageChange, onSearch } = usePaging()
   const { data, isPending } = useAdminCustomers({ page, size: 10, q })
-  const columns: ColumnDef<Customer>[] = [
+  const columns: ColumnDef<Account>[] = [
     { accessorKey: 'fullName', header: t('admin.fullName') },
     { accessorKey: 'username', header: t('admin.username') },
     { accessorKey: 'email', header: t('admin.email') },
     { accessorKey: 'phone', header: t('admin.phone') },
-    { accessorKey: 'orderCount', header: t('admin.orderCount') },
-    { accessorKey: 'createdAt', header: t('admin.date'), cell: ({ row }) => formatDate(row.original.createdAt) },
+    { accessorKey: 'verified', header: t('admin.verified'), cell: ({ row }) => (row.original.verified ? '✓' : '') },
   ]
   return (
     <>
@@ -46,7 +44,7 @@ export function EmployeesPage() {
   const { t } = useTranslation()
   const { page, q, onPageChange, onSearch } = usePaging()
   const { data, isPending } = useAdminEmployees({ page, size: 10, q })
-  const columns: ColumnDef<Employee>[] = [
+  const columns: ColumnDef<Account>[] = [
     { accessorKey: 'fullName', header: t('admin.fullName') },
     { accessorKey: 'username', header: t('admin.username') },
     { accessorKey: 'email', header: t('admin.email') },

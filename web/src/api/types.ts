@@ -1,108 +1,117 @@
-// API contract guessed from the JSP controllers + JPA entities (phase A REST /api/v1 is not merged yet).
-// Everything marked "MATCH" must be re-checked against the real OpenAPI document.
+// Shapes of the PetStore REST API (/api/v1), mirrored from Dto.java on branch dan-petstore-modernize.
+// src/api/schema.d.ts is generated from the live OpenAPI document (pnpm gen:api); contract.ts checks these against it.
 
 export type CatalogKind = 'products' | 'foods'
 
-// MATCH: Product and Food are two entities with the same shape; "type" differs (CAT|DOG vs DRY|SNACK|MILK|WET)
 export interface CatalogItem {
   id: number
   name: string
   sortName: string
   price: number // VND, integer
-  pic: string // file name under /img/product
-  description: string
+  imageUrl: string | null // "/img/product/x.jpg" (bundled) or "/user-photos/..." (uploaded)
+  description: string | null
   type: string | null
 }
 
-export type CatalogInput = Omit<CatalogItem, 'id' | 'sortName'> & { sortName?: string }
+export interface CatalogInput {
+  name: string
+  sortName?: string
+  price: number
+  description: string
+  type: string
+}
 
-// MATCH: Spring Data Page, flattened
+// Zero-based page, same for every list endpoint.
 export interface Page<T> {
-  content: T[]
-  totalElements: number
-  totalPages: number
-  page: number // zero based
+  items: T[]
+  page: number
   size: number
+  totalItems: number
+  totalPages: number
 }
 
 export interface PageParams {
   page?: number
   size?: number
   q?: string
+  sort?: string // "price,asc"
 }
 
 export interface CatalogQuery extends PageParams {
-  sort?: 'price,asc' | 'price,desc'
+  type?: string
 }
 
 export type OrderState = 'DUE' | 'PAID' | 'CANCEL'
-export type PaymentMethod = 'COD' | 'ATM'
 
 export interface OrderItem {
-  id: number
   name: string
+  type: string // FOOD | PRODUCT
   quantity: number
   total: number
-  type: 'FOOD' | 'PRODUCT'
 }
 
-export interface Order {
+export interface OrderSummary {
   id: number
   code: string
-  label: string
-  total: number
   state: OrderState
-  note: string | null
-  paymentMethod: PaymentMethod
-  transactionDate: string // ISO-8601
-  customerName?: string
-  items?: OrderItem[]
+  total: number
+  currency: string
+  transactionDate: string // ISO-8601 instant
+  customerName: string | null
 }
 
-export interface CreateOrderInput {
-  items: { kind: CatalogKind; id: number; quantity: number }[]
-  paymentMethod: PaymentMethod
+export interface OrderDetail extends OrderSummary {
+  customerUsername: string | null
+  employeeUsername: string | null
+  note: string | null
+  items: OrderItem[]
+}
+
+export interface CartLine {
+  type: 'FOOD' | 'PRODUCT'
+  id: number
+  quantity: number
+}
+
+export interface OrderRequest {
+  items: CartLine[]
   note?: string
 }
 
-// MATCH: identity comes from Keycloak; this is the local profile row (Customer entity)
-export interface Profile {
-  id: number
+export interface Me {
+  subject: string
   username: string
-  email: string
-  fullName: string
-  phone: string | null
-  address: string | null
-  birthday: string | null // yyyy-MM-dd
-  avatarUrl: string
+  email: string | null
+  name: string | null
+  roles: string[]
 }
 
-export type ProfileInput = Pick<Profile, 'fullName' | 'phone' | 'address' | 'birthday'>
+export interface Account {
+  id: number
+  username: string
+  fullName: string
+  email: string | null
+  phone: string | null
+  address: string | null
+  gender: 'Male' | 'Female' | null
+  role: 'Admin' | 'Moderator' | 'Write' | 'Read' | null
+  birthday: string | null
+  verified: boolean
+}
+
+export interface AdminStats {
+  revenueByDay: { date: string; orders: number; revenue: number }[] // last 30 days, PAID orders only
+  ordersByState: { state: OrderState; count: number }[]
+  topProducts: { name: string; quantity: number; revenue: number }[]
+  totalCustomers: number
+}
+
+export interface AdminOrderQuery extends PageParams {
+  state?: OrderState
+}
 
 export interface ContactInput {
   name: string
   email: string
   message: string
-}
-
-export interface Employee {
-  id: number
-  username: string
-  fullName: string
-  email: string
-  phone: string | null
-  role: 'Admin' | 'Moderator' | 'Write' | 'Read'
-}
-
-export type Customer = Profile & { orderCount: number; createdAt: string }
-
-export interface AdminStats {
-  totals: { revenue: number; orders: number; customers: number; items: number }
-  revenueByDay: { date: string; revenue: number }[] // last 30 days
-  ordersByState: { state: OrderState; count: number }[]
-  topItems: { name: string; quantity: number; revenue: number }[]
-}
-
-export interface AdminOrderQuery extends PageParams {
-  state?: OrderState
 }

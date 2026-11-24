@@ -48,7 +48,7 @@ function ShopList({ kind }: { kind: CatalogKind }) {
   return (
     <>
       <PageHeader title={kind === 'products' ? t('shop.titleProducts') : t('shop.titleFoods')}
-        sub={data ? t('shop.showing', { count: data.content.length, total: data.totalElements }) : undefined}>
+        sub={data ? t('shop.showing', { count: data.items.length, total: data.totalItems }) : undefined}>
         <div className="flex flex-wrap items-center gap-2">
           <form className="relative" onSubmit={(e) => { e.preventDefault(); update({ q: text || null, page: null }) }}>
             <Search className="absolute left-2.5 top-2 size-4 text-muted-foreground" />
@@ -69,11 +69,11 @@ function ShopList({ kind }: { kind: CatalogKind }) {
           <div className="py-16 text-center"><p className="mb-3">{t('common.error')}</p><Button onClick={() => void refetch()}>{t('common.retry')}</Button></div>
         ) : isPending ? (
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">{Array.from({ length: 8 }, (_, n) => <Skeleton key={n} className="aspect-[3/4]" />)}</div>
-        ) : data.content.length === 0 ? (
+        ) : data.items.length === 0 ? (
           <p className="py-16 text-center text-muted-foreground">{t('shop.none')}</p>
         ) : (
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-            {data.content.map((p) => <ProductCard key={p.id} kind={kind} item={p} onOpen={setOpen} />)}
+            {data.items.map((p) => <ProductCard key={p.id} kind={kind} item={p} onOpen={setOpen} />)}
           </div>
         )}
         {data && <Pager page={page} totalPages={data.totalPages} onChange={(p) => update({ page: p === 1 ? null : String(p) })} />}
@@ -87,7 +87,7 @@ function ShopList({ kind }: { kind: CatalogKind }) {
                 <DialogDescription className="sr-only">{open.name}</DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 sm:grid-cols-2">
-                <img src={imgUrl(open.pic)} alt={open.name} className="aspect-square w-full rounded-lg object-cover" />
+                <img src={imgUrl(open.imageUrl)} alt={open.name} className="aspect-square w-full rounded-lg object-cover" />
                 <div className="flex flex-col gap-3">
                   <h2 className="text-lg font-semibold">{open.name}</h2>
                   <p className="text-xl font-semibold text-primary">{formatVnd(open.price)}</p>

@@ -38,7 +38,7 @@ export const en: Resources = {
     title: 'Checkout', greeting: 'Hello {{name}}', info: 'Your details', fullName: 'Full name', address: 'Address', phone: 'Phone', email: 'Email',
     note: 'Order note', notePlaceholder: 'Note', yourOrder: 'Your order', total: 'Total', method: 'Payment method',
     cod: 'Cash on delivery (COD)', atm: 'ATM bank transfer', place: 'Place order', chooseMethod: 'Please choose a payment method',
-    success: 'Order placed', empty: 'Nothing to check out yet', updateProfile: 'Update profile',
+    success: 'Order placed', empty: 'Nothing to check out yet', updateProfile: 'Your account',
   },
   history: {
     title: 'Order history', code: 'Order code', name: 'Order name', date: 'Date', total: 'Total', state: 'Status', empty: 'You have no orders yet',
@@ -47,7 +47,7 @@ export const en: Resources = {
   state: { DUE: 'Shipping / awaiting payment', PAID: 'Completed', CANCEL: 'Cancelled' },
   profile: {
     title: 'Profile', avatar: 'Avatar', fullName: 'Full name', email: 'Email', birthday: 'Birthday', phone: 'Phone', address: 'Address',
-    changePassword: 'Change password (Keycloak)', phoneInvalid: '10 digits starting with 0', required: 'Required', upload: 'Choose image',
+    username: 'Username', manage: 'Manage account and password (Keycloak)',
   },
   contact: {
     title: 'Contact', sub: 'Questions? Get in touch with us.', branch: 'Branch 1', address: 'Landmark 81 Tower', hotline: 'Hotline',
@@ -64,9 +64,9 @@ export const en: Resources = {
   notFound: { title: 'Page not found', text: 'The page you are looking for does not exist.' },
   admin: {
     title: 'Admin', dashboard: 'Dashboard', products: 'Accessories', foods: 'Food', orders: 'Orders', customers: 'Customers', employees: 'Employees', backToShop: 'Back to shop',
-    kpi: { revenue: 'Revenue', orders: 'Orders', customers: 'Customers', items: 'Items' },
-    revenue30: 'Revenue, last 30 days', ordersByState: 'Orders by status', topItems: 'Top items', sold: 'Sold',
-    name: 'Name', type: 'Type', price: 'Price', description: 'Description', image: 'Image', uploadImage: 'Upload image', createItem: 'Add item', editItem: 'Edit item',
+    kpi: { revenue: 'Revenue, 30 days', orders: 'Orders', customers: 'Customers', avg: 'Average order value' },
+    revenue30: 'Revenue, last 30 days (paid orders)', ordersByState: 'Orders by status', topItems: 'Top items', sold: 'Sold',
+    name: 'Name', type: 'Type', price: 'Price', description: 'Description', image: 'Image', uploadImage: 'Upload image', imageAfterSave: 'Image upload after saving', verified: 'Verified', createItem: 'Add item', editItem: 'Edit item',
     confirmDelete: 'Delete "{{name}}"?', confirmDeleteText: 'This cannot be undone.', deleted: 'Deleted', priceInvalid: 'Price must be an integer >= 0',
     filterState: 'Filter by status', changeState: 'Change status', stateChanged: 'Status updated', customer: 'Customer', orderCount: 'Orders', username: 'Username',
     role: 'Role', phone: 'Phone', email: 'Email', fullName: 'Full name', date: 'Date', code: 'Code', total: 'Total', state: 'Status',

@@ -73,7 +73,7 @@ export function Home() {
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
           {featured.isPending
             ? Array.from({ length: 4 }, (_, n) => <Skeleton key={n} className="aspect-[3/4]" />)
-            : featured.data?.content.map((p) => <ProductCard key={p.id} kind="products" item={p} />)}
+            : featured.data?.items.map((p) => <ProductCard key={p.id} kind="products" item={p} />)}
         </div>
       </section>
 

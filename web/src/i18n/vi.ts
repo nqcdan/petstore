@@ -36,7 +36,7 @@ export const vi = {
     title: 'Thanh toán', greeting: 'Chào bạn {{name}}', info: 'Thông tin cá nhân', fullName: 'Họ và tên', address: 'Địa chỉ', phone: 'Số điện thoại', email: 'Email',
     note: 'Ghi chú cho đơn hàng', notePlaceholder: 'Ghi chú', yourOrder: 'Đơn hàng của bạn', total: 'Tổng cộng', method: 'Hình thức thanh toán',
     cod: 'Thanh toán khi nhận hàng (COD)', atm: 'Chuyển khoản ATM', place: 'Đặt hàng', chooseMethod: 'Vui lòng chọn phương thức thanh toán',
-    success: 'Đặt hàng thành công', empty: 'Chưa có sản phẩm nào để thanh toán', updateProfile: 'Cập nhật thông tin cá nhân',
+    success: 'Đặt hàng thành công', empty: 'Chưa có sản phẩm nào để thanh toán', updateProfile: 'Tài khoản của bạn',
   },
   history: {
     title: 'Lịch sử giao dịch', code: 'Mã đơn hàng', name: 'Tên đơn hàng', date: 'Ngày đặt', total: 'Tổng tiền', state: 'Tình trạng', empty: 'Bạn chưa có đơn hàng nào',
@@ -45,7 +45,7 @@ export const vi = {
   state: { DUE: 'Đang giao / chờ thanh toán', PAID: 'Thành công', CANCEL: 'Đã hủy' },
   profile: {
     title: 'Thông tin chi tiết', avatar: 'Ảnh đại diện', fullName: 'Họ và tên', email: 'Email', birthday: 'Ngày sinh', phone: 'Điện thoại', address: 'Địa chỉ',
-    changePassword: 'Đổi mật khẩu (Keycloak)', phoneInvalid: 'Số điện thoại gồm 10 chữ số, bắt đầu bằng 0', required: 'Bắt buộc', upload: 'Chọn ảnh',
+    username: 'Tài khoản', manage: 'Quản lý tài khoản và mật khẩu (Keycloak)',
   },
   contact: {
     title: 'Liên hệ', sub: 'Mọi thắc mắc vui lòng liên hệ với chúng tôi.', branch: 'Chi nhánh 1', address: 'Tòa nhà Landmark 81', hotline: 'Hotline',
@@ -62,9 +62,9 @@ export const vi = {
   notFound: { title: 'Không tìm thấy trang', text: 'Trang bạn tìm không tồn tại.' },
   admin: {
     title: 'Quản trị', dashboard: 'Tổng quan', products: 'Vật phẩm', foods: 'Thức ăn', orders: 'Đơn hàng', customers: 'Khách hàng', employees: 'Nhân viên', backToShop: 'Về cửa hàng',
-    kpi: { revenue: 'Doanh thu', orders: 'Đơn hàng', customers: 'Khách hàng', items: 'Sản phẩm' },
-    revenue30: 'Doanh thu 30 ngày', ordersByState: 'Đơn theo trạng thái', topItems: 'Sản phẩm bán chạy', sold: 'Đã bán',
-    name: 'Tên', type: 'Loại', price: 'Giá', description: 'Mô tả', image: 'Ảnh', uploadImage: 'Tải ảnh lên', createItem: 'Thêm sản phẩm', editItem: 'Sửa sản phẩm',
+    kpi: { revenue: 'Doanh thu 30 ngày', orders: 'Đơn hàng', customers: 'Khách hàng', avg: 'Giá trị đơn trung bình' },
+    revenue30: 'Doanh thu 30 ngày (đơn đã thanh toán)', ordersByState: 'Đơn theo trạng thái', topItems: 'Sản phẩm bán chạy', sold: 'Đã bán',
+    name: 'Tên', type: 'Loại', price: 'Giá', description: 'Mô tả', image: 'Ảnh', uploadImage: 'Tải ảnh lên', imageAfterSave: 'Ảnh tải lên sau khi lưu', verified: 'Xác minh', createItem: 'Thêm sản phẩm', editItem: 'Sửa sản phẩm',
     confirmDelete: 'Xóa "{{name}}"?', confirmDeleteText: 'Hành động này không thể hoàn tác.', deleted: 'Đã xóa', priceInvalid: 'Giá phải là số nguyên >= 0',
     filterState: 'Lọc trạng thái', changeState: 'Đổi trạng thái', stateChanged: 'Đã cập nhật trạng thái', customer: 'Khách hàng', orderCount: 'Số đơn', username: 'Tài khoản',
     role: 'Vai trò', phone: 'Điện thoại', email: 'Email', fullName: 'Họ và tên', date: 'Ngày', code: 'Mã', total: 'Tổng', state: 'Trạng thái',

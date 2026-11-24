@@ -3,9 +3,8 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
-import { useProfile } from '@/api/queries'
+import { useMe } from '@/api/queries'
 import { shopApi } from '@/api/shop'
-import type { PaymentMethod } from '@/api/types'
 import { useCart } from '@/cart/context'
 import { PageHeader } from '@/components/PageHeader'
 import { Button } from '@/components/ui/button'
@@ -18,23 +17,23 @@ import { formatVnd } from '@/lib/format'
 export function Checkout() {
   const { t } = useTranslation()
   const { lines, total, clear } = useCart()
-  const { data: me } = useProfile()
+  const { data: me } = useMe()
   const navigate = useNavigate()
   const qc = useQueryClient()
-  const [method, setMethod] = useState<PaymentMethod | ''>('')
+  const [method, setMethod] = useState<'COD' | 'ATM' | ''>('')
   const [note, setNote] = useState('')
 
   const place = useMutation({
+    // The API has no payment method field yet, so it travels in the order note.
     mutationFn: () => shopApi.createOrder({
-      items: lines.map((l) => ({ kind: l.kind, id: l.item.id, quantity: l.quantity })),
-      paymentMethod: method as PaymentMethod,
-      note: note || undefined,
+      items: lines.map((l) => ({ type: l.kind === 'foods' ? 'FOOD' : 'PRODUCT', id: l.item.id, quantity: l.quantity })),
+      note: [`[${method}]`, note].filter(Boolean).join(' '),
     }),
     onSuccess: (order) => {
       clear()
       void qc.invalidateQueries({ queryKey: ['orders'] })
       toast.success(t('checkout.success'))
-      navigate(`/orders/${order.id}`)
+      navigate(`/orders/${order.code}`)
     },
     onError: (e) => toast.error(e.message),
   })
@@ -54,17 +53,15 @@ export function Checkout() {
 
   return (
     <>
-      <PageHeader title={t('checkout.title')} sub={me ? t('checkout.greeting', { name: me.fullName }) : undefined} />
+      <PageHeader title={t('checkout.title')} sub={me?.name ? t('checkout.greeting', { name: me.name }) : undefined} />
       <form className="mx-auto grid max-w-6xl gap-6 px-4 py-8 lg:grid-cols-[1fr_24rem]"
         onSubmit={(e) => { e.preventDefault(); if (!method) return toast.error(t('checkout.chooseMethod')); place.mutate() }}>
         <Card>
           <CardContent className="space-y-4">
             <h2 className="font-semibold">{t('checkout.info')}</h2>
             <div className="grid gap-4 sm:grid-cols-2">
-              {field(t('checkout.fullName'), me?.fullName)}
-              {field(t('checkout.phone'), me?.phone)}
+              {field(t('checkout.fullName'), me?.name)}
               {field(t('checkout.email'), me?.email)}
-              {field(t('checkout.address'), me?.address)}
             </div>
             <Button asChild variant="link" className="h-auto p-0"><Link to="/profile">{t('checkout.updateProfile')}</Link></Button>
             <div className="space-y-1.5">
@@ -87,7 +84,7 @@ export function Checkout() {
             <div className="flex justify-between border-t pt-3 text-lg font-semibold"><span>{t('checkout.total')}</span><span className="text-primary">{formatVnd(total)}</span></div>
             <div className="space-y-2">
               <Label>{t('checkout.method')}</Label>
-              <RadioGroup value={method} onValueChange={(v) => setMethod(v as PaymentMethod)}>
+              <RadioGroup value={method} onValueChange={(v) => setMethod(v as 'COD' | 'ATM')}>
                 {(['COD', 'ATM'] as const).map((m) => (
                   <Label key={m} htmlFor={`pay-${m}`} className="flex cursor-pointer items-center gap-3 rounded-md border p-3 font-normal">
                     <RadioGroupItem value={m} id={`pay-${m}`} /> {t(`checkout.${m.toLowerCase()}`)}

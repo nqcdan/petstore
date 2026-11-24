@@ -37,7 +37,8 @@ export async function request<T>(
   if (!res.ok) {
     let message = res.statusText
     try {
-      message = (await res.json()).message ?? message
+      const body = await res.json()
+      message = body.detail ?? body.message ?? body.title ?? message
     } catch {
       /* body is not JSON */
     }

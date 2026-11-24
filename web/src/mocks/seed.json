@@ -5,360 +5,360 @@
    "type": "DOG",
    "sortName": "Nem-cho-Cho-Meo",
    "price": 450000,
-   "pic": "product1.png",
    "description": "Nệm cho chó mèo hình chữ nhật được thiết kế dành riêng cho vật nuôi.",
-   "id": 1
+   "id": 1,
+   "imageUrl": "/img/product/product1.png"
   },
   {
    "name": "Balo phi hành gia cho Chó/Mèo",
    "type": "CAT",
    "sortName": "Balo-Phi-hanh-gia",
    "price": 200000,
-   "pic": "product2.jpg",
    "description": "Balo Phi Hành Gia Cho Chó Mèo có thiết kế thông minh, thông thoáng giúp cho thú cưng của bạn thoải mái và an toàn khi di chuyển. Vòm kính có thể thay thế bằng lưới nhựa và phù hợp với nhu cầu của bạn. Lưới nhựa tặng kèm ngay bên trong Balo phi hành gia mà bạn không cần phải mua thêm. ",
-   "id": 2
+   "id": 2,
+   "imageUrl": "/img/product/product2.jpg"
   },
   {
    "name": "Áo thời trang Tết cho Chó/Mèo",
    "type": "CAT",
    "sortName": "Quan-ao-thoi-trang-Cho-Meo",
    "price": 120000,
-   "pic": "product3.jpg",
    "description": "Quần áo chó mèo sẽ giúp cho thú cưng trở nên sành điệu.",
-   "id": 3
+   "id": 3,
+   "imageUrl": "/img/product/product3.jpg"
   },
   {
    "name": "Dây xích kỉ luật cho Chó",
    "type": "DOG",
    "sortName": "Day-xich-Cho",
    "price": 90000,
-   "pic": "product4.jpg",
    "description": "Dây xích kỷ luật cho chó phù hợp với thú cưng quá nghịch ngợm, thích chạy nhảy khi đi ra ngoài hay những chú chó lớn hung hăng, chó mèo đang trong quá trình huấn luyện.",
-   "id": 4
+   "id": 4,
+   "imageUrl": "/img/product/product4.jpg"
   },
   {
    "name": "Tã bỉm cho Chó/Mèo",
    "type": "DOG",
    "sortName": "Ta-bim Cho-Meo",
    "price": 140000,
-   "pic": "product5.jpg",
    "description": "Tã bỉm cho chó mèo với thiết kế đặc biệt bên trong chứa chất kháng khuẩn cao, có đầy đủ các kích thước khác nhau dành cho tất cả các giống chó từ nhỏ tới lớn.",
-   "id": 5
+   "id": 5,
+   "imageUrl": "/img/product/product5.jpg"
   },
   {
    "name": "Dầu tắm Chó-Mèo lông dài TRIXIE Langhaar Shampoo",
    "type": "DOG",
    "sortName": "Dau-tam-TRIXIE-Langhaar-Shampoo",
    "price": 180000,
-   "pic": "product6.jpg",
    "description": "Dầu tắm chó mèo lông dài TRIXIE Langhaar Shampoo dành cho tất cả các giống chó. Đặc biệt là những giống chó có bộ lông dài và dày như Poodle, Phốc sóc, Alaska, Samoyed…",
-   "id": 6
+   "id": 6,
+   "imageUrl": "/img/product/product6.jpg"
   },
   {
    "name": "Khay vệ sinh cho Chó/Mèo",
    "type": "CAT",
    "sortName": "Khay-ve-sinh Cho-Meo",
    "price": 390000,
-   "pic": "product7.jpg",
    "description": "Khay vệ sinh cho chó thành cao IRIS với thiết kế hình vuông nhỏ gọn, thuận tiện cho việc cún cưng đi vệ sinh. ",
-   "id": 7
+   "id": 7,
+   "imageUrl": "/img/product/product7.jpg"
   },
   {
    "name": "Nhà cho chó bằng nhựa dáng vuông",
    "type": "DOG",
    "sortName": "Nha-cho-cho-nhua-dang-vuong",
    "price": 690000,
-   "pic": "product8.jpg",
    "description": "Nhà cho chó bằng nhựa dáng vuông được sản xuất trên dây chuyền công nghệ hiện đại, sản phẩm với màu sắc đa dạng.",
-   "id": 8
+   "id": 8,
+   "imageUrl": "/img/product/product8.jpg"
   },
   {
    "name": "Bát ăn inox cho Chó-Mèo",
    "type": "DOG",
    "sortName": "Bat-an-inox",
    "price": 90000,
-   "pic": "product9.jpg",
    "description": "Bát ăn inox cho chó mèo có vỏ được làm từ chất liệu nhựa cao cấp không gây hại.",
-   "id": 9
+   "id": 9,
+   "imageUrl": "/img/product/product9.jpg"
   },
   {
    "name": "Bình uống nước cho Chó/Mèo đi dạo",
    "type": "DOG",
    "sortName": "Binh-uong-nuoc",
    "price": 90000,
-   "pic": "product10.jpg",
    "description": "Bình uống nước cho chó mèo đi dạo không thể thiếu dành cho thú cưng hay đi offline, đi dạo và hoạt động thể lực thường xuyên.",
-   "id": 10
+   "id": 10,
+   "imageUrl": "/img/product/product10.jpg"
   },
   {
    "name": "Đồ chơi cho Chó-Mèo bằng bông chút chít ELITE hình con kỳ lân",
    "type": "DOG",
    "sortName": "Do-choi-chut-chit",
    "price": 150000,
-   "pic": "product11.jpg",
    "description": "Đồ chơi cho chó mèo bằng bông chút chít không gây độc hại cho thú cưng.\\r\\n",
-   "id": 11
+   "id": 11,
+   "imageUrl": "/img/product/product11.jpg"
   },
   {
    "name": "Đồ chơi cho chó bằng cao su SOLEIL hình xương",
    "type": "DOG",
    "sortName": "Do-choi-cao-su",
    "price": 150000,
-   "pic": "product12.jpg",
    "description": "Đồ chơi cho chó với chất liệu thừng kết hợp vòng cao su cao cấp tự nhiên, không gây độc hại cho chó. Có độ bền cao và khả năng đàn hồi tốt.",
-   "id": 12
+   "id": 12,
+   "imageUrl": "/img/product/product12.jpg"
   },
   {
    "name": "Đồ chơi chó nhồi bông IKEA Hoppig Bernese Mountain",
    "type": "DOG",
    "sortName": "Do-choi-nhoi-bong",
    "price": 390000,
-   "pic": "product13.jpg",
    "description": "Đồ chơi chó nhồi bông IKEA Hoppig Bernese Mountain có nhiều hình dạng ngộ nghĩnh đáng yêu thu hút sự chú ý của những người bạn 4 chân.",
-   "id": 13
+   "id": 13,
+   "imageUrl": "/img/product/product13.jpg"
   },
   {
    "name": "Roi huấn luyện chó mèo PAW",
    "type": "CAT",
    "sortName": "Roi-huan-luyen",
    "price": 90000,
-   "pic": "product14.jpg",
    "description": "Roi huấn luyện chó mèo PAW được dùng để huấn luyện, hướng dẫn, đào tạo thú cưng. Việc sử dụng roi huấn luyện cải thiện nhanh chóng thái độ của thú cưng với mệnh lệnh của bạn. Đệm cao su đàn hồi không lo cún cưng bị đau, bị thương.",
-   "id": 14
+   "id": 14,
+   "imageUrl": "/img/product/product14.jpg"
   },
   {
    "name": "Lược chải lông chó mèo DELE có nút bấm",
    "type": "CAT",
    "sortName": "Luoc-chải-long",
    "price": 130000,
-   "pic": "product15.jpg",
    "description": "Lược chải lông chó mèo có nút bấm phù hợp với tất cả các giống chó. Bao gồm cả các giống chó nhỏ và chó lớn như Poodle, Phốc sóc, Samoyel, Alaska…",
-   "id": 15
+   "id": 15,
+   "imageUrl": "/img/product/product15.jpg"
   },
   {
    "name": "Tông đơ cạo lông chó mèo JOYU PHC 950",
    "type": "DOG",
    "sortName": "Tong-do-cao-long",
    "price": 999000,
-   "pic": "product16.jpg",
    "description": "Tông đơ cạo lông chó mèo JOYU PHC 950 sử dụng chức năng pin sạc điện kèm theo các phụ kiện. Sản phẩm được gia công thiết kế siêu chính xác với lưỡi dao bằng thép không gỉ, dễ tháo rời và vệ sinh. Độ rung thấp, thiết kế tiếng ồn thấp. Sản phẩm phù hợp nhất với tất cả giống chó.",
-   "id": 16
+   "id": 16,
+   "imageUrl": "/img/product/product16.jpg"
   },
   {
    "name": "Máy mài móng chó mèo JOYU Pet Nail Grinder N8",
    "type": "CAT",
    "sortName": "May-mao-mong-JOYU",
    "price": 340000,
-   "pic": "product17.jpg",
    "description": "Máy mài móng chó mèo – JOYU Pet Nail Grinder N8 thiết kế tiện dụng, bạn có thể cảm thấy tay cầm rất thoải mái và máy dễ vận hành. Bạn có thể dễ dàng mài móng chó mèo của bạn ở nhà. Có 3 chức năng mài móng theo tốc độ: nhỏ, trung bình-lớn và nhanh. ",
-   "id": 17
+   "id": 17,
+   "imageUrl": "/img/product/product17.jpg"
   },
   {
    "name": "Máy sấy lông chó mèo chuyên dụng CODOS CP160",
    "type": "DOG",
    "sortName": "May-say-long",
    "price": 2300000,
-   "pic": "product18.jpg",
    "description": "Máy sấy lông chó mèo chuyên dụng với công suất 1600w màu tím theo tiêu chuẩn chính thức của Anh. Sản phẩm với công suất cực lớn. Tốc độ thổi sấy gió nhanh, không gây ồn và phạm vi sấy rộng. Phù hợp với tất cả các giống chó mèo như Poodle, Alaska, Husky…",
-   "id": 18
+   "id": 18,
+   "imageUrl": "/img/product/product18.jpg"
   },
   {
    "name": "Dây dắt cho chó mèo tự động DELE 007G",
    "type": "DOG",
    "sortName": "Day-dat",
    "price": 200000,
-   "pic": "product19.jpg",
    "description": "Dây dắt cho chó mèo tự động DELE là sản phẩm được thiết kế tay cầm bằng nhựa cao cấp.Cùng với nút bấm giúp kéo dài hoặc thu gọn dây dắt dễ dàng.Không còn trở nên cồng kềnh và bị rối như các dây dắt thông thường khác.Dây dắt với chất liệu 100% nylon, cực chắc chắn.Đầu dây có móc nối vào vòng cổ khi dắt cho đi dạo mà không hề gây hại cho da và lông của thú cưng.",
-   "id": 19
+   "id": 19,
+   "imageUrl": "/img/product/product19.jpg"
   },
   {
    "name": "Rọ mõm chó hình mỏ vịt PAW Aduck",
    "type": "DOG",
    "sortName": "Ro-mom",
    "price": 90000,
-   "pic": "product20.jpg",
    "description": "Rọ mõm chó hình mỏ vịt PAW Aduck được sản xuất từ nhựa silic mềm, màu sắc đẹp. Không độc không có mùi lạ.",
-   "id": 20
+   "id": 20,
+   "imageUrl": "/img/product/product20.jpg"
   },
   {
    "name": "Lồng vận chuyển chó mèo IRIS",
    "type": "CAT",
    "sortName": "Long-vạn-chuyen",
    "price": 1020000,
-   "pic": "product21.jpg",
    "description": "Lồng vận chuyển chó mèo IRIS sản xuất theo tiêu chuẩn quốc tế. Phía trên có tay cầm, tiện cho việc xách chó mèo, di chuyển dễ dàng. Lồng vận chuyển chó mèo IRIS kích thước 51 x 32 x 28.5 (cm)",
-   "id": 21
+   "id": 21,
+   "imageUrl": "/img/product/product21.jpg"
   },
   {
    "name": "Chuồng sắt cho chó mèo có mái IRIS",
    "type": "DOG",
    "sortName": "Chuong-sat",
    "price": 2220000,
-   "pic": "product22.jpg",
    "description": "Chuồng sắt cho chó mèo có mái IRIS được thiết kế thông minh, đảm bảo chắc chắn, an toàn cho thú cưng.",
-   "id": 22
+   "id": 22,
+   "imageUrl": "/img/product/product22.jpg"
   },
   {
    "name": "Chuồng gỗ cho chó mèo RICHELL",
    "type": "DOG",
    "sortName": "CHuong-go",
    "price": 2250000,
-   "pic": "product23.jpg",
    "description": "Chuồng gỗ cho chó mèo RICHELL RC03 với chất liệu khung gỗ tự nhiên, hàng rào thép sơn tĩnh điện, lót sàn nhựa ABS (màu đen).",
-   "id": 23
+   "id": 23,
+   "imageUrl": "/img/product/product23.jpg"
   },
   {
    "name": "Chuồng quây cho chó bằng nhựa nan mỏng AUPET",
    "type": "DOG",
    "sortName": "Chuong-quay",
    "price": 1550000,
-   "pic": "product24.jpg",
    "description": "Chuồng quây cho chó bằng nhựa nan mỏng AUPET 161 được sản xuất bởi chất liệu nhựa cao cấp PP an toàn cho thú cưng, thân thiện với môi trường, không gây độc hại.",
-   "id": 24
+   "id": 24,
+   "imageUrl": "/img/product/product24.jpg"
   },
   {
    "name": "Trụ cào móng cho mèo màu đỏ đen",
    "type": "CAT",
    "sortName": "Trụ-cao-mong",
    "price": 29000,
-   "pic": "product25.jpg",
    "description": "Trụ cào móng cho mèo màu đỏ đen được làm từ thừng sisal, sisal là loại vật liệu rất chắc, bền được làm thành dạng dây. ",
-   "id": 25
+   "id": 25,
+   "imageUrl": "/img/product/product25.jpg"
   },
   {
    "name": "Cát vệ sinh cho mèo siêu vón IRIS",
    "type": "CAT",
    "sortName": "Cat-ve-sinh",
    "price": 150000,
-   "pic": "product26.jpg",
    "description": "Cát vệ sinh cho mèo siêu vón IRIS với công dụng vón thành cục siêu nhanh.",
-   "id": 26
+   "id": 26,
+   "imageUrl": "/img/product/product26.jpg"
   },
   {
    "name": "Sữa tắm cho mèo BBN For Cats Shampoo",
    "type": "CAT",
    "sortName": "Sưa-tam-BBN",
    "price": 150000,
-   "pic": "product27.jpg",
    "description": "Sữa tắm cho mèo BBN For Cats Shampoo với chiết xuất từ quả đào tươi, tạo nên mùi hương dễ chịu, thơm mát cả ngày hoạt động.",
-   "id": 27
+   "id": 27,
+   "imageUrl": "/img/product/product27.jpg"
   },
   {
    "name": "Bộ đồ chơi cho mèo bằng cói BOBO",
    "type": "CAT",
    "sortName": "Bọ-do-choi-bằng-coi",
    "price": 60000,
-   "pic": "product28.jpg",
    "description": "Bộ đồ chơi cho mèo bằng cói BOBO kích thước size S với chất liệu bằng cói tự nhiên rất an toàn và không gây độc hại. ",
-   "id": 28
+   "id": 28,
+   "imageUrl": "/img/product/product28.jpg"
   },
   {
    "name": "Đồ chơi cho chó mèo Paw hình con gà",
    "type": "CAT",
    "sortName": "Do-choi-con-ga",
    "price": 50000,
-   "pic": "product29.jpg",
    "description": "Đồ chơi cho chó mèo Paw hình con gà có một tiếng kêu rất đặc biệt, họ nói tiếng kêu của sản phẩm nghe rất khổ sở nên họ đều gọi sản phẩm này là chú gà có tiếng kêu thảm thiết.Sản phẩm được làm từ nhựa dẻo, rất an toàn với môi trường, khỏe mạnh, không hề có độc tố, không làm lọt hơi ra ngoài… chắc chắn thú cưng của bạn sẽ thích khi nghe tiếng kêu của sản phẩm này đấy.",
-   "id": 29
+   "id": 29,
+   "imageUrl": "/img/product/product29.jpg"
   },
   {
    "name": "Chuồng mèo 3 tầng bằng sắt cao cấp sàn kín AUPET",
    "type": "CAT",
    "sortName": "Chuong-meo-3-tang",
    "price": 2900000,
-   "pic": "product30.jpg",
    "description": "Chuồng mèo 3 tầng bằng sắt cao cấp sàn kín AUPET có 2 kích cỡ cho bạn lựa chọn:Size nhỏ: 73 – 52 – 160cm.\\r\\nSize to: 91 – 62 – 167cm.",
-   "id": 30
+   "id": 30,
+   "imageUrl": "/img/product/product30.jpg"
   },
   {
    "name": "Vòng cổ chống ve chó BIOLINE Flea and Tick Collar For Dogs",
    "type": "DOG",
    "sortName": "Vong-co-chong-ve",
    "price": 60000,
-   "pic": "product31.jpg",
    "description": "Vòng cổ chống ve chó BIOLINE Flea and Tick Collar For Dogs là sản phẩm ngăn ngừa và điều trị ve, bọ chét cho chó từ 8 tuần tuổi trở lên.",
-   "id": 31
+   "id": 31,
+   "imageUrl": "/img/product/product31.jpg"
   },
   {
    "name": "Thuốc nhỏ gáy trị ve chó Frontline Plus",
    "type": "DOG",
    "sortName": "Thuoc-trị-ve",
    "price": 250000,
-   "pic": "product32.jpg",
    "description": "Đáp ứng tất cả nhu cầu đó của bạn, Thuốc nhỏ gáy trị ve chó Frontline Plus MERIAL 20 – 40kg sẽ giúp bạn thật an tâm khi thú cưng sạch rận bọ mà lại an toàn. ",
-   "id": 32
+   "id": 32,
+   "imageUrl": "/img/product/product32.jpg"
   },
   {
    "name": "Banh Bóng Rổ Mon Ami Toy Vinyl",
    "type": "DOG",
    "sortName": "Banh-bong-rỏ",
    "price": 32000,
-   "pic": "product33.jpg",
    "description": "Thương hiệu Việt Nam.Chất liệu nhựa tổng hợp cao cấp, an toàn cho chó khi chơi đùa.Giúp chó vận động, hạn chế những bệnh về cân nặng.",
-   "id": 33
+   "id": 33,
+   "imageUrl": "/img/product/product33.jpg"
   },
   {
    "name": "Xương Gai Làm Sạch Răng Mon Ami Toy Dental",
    "type": "DOG",
    "sortName": "Xuong-gai-sạch-rang",
    "price": 39000,
-   "pic": "product34.jpg",
    "description": "Thương hiệu Việt Nam.Hỗ trợ vệ sinh răng cho chó, giúp răng chó khỏe mạnh hơn.Chất liệu cao cấp, không gây hại đến sức khỏe của chó.",
-   "id": 34
+   "id": 34,
+   "imageUrl": "/img/product/product34.jpg"
   },
   {
    "name": "Đồ Chơi Rượt Bắt Pawise Play",
    "type": "CAT",
    "sortName": "Do-choi-ruot-bat",
    "price": 484000,
-   "pic": "product35.jpg",
    "description": "Thương hiệu nổi tiếng ở Châu Âu và Mỹ.- Kích thích sự tò mò của mèo.- Hạn chế lười nhát ở mèo.",
-   "id": 35
+   "id": 35,
+   "imageUrl": "/img/product/product35.jpg"
   },
   {
    "name": "Bông Vụ Chứa Bánh Thưởng Pawise Play",
    "type": "DOG",
    "sortName": "Bong-vụ-Pawise",
    "price": 200000,
-   "pic": "product36.jpg",
    "description": "Thương hiệu nổi tiếng ở Châu Âu và Mỹ.Thiết kế để nhét bánh thưởng bên trong nhằm kích thích chó chơi đùa.",
-   "id": 36
+   "id": 36,
+   "imageUrl": "/img/product/product36.jpg"
   },
   {
    "name": "Máy Bắn Banh Tự Động AFP Interactives",
    "type": "DOG",
    "sortName": "May-ban-banh",
    "price": 626000,
-   "pic": "product37.jpg",
    "description": "Thiết kế tại Pháp.Tự động bắn banh giúp chó chơi một mình.Tự động tặng bánh thưởng cho chó.Hỗ trợ giảm stress cho chó.Sản phẩm kèm theo 6 trái banh chính hãng.",
-   "id": 37
+   "id": 37,
+   "imageUrl": "/img/product/product37.jpg"
   },
   {
    "name": "Banh Dùng Cho Máy Bắn Tự Động AFP Interactives",
    "type": "DOG",
    "sortName": "Banh-dung-cho-may-ban",
    "price": 100000,
-   "pic": "product38.jpg",
    "description": "Sản phẩm của Pháp.Được thiết kế đặc biệt hỗ trợ sự phát triển răng của chó.Phù hợp với máy bắn banh tự động AFP.1 lốc 6 trái banh",
-   "id": 38
+   "id": 38,
+   "imageUrl": "/img/product/product38.jpg"
   },
   {
    "name": "Bàn Chải Đánh Răng Hai Đầu Cho Chó Mèo Beaphar Toothbrush",
    "type": "CAT",
    "sortName": "Ban-chải-đanh-rang",
    "price": 112000,
-   "pic": "product39.jpg",
    "description": "Thiết kế 2 đầu đặc biệt giúp chải răng cho chó mèo sạch hơn.Được thiết kế phù hợp với kẽ răng và kích cỡ răng của thú cưng.",
-   "id": 39
+   "id": 39,
+   "imageUrl": "/img/product/product39.jpg"
   },
   {
    "name": "Kềm Cắt Móng Mon Ami Enzo",
    "type": "CAT",
    "sortName": "Kem-cat-mong",
    "price": 60000,
-   "pic": "product40.jpg",
    "description": " Sản xuất tại Việt Nam.Thiết kế chuẩn, không gây khó chịu cho chó mèo khi sử dụng.Thiết kế cầm tay, gọn nhẹ.",
-   "id": 40
+   "id": 40,
+   "imageUrl": "/img/product/product40.jpg"
   }
  ],
  "foods": [
@@ -367,297 +367,297 @@
    "type": "SNACK",
    "sortName": "banh-thuong-cho-cho-dang-que",
    "price": 55000,
-   "pic": "food.jpg",
    "description": "NurCollagen làm giảm các dấu hiệu lão hóa, kẽm giúp duy trì tính toàn vẹn của da và lông",
-   "id": 1001
+   "id": 1001,
+   "imageUrl": "/img/product/food.jpg"
   },
   {
    "name": "Pate cho chó vị cơm gà IRIS Chicken & Rice",
    "type": "WET",
    "sortName": "Pate-cho-cho-vi-com-ga",
    "price": 60000,
-   "pic": "food1.jpg",
    "description": "Đặc biệt với công thức chế biến riêng tạo nên khẩu phần ăn ngon miệng cho thú cưng, cung cấp đầy đủ chất đạm, béo, Vitamin B1 và khoáng chất,kiểm soát trọng lượng của chó,bạn có thể dùng làm thức ăn chính hoặc ăn kết hợp với các loại thức ăn khác cũng được, pate cho chó vị cơm gà IRIS Chicken & Rice làm hài lòng cả những chú chó kén ăn nhất.",
-   "id": 1002
+   "id": 1002,
+   "imageUrl": "/img/product/food1.jpg"
   },
   {
    "name": "Thức ăn cho chó kéo xe MOSHM Sled Dog Grain Free Nutrition",
    "type": "DRY",
    "sortName": "Thuc-an-cho-cho-keo-xe",
    "price": 265000,
-   "pic": "food2.jpg",
    "description": "Thức ăn cho chó kéo xe MOSHM cung cấp đầy đủ chất dinh dưỡng, giúp duy trì độ bóng mượt và màu lông của chó, hỗ trợ hệ tiêu hóa hoạt động hiệu quả,tăng sức đề kháng cho chó, giúp chó con lớn nhanh, khỏe mạnh và duy trì thể trạng lý tưởng ở chó trưởng thành.",
-   "id": 1003
+   "id": 1003,
+   "imageUrl": "/img/product/food2.jpg"
   },
   {
    "name": "Xương gặm sạch răng cho chó vị thịt bò VEGEBRAND Orgo Beef Flavor Nutrients",
    "type": "DRY",
    "sortName": "Xuong-gam-sach-rang-cho-cho-vi-thit-bo",
    "price": 50000,
-   "pic": "food3.jpg",
    "description": "Xương gặm sạch răng cho chó vị thịt bò VEGEBRAND Orgo Beef Flavor Nutrients làm sạch răng hiệu quả, với thiết kế xương hình bàn chải đánh răng, thúc đẩy khả năng nhai của thú cưng, hiệu quả trong việc làm sạch răng, loại bỏ cao răng, mảng bám, không còn tình trạng răng vàng, nướu chắc khỏe,hàm lượng canxi cao giúp xương thú cưng luôn khỏe, răng chắc, hơn nữa sản phẩm xương gặm còn thúc đẩy hệ tiêu hóa, tránh những bệnh về đường ruột.",
-   "id": 1004
+   "id": 1004,
+   "imageUrl": "/img/product/food3.jpg"
   },
   {
    "name": "Thức ăn cho chó con ROYAL CANIN Chihuahua Puppy",
    "type": "DRY",
    "sortName": "Thuc-an-cho-cho-con-chihuahua",
    "price": 135000,
-   "pic": "food4.jpg",
    "description": "ROYAL CANIN Chihuahua Puppy được chế tạo với công thức đặc biệt, phù hợp với hàm răng nhỏ. Thích nghi chế độ ăn và nhai của giống chó Chihuahua, sản phẩm được biết đến như kích thích sự thèm ăn kén chọn của chó Chihuahua. Do đó, đem lại bữa ăn ngon miệng và được đáp ứng đầy đủ những dưỡng chất cần thiết. ROYAL CANIN Chihuahua Puppy thỏa mãn sự thèm ăn của Chihuahua. Với sự kết hợp của ba yếu tố: lựa chọn cẩn thận, hương thơm đặc biệt và hình dáng thức ăn tùy chỉnh phù hợp với chúng, thức ăn còn giúp làm giảm mùi phân. Giúp hỗ trợ tiêu hóa tốt với protein dễ tiêu hóa (LIP), một hàm lượng chất xơ thích hợp và các nguồn carbohydrate chất lượng cao.",
-   "id": 1005
+   "id": 1005,
+   "imageUrl": "/img/product/food4.jpg"
   },
   {
    "name": "Nước sốt pate cho mèo CIAO vị thịt gà, cá ngừ & cá ngần trắng IC-86C",
    "type": "WET",
    "sortName": "Nuoc-sot-pate-cho-meo-vi-thit-ga",
    "price": 25000,
-   "pic": "food5.jpg",
    "description": "Vitamin E & Selen giúp bảo vệ tổn thương do các gốc tự do gây ra (Chất chống oxy hóa), protein giúp phát triển cơ bắp và sửa chữa các mô.",
-   "id": 1006
+   "id": 1006,
+   "imageUrl": "/img/product/food5.jpg"
   },
   {
    "name": "Thức ăn cho mèo tiêu hóa búi lông ROYAL CANIN Hairball Care",
    "type": "DRY",
    "sortName": "Thuc-an-cho-meo-tieu-hoa-bui-long",
    "price": 110000,
-   "pic": "food6.jpg",
    "description": "Thức ăn cho mèo kiểm soát búi lông ROYAL CANIN Hairball Care đặc trị cho mèo dễ bị tắc lông, viêm búi lông. Kiểm soát búi lông cho mèo giúp bổ sung chất xơ tự nhiên, giúp bài tiết búi lông qua đường tiêu hóa cho mèo. Trị bệnh búi lông cho mèo. Hạt mã đề hỗ trợ tiêu hóa cho mèo, phòng các bệnh về đường tiêu hóa., kiểm soát búi lông cho mèo giúp bổ sung chất xơ tự nhiên, giúp bài tiết búi lông qua đường tiêu hóa cho mèo, trị bệnh búi lông cho mèo.",
-   "id": 1007
+   "id": 1007,
+   "imageUrl": "/img/product/food6.jpg"
   },
   {
    "name": "Pate cho mèo vị cá ngừ và gà IRIS Tuna & Chicken",
    "type": "WET",
    "sortName": "pate-cho-meo-vi-ca-ngu-va-ga",
    "price": 35000,
-   "pic": "food7.jpg",
    "description": "Pate cho mèo vị cá ngừ và gà IRIS Tuna & Chicken cung cấp đầy đủ chất đạm, béo, vitamin B1 và khoáng chất, cá ngừ bổ sung omega 3,6 hỗ trợ rất tốt cho da và lông của mèo cưng, thịt gà cung cấp protein giúp mèo cưng duy trì nguồn năng lượng hoạt động mỗi ngày,ổn định huyết áp, bảo vệ gan và hệ thống tim mạch, cá ngừ chứa ít chất béo nhưng lại nhiều protein, vì vậy đảm bảo cung cấp năng lượng cho cơ thể mèo cưng. Vừa giảm nguy cơ béo phì hiệu quả. ",
-   "id": 1008
+   "id": 1008,
+   "imageUrl": "/img/product/food7.jpg"
   },
   {
    "name": "Bánh thưởng cho mèo vị cá hồi JERHIGH Jinny Salmon",
    "type": "SNACK",
    "sortName": "Banh-thuong-cho-meo-vi-ca-hoi",
    "price": 35000,
-   "pic": "food8.jpg",
    "description": "Bánh thưởng cho mèo vị cá hồi JERHIGH Jinny Salmon là món ăn được vô cùng yêu thích, là một món ăn được làm từ thịt gà và cá hồi thật, được chế biến với tiêu chuẩn chất lượng. Được đóng gói với Taurine, Vitamin E và dầu cá (Omega3,6),taurine là axit amin cần thiết., phân tích đảm bảo: Chất đạm 22% tối thiểu. Chất béo thô9% tối thiểu. Sợi thô tối đa 2%. Độ ẩm tối đa 20%.",
-   "id": 1009
+   "id": 1009,
+   "imageUrl": "/img/product/food8.jpg"
   },
   {
    "name": "Bánh thưởng cho chó vị thịt gà BUDGE Chicken Flavor",
    "type": "SNACK",
    "sortName": "banh-thuong-cho-cho-vi-thit-ga",
    "price": 60000,
-   "pic": "food10.jpg",
    "description": "Bánh thưởng cho chó vị thịt gà BUDGE Chicken Flavor với các thành phần từ tự nhiên tạo nên hương vị thơm ngon, bổ dưỡng. Sản phẩm giúp loại bỏ 99% những mảng bám răng cứng đầu, làm giảm mùi hôi miệng. Thúc đẩy hệ tiêu hóa và tránh được những bệnh về đường ruột. Bổ sung canxi giúp xương và răng luôn chắc khỏe. Kích thích hoạt động nhai của cún cưng",
-   "id": 1010
+   "id": 1010,
+   "imageUrl": "/img/product/food10.jpg"
   },
   {
    "name": "Xương cho chó gặm cỡ lớn VEGEBRAND 360 For Large Breed Dogs Bone",
    "type": "DRY",
    "sortName": "xuong-cho-cho-gam-co-lon",
    "price": 80000,
-   "pic": "food12.jpg",
    "description": "Xương cho chó gặm cỡ lớn VEGEBRAND 360 For Large Breed Dogs Bone hỗ trợ vấn đề răng miệng rất tốt cho thú cưng.\\r\\nHạn chế được mảng bám trong răng, làm giảm mùi hôi miệng.\\r\\nThúc đẩy quá trình trao đổi chất trong đường ruột.\\r\\nXương cho chó gặm cỡ lớn VEGEBRAND 360 For Large Breed Dogs Bone làm sạch răng toàn diện, loại bỏ 99% cao răng.\\r\\nHơi thở thơm tho, giảm mùi hôi miệng.\\r\\nHỗ trợ tiêu hóa tốt cho thú cưng. ",
-   "id": 1011
+   "id": 1011,
+   "imageUrl": "/img/product/food12.jpg"
   },
   {
    "name": "Pate cho chó vị gan và thịt gà JERHIGH Chicken & Liver",
    "type": "WET",
    "sortName": "pate-cho-cho-vi-gan-va-thit-ga",
    "price": 45000,
-   "pic": "food14.jpg",
    "description": "Pate cho chó vị gan và thịt gà JERHIGH Chicken & Liver là thực phẩm ướt bổ sung vitamin E giúp cún cưng có làn da và lông khỏe mạnh. Bổ sung protein và đạm giúp cún cưng có đầy đủ năng lượng. Duy trì các vận động vui chơi và chạy nhảy. Bạn có thể yên tâm rằng JJERHIGH Chicken & Liver có mọi thứ mà thú cưng của bạn cần để giữ sức khỏe, hạnh phúc và tràn đầy năng lượng. Hỗ trợ hệ tiêu hóa, thúc đấy quá trình trao đổi chất, cân bằng dinh dưỡng. Là phần thưởng ý nghĩa nhất cho những người bạn bốn chân.\\r\\n\\r\\nPate cho chó vị gan và thịt gà JERHIGH Chicken & Liver được đóng hộp vàng nhỏ gọn và tiện lợi. Phù hợp với bữa ăn hàng ngày của cún cưng. Bạn có thể dể dàng sử dụng. Có thể cho cún ăn trực tiếp hoặc trộn với thức ăn khô để chúng cảm thấy vui vẻ hơn. Thích hợp với cả những chú chó biếng và khảnh ăn nhất. Tùy chỉnh liều lượng theo chỉ số cân nặng của thú cưng.",
-   "id": 1012
+   "id": 1012,
+   "imageUrl": "/img/product/food14.jpg"
   },
   {
    "name": "Pate cho chó vị gan gà IRIS One Care Chicken Liverr",
    "type": "WET",
    "sortName": "pate-cho-cho-vi-gan-ga",
    "price": 35000,
-   "pic": "food15.jpg",
    "description": "Đặc biệt với công thức chế biến riêng tạo nên khẩu phần ăn ngon miệng cho thú cưng.\\r\\nBổ sung nhiều Protein, Vitamin đảm bảo một sức khỏe toàn diện hơn.\\r\\nTạo nên cảm giác thèm ăn cho cún cưng.\\r\\nPate cho chó vị gan gà IRIS One Care Chicken Liver làm hài lòng cả những chú chó kén ăn nhất.",
-   "id": 1013
+   "id": 1013,
+   "imageUrl": "/img/product/food15.jpg"
   },
   {
    "name": " Xương gặm cho chó vị sữa IRIS GN5M ",
    "type": "DRY",
    "sortName": "xuong-gam-cho-cho-vi-sua",
    "price": 145000,
-   "pic": "food17.jpg",
    "description": " Xương gặm cho chó vị sữa IRIS GN5M được làm bằng da bò, không có sản phẩm phụ từ da, không thêm chất màu. Tạo cảm giác ngon miệng và mùi thơm sữa tươi. Thành phần sữa, giúp răng chắc khỏe đồng thời có mùi thơm của sữa, lưu giữ hơi thở thơm mát. Đặc biệt hiệu quả ngăn chặn các mảng bám trên răng. Hạn sử dụng 16 tháng. ",
-   "id": 1014
+   "id": 1014,
+   "imageUrl": "/img/product/food17.jpg"
   },
   {
    "name": " Bánh thưởng cho chó dạng hạt VEGEBRAND Orgo Endi Chew Chicken Flavor ",
    "type": "SNACK",
    "sortName": "banh-thuong-cho-cho-dang-hat",
    "price": 50000,
-   "pic": "food19.jpg",
    "description": " Bánh thưởng cho chó dạng hạt VEGEBRAND Orgo Endi Chew Chicken Flavor với các thành phần từ tự nhiên cung cấp chất dinh dưỡng cực tốt cho thú cưng. Hỗ trợ da và lông trở nên mềm mượt hơn. Sản phẩm giúp loại bỏ 99% những mảng bám răng cứng đầu, làm giảm mùi hôi miệng. Thúc đẩy hệ tiêu hóa và tránh được những bệnh về đường ruột. ",
-   "id": 1015
+   "id": 1015,
+   "imageUrl": "/img/product/food19.jpg"
   },
   {
    "name": " Xương Canxi cho chó VEGEBRAND Orgo Calcium Bone ",
    "type": "DRY",
    "sortName": "xuong-canxi-cho-cho",
    "price": 65000,
-   "pic": "food20.jpg",
    "description": " Xương Canxi cho chó VEGEBRAND Orgo Calcium Bone chứa hàm lượng Canxi cao. Đảm bảo xương luôn chắc khỏe\\r\\n.Bổ sung năng lượng cho những hoạt động của thú cưng. Giúp làm sạch răng, loại bỏ triệt để những mảng cao răng cứng đầu\\r\\n.Giảm mùi hôi miệng của cún cưng\\r\\n.Sản phẩm xương gặm không chứa chất bảo quản, phù hợp với mọi kích cỡ và lứa tuổi ",
-   "id": 1016
+   "id": 1016,
+   "imageUrl": "/img/product/food20.jpg"
   },
   {
    "name": " Thức ăn cho chó con JOSERA Young Star ",
    "type": "DRY",
    "sortName": "thuc-an-cho-cho-con",
    "price": 100000,
-   "pic": "food22.jpg",
    "description": " Dễ tiêu hóa mà không có ngũ cốc.\\r\\nĐược thiết kế đặc biệt để tăng trưởng với tỷ lệ canxi / phosphor phù hợp.\\r\\nHàm lượng protein và năng lượng vừa phải.\\r\\nCũng thích hợp cho ăn chó trẻ vào tuổi trưởng thành mà không cần phải thay đổi thức ăn.\\r\\nCông thức này không chứa ngũ cốc và phù hợp với chế độ ăn không có hạt hàng ngày của những con chó khỏe mạnh và nhạy cảm.\\r\\nTỷ lệ canxi-phốt pho cân bằng, vitamin C và mangan và đồng ở dạng hơi hấp thụ hỗ trợ cấu trúc xương chắc khỏe và các khớp khỏe mạnh. ",
-   "id": 1017
+   "id": 1017,
+   "imageUrl": "/img/product/food22.jpg"
   },
   {
    "name": "  Thức ăn cho chó trưởng thành cỡ nhỏ EARTHBORN HOLISTIC Small Breed",
    "type": "DRY",
    "sortName": "thuc-an-cho-cho-truong-thanh-co-nho",
    "price": 595000,
-   "pic": "food23.jpg",
    "description": " Các nguồn protein cao cấp, chẳng hạn như bột thịt gà và bột cá trắng, hỗ trợ xây dựng và duy trì khối lượng cơ nạc của chú chó.\\r\\nVitamin, khoáng chất và Beta-carotene giúp duy trì hệ miễn dịch cho chó của bạn.\\r\\nKhông có ngũ cốc, gluten và khoai tây, công thức đặc biệt này là lý tưởng như một chế độ ăn thay thế ngũ cốc giàu protein.\\r\\nL-Carnitine giúp chuyển đổi chất béo cơ thể thành cơ bắp và năng lượng, hỗ trợ khối lượng cơ nạc và điều hòa cơ thể tổng thể.\\r\\nAxit béo Omega-6 và Omega-3 cân bằng đóng vai trò quan trọng trong việc thiết lập hàng rào lipid của da, nuôi dưỡng da và lông chó của bạn.\\r\\nĐược làm bằng các thành phần chất lượng cao và công nghệ chế biến, cung cấp khả năng tiêu hóa và hấp thụ chất dinh dưỡng tuyệt vời.\\r\\nEarthborn Holistic Small Breed được xây dựng để đáp ứng các mức dinh dưỡng được đưa ra bởi Hiệp hội kiểm soát dinh dưỡng thức ăn cho chó của Hoa Kỳ (AAFCO) cho tất cả các giai đoạn. ",
-   "id": 1018
+   "id": 1018,
+   "imageUrl": "/img/product/food23.jpg"
   },
   {
    "name": " Thức ăn cho chó trưởng thành JOSERA Mini Deluxe 15kg ",
    "type": "DRY",
    "sortName": "thuc-an-cho-cho-truong-thanh",
    "price": 200000,
-   "pic": "food24.jpg",
    "description": "Thịt cừu non thay vì thịt gia cầm.\\r\\nGiảm nguy cơ hình thành cao răng.\\r\\nLý tưởng như là dinh dưỡng không hạt dành cho chó con\\r\\nThức ăn cho chó trưởng thành JOSERA Mini Deluxe cung cấp cho thú y êu của chúng ta một bữa ăn không hề hối tiếc, đầy đủ hương vị nhưng dễ tiêu hóa. ",
-   "id": 1019
+   "id": 1019,
+   "imageUrl": "/img/product/food24.jpg"
   },
   {
    "name": " Thức ăn cho chó vị thịt vịt ANF Organic 6 Free Duck ",
    "type": "DRY",
    "sortName": "thuc-an-cho-cho-vi-thit-vit",
    "price": 95000,
-   "pic": "food26.jpg",
    "description": " Thức ăn cho chó vị thịt vịt ANF Organic 6 Free Duck bao gồm Thịt vịt là nguồn protein cao cấp tuyệt vời chứa các axit amin thiết yếu cân bằng\\r\\nThịt vịt cũng chứa nhiều sắt, kẽm, đồng, vitamin B1, B2, B6, B12…\\r\\nNhờ áp dụng phương pháp nghiền nhỏ trực tiếp thịt vịt thay vì sử dụng bột giúp giữ nguyên vị thịt và bảo toàn các chất dinh dưỡng bên trong ANF 6 FREE DUCK\\r\\nThức ăn cho chó vị thịt vịt ANF 6 Free Duck chứa nhiều hơn 40% chất chống oxy hóa thiên nhiên, nhờ vậy giúp tăng cường hệ miễn dịch cũng như giảm thiểu dị ứng gây ra do thức ăn. Giúp giảm các hiện tượng như kích ứng, viêm da atopic… ",
-   "id": 1020
+   "id": 1020,
+   "imageUrl": "/img/product/food26.jpg"
   },
   {
    "name": " Xương cho chó gặm vị cá hồi VEGEBRAND Meat Salmon Bone Small ",
    "type": "DRY",
    "sortName": "xuong-cho-cho-gam-vi-ca-hoi",
    "price": 60000,
-   "pic": "food27.jpg",
    "description": " Xương cho chó gặm vị cá hồi VEGEBRAND Meat Salmon Bone Small với thành phần từ tự nhiên không chất bảo quản.\\r\\nTạo nên hương vị thơm ngon, bổ dưỡng.\\r\\nLà một sản phẩm hỗ trợ cực tốt cho nướu răng của cún cưng, chắc và khỏe hơn.\\r\\nHạn chế những mảng bám trên răng hiệu quả.\\r\\nSản phẩm xương gặm có các kích cỡ phù hợp với khuôn miệng của thú cưng.\\r\\nCó kích thước size S và L phù hợp với miệng của thú cưng. ",
-   "id": 1021
+   "id": 1021,
+   "imageUrl": "/img/product/food27.jpg"
   },
   {
    "name": " Thức ăn cho chó con PRO PAC ULTIMATES Puppy Chicken & Brown Rice Formula ",
    "type": "DRY",
    "sortName": "thuc-an-cho-cho-con-pro-pac-ultimates",
    "price": 445000,
-   "pic": "food28.jpg",
    "description": " PRO PAC ULTIMATES Puppy Chicken & Brown Rice Formula cung cấp dinh dưỡng hoàn chỉnh và một chế độ ăn uống cân bằng cho chó con\\r\\nĐáp ứng các mức độ dinh dưỡng được đưa ra bởi Hiệp hội kiểm soát thức ăn của Mỹ (AAFCO) về danh mục dinh dưỡng trong thức ăn dành cho chó trong giai đoạn cho con bú, mang thai và tăng trưởng\\r\\nCung cấp thêm Protein, hình thành cơ bắp, các cơ quan và xương chắc khỏe. Tăng cường với DHA để giúp hỗ trợ phát triển não và mắt khỏe mạnh\\r\\nBột thịt gà thật là thành phần số 1 và Axit béo Omega cân bằng hỗ trợ làn da khỏe mạnh, áo lông và hệ miễn dịch\\r\\nThêm L-Carnitine giúp thú cưng của bạn đốt cháy chất béo và duy trì khối lượng cơ nạc. ",
-   "id": 1022
+   "id": 1022,
+   "imageUrl": "/img/product/food28.jpg"
   },
   {
    "name": " Pate cho chó vị bò và rau IRIS HRBV375 Beef & Vegetable ",
    "type": "WET",
    "sortName": "pate-cho-cho-vi-bo-va-rau",
    "price": 85000,
-   "pic": "food29.jpg",
    "description": " Pate cho chó vị bò và rau IRIS HRBV375 Beef & Vegetable bao gồm: gà, bò, cà rốt thái sợi, đậu nành xanh… Cung cấp đầy đủ dưỡng chất cho thú cưng trong mỗi bữa ăn. ",
-   "id": 1023
+   "id": 1023,
+   "imageUrl": "/img/product/food29.jpg"
   },
   {
    "name": " Thức ăn cho chó con ROYAL CANIN Shiba Inu Junior ",
    "type": "DRY",
    "sortName": "thuc-an-cho-cho-con-shiba",
    "price": 90000,
-   "pic": "food30.jpg",
    "description": " Thức ăn cho chó ROYAL CANIN Shiba Inu Junior với công thức đặc chế riêng cho nhu cầu dinh dưỡng của chó Shiba. Sản phẩm được chế biến theo công thức đề cao hệ miễn dịch, giúp da lông chắc khỏe. Bảo vệ da và lông. EPA/DHA: có tác dụng giúp da và lông phát triển khỏe mạnh. Tăng sức đề kháng. Chất chống oxy hóa CELT: hỗ trợ hệ miễn dịch của chó. ",
-   "id": 1024
+   "id": 1024,
+   "imageUrl": "/img/product/food30.jpg"
   },
   {
    "name": " Sữa bột cho chó BBN Goat’s Milk New Zealand ",
    "type": "MILK",
    "sortName": "sua-bot-cho-cho",
    "price": 320000,
-   "pic": "food31.jpg",
    "description": " Sản phẩm sữa bột cho chó BBN Goat’s Milk New Zealand được chế biến sản xuất từ sữa dê thô đặc biệt tại New Zealand trên dây chuyền công nghệ cao.\\r\\nĐảm bảo giữ được hàm lượng dinh dưỡng cao nhất.\\r\\nSản phẩm này có thể thay thế cho sữa chó mẹ với nguồn dinh dưỡng giàu Protein, Canxi, không chứa chất gây dị ứng dành cho chó ở mọi lứa tuổi có thể sử dụng.\\r\\nSữa bột cho chó BBN Goat’s Milk New Zealand rất tốt cho dạ dày của thú cưng.\\r\\nKích thích tiêu hóa tránh táo bón.\\r\\nThành phần có chứa cả EFG có trong sữa chó mẹ giúp bảo vệ dạ dày của chó con một cách tốt nhất. ",
-   "id": 1025
+   "id": 1025,
+   "imageUrl": "/img/product/food31.jpg"
   },
   {
    "name": " Bánh thưởng cho chó vị thịt bò BUDGE Beef Flavor ",
    "type": "SNACK",
    "sortName": "banh-thuong-cho-cho-vi-thit-bo",
    "price": 60000,
-   "pic": "food32.jpg",
    "description": " Bánh thưởng cho chó vị thịt bò BUDGE Beef Flavor bổ sung vitamin và khoáng chất thiết yếu cho cún cưng. Xương dinh dưỡng cho chó giúp làm sạch răng, loại bỏ 99% những mảng cao răng cứng đầu. Hơn nữa sản phẩm còn thúc đẩy hệ tiêu hóa, tránh những bệnh về đường ruột. Làm giảm mùi hôi miệng cho thú cưng. ",
-   "id": 1026
+   "id": 1026,
+   "imageUrl": "/img/product/food32.jpg"
   },
   {
    "name": " Pate cho chó vị thịt và rau củ IRIS Chicken Beef & Vegetable ",
    "type": "WET",
    "sortName": "pate-cho-cho-vi-thit-va-rau-cu",
    "price": 35000,
-   "pic": "food33.jpg",
    "description": " Đặc biệt với công thức chế biến riêng tạo nên khẩu phần ăn ngon miệng cho thú cưng.\\r\\nBổ sung protein đảm bảo một sức khỏe toàn diện hơn.\\r\\nThức ăn có chất xơ hỗ trợ hệ tiêu hóa cực tốt.\\r\\nPate cho chó vị thịt và rau củ IRIS Chicken Beef & Vegetable làm hài lòng những chú chó kén ăn nhất. ",
-   "id": 1027
+   "id": 1027,
+   "imageUrl": "/img/product/food33.jpg"
   },
   {
    "name": " Thức ăn cho chó MEC Wild Taste Nutrition for Poodle ",
    "type": "DRY",
    "sortName": "thuc-an-cho-cho-mec-wild",
    "price": 265000,
-   "pic": "food34.jpg",
    "description": " Thức ăn cho chó MEC Wild Taste Nutrition for Poodle được chế biến từ nguyên liệu hoàn toàn tự nhiên\\r\\nHương vị thơm ngon, phù hợp khẩu vị của chó\\r\\nKhông chứa chất bảo quản, chất tạo màu, tạo mùi và phụ gia thực phẩm độc hại\\r\\nGiảm các vấn đề về da và lông, giúp mắt chó Poodle luôn khỏe mạnh\\r\\nHạt thức ăn có kích thước phù hợp với hàm răng của chó, giúp làm sạch và bảo vệ răng miệng cho chó. ",
-   "id": 1028
+   "id": 1028,
+   "imageUrl": "/img/product/food34.jpg"
   },
   {
    "name": " Pate cho chó vị thịt bò và mề gà IRIS Beef & Chicken Gizzard ",
    "type": "WET",
    "sortName": "pate-cho-cho-vi-thit-bo-va-me-ga",
    "price": 60000,
-   "pic": "food35.jpg",
    "description": " Đặc biệt với công thức chế biến riêng tạo nên khẩu phần ăn ngon miệng cho thú cưng.\\r\\nCung cấp đầy đủ chất đạm, béo, Vitamin B1 và khoáng chất.\\r\\nKiểm soát trọng lượng của chó.\\r\\nBạn có thể dùng làm thức ăn chính hoặc ăn kết hợp với các loại thức ăn khác cũng được.\\r\\nPate cho chó vị thịt bò và mề gà IRIS Beef & Chicken Gizzard làm hài lòng cả những chú chó kén ăn nhất. ",
-   "id": 1029
+   "id": 1029,
+   "imageUrl": "/img/product/food35.jpg"
   },
   {
    "name": " Pate cho chó vị cá IRIS One Care Fish ",
    "type": "WET",
    "sortName": "pate-cho-cho-vi-ca",
    "price": 35000,
-   "pic": "food36.jpg",
    "description": " Đặc biệt với công thức chế biến riêng tạo nên khẩu phần ăn ngon miệng cho thú cưng.\\r\\nĐem lại nhiều chất dinh dưỡng cần thiết cho một ngày.\\r\\nĐảm bảo một sức khỏe toàn diện hơn.\\r\\nCá bổ sung omega 3, 6 giúp cho lông mềm mượt hơn, mắt sáng rõ hơn.\\r\\nPate cho chó vị cá IRIS One Care Fish tạo nên cảm giác thèm ăn cho cún cưng. ",
-   "id": 1030
+   "id": 1030,
+   "imageUrl": "/img/product/food36.jpg"
   },
   {
    "name": " Pate cho chó trưởng thành ROYAL CANIN Chihuahua Adult ",
    "type": "WET",
    "sortName": "pate-cho-cho-truong-thanh",
    "price": 55000,
-   "pic": "food37.jpg",
    "description": " Được chế biến đặc biệt với tất cả các nhu cầu dinh dưỡng của chú chó trưởng thành của bạn\\r\\nGiúp duy trì cơ khớp của Chihuahua khỏe mạnh và tăng cường sức khỏe thể chất của chó\\r\\nHỗ trợ sức khỏe làn da của Chihuahua để giúp duy trì lớp lông sáng bóng và đẹp\\r\\nTăng độ ngon miệng nhằm giúp thỏa mãn cơn thèm ăn của cả Chihuahua\\r\\nKích thích sự thèm ăn của Chihuahua ",
-   "id": 1031
+   "id": 1031,
+   "imageUrl": "/img/product/food37.jpg"
   },
   {
    "name": " Thức ăn cho chó trưởng thành JOSERA Josidog Agilo Sport ",
    "type": "DRY",
    "sortName": "thuc-an-cho-cho-truong-thanh-josera-josidog",
    "price": 100000,
-   "pic": "food38.jpg",
    "description": " Preulinotic inulin thúc đẩy hệ đường ruột\\r\\nTaurine giúp hỗ trợ chức năng tim, thị lực và khả năng sinh sản\\r\\nMột hàm lượng cao các chất chống oxy hóa có giá trị hỗ trợ các tế bào trong việc bảo vệ chống lại các gốc tự do\\r\\nCác axit béo có giá trị thúc đẩy làn da khỏe mạnh và một lớp lông sáng bóng\\r\\nNhiều vitamin và khoáng chất\\r\\nBiotine hỗ trợ da và áo khỏe mạnh, cũng như khuyến khích chuyển đổi hiệu quả protein, carbohydrate và chất béo\\r\\nDễ nhai và tiêu hóa ",
-   "id": 1032
+   "id": 1032,
+   "imageUrl": "/img/product/food38.jpg"
   },
   {
    "name": " Que bánh thưởng cho chó BOWWOW Stick Jerky Lamd ",
    "type": "SNACK",
    "sortName": "que-banh-thuong-cho-cho",
    "price": 40000,
-   "pic": "food39.jpg",
    "description": " Thành phần tươi sạch, thích hợp với mọi giống chó, lứa tuổi, cân nặng\\r\\nQue bánh thưởng cho chó BOWWOW Stick Jerky Lamd được làm từ thịt cừu tươi Úc, chứa hàm lượng protein cao, giúp làn da và bộ lông của chó khỏe mạnh, hỗ trợ hệ tiêu hóa và khả năng hấp thụ dưỡng chất. ",
-   "id": 1033
+   "id": 1033,
+   "imageUrl": "/img/product/food39.jpg"
   }
  ]
 }

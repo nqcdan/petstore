@@ -1,4 +1,4 @@
-import { CircleDollarSign, Package, ReceiptText, Users } from 'lucide-react'
+import { CircleDollarSign, ReceiptText, TrendingUp, Users } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Bar, BarChart, CartesianGrid, Cell, Line, LineChart, Pie, PieChart, XAxis, YAxis } from 'recharts'
 import { useAdminStats } from '@/api/queries'
@@ -18,11 +18,14 @@ export function Dashboard() {
   if (isError) return <p>{t('common.error')}</p>
   if (isPending) return <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">{Array.from({ length: 4 }, (_, i) => <Skeleton key={i} className="h-28" />)}</div>
 
+  // The API returns no grand totals: derive them from the 30-day series and the state counts.
+  const revenue = data.revenueByDay.reduce((s, d) => s + d.revenue, 0)
+  const paidOrders = data.revenueByDay.reduce((s, d) => s + d.orders, 0)
   const kpis = [
-    { label: t('admin.kpi.revenue'), value: formatVnd(data.totals.revenue), icon: CircleDollarSign },
-    { label: t('admin.kpi.orders'), value: data.totals.orders, icon: ReceiptText },
-    { label: t('admin.kpi.customers'), value: data.totals.customers, icon: Users },
-    { label: t('admin.kpi.items'), value: data.totals.items, icon: Package },
+    { label: t('admin.kpi.revenue'), value: formatVnd(revenue), icon: CircleDollarSign },
+    { label: t('admin.kpi.orders'), value: data.ordersByState.reduce((s, o) => s + o.count, 0), icon: ReceiptText },
+    { label: t('admin.kpi.customers'), value: data.totalCustomers, icon: Users },
+    { label: t('admin.kpi.avg'), value: formatVnd(paidOrders ? Math.round(revenue / paidOrders) : 0), icon: TrendingUp },
   ]
   const revenueConfig = { revenue: { label: t('admin.kpi.revenue'), color: 'var(--chart-1)' } } satisfies ChartConfig
   const stateConfig = Object.fromEntries((Object.keys(stateColor) as OrderState[]).map((s) => [s, { label: t(`state.${s}`), color: stateColor[s] }])) satisfies ChartConfig
@@ -76,7 +79,7 @@ export function Dashboard() {
         <CardHeader><CardTitle>{t('admin.topItems')}</CardTitle></CardHeader>
         <CardContent>
           <ChartContainer config={topConfig} className="h-64 w-full">
-            <BarChart data={data.topItems.map((i) => ({ ...i, short: i.name.length > 28 ? `${i.name.slice(0, 28)}…` : i.name }))} layout="vertical" margin={{ left: 8, right: 12 }}>
+            <BarChart data={data.topProducts.map((i) => ({ ...i, short: i.name.length > 28 ? `${i.name.slice(0, 28)}…` : i.name }))} layout="vertical" margin={{ left: 8, right: 12 }}>
               <CartesianGrid horizontal={false} />
               <YAxis dataKey="short" type="category" tickLine={false} axisLine={false} width={190} />
               <XAxis type="number" tickLine={false} axisLine={false} tickFormatter={compact} />

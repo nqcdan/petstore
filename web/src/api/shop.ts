@@ -1,56 +1,39 @@
 import { del, get, patch, post, put, request } from './http'
 import type {
-  AdminOrderQuery,
-  AdminStats,
-  CatalogInput,
-  CatalogItem,
-  CatalogKind,
-  CatalogQuery,
-  ContactInput,
-  CreateOrderInput,
-  Customer,
-  Employee,
-  Order,
-  OrderState,
-  Page,
-  PageParams,
-  Profile,
-  ProfileInput,
+  Account, AdminOrderQuery, AdminStats, CatalogInput, CatalogItem, CatalogKind, CatalogQuery, ContactInput, Me, OrderDetail,
+  OrderRequest, OrderState, OrderSummary, Page, PageParams,
 } from './types'
 
-// Public + customer endpoints (MATCH with phase A: /api/v1/...)
+// Public + customer endpoints
 export const shopApi = {
   listCatalog: (kind: CatalogKind, q: CatalogQuery) => get<Page<CatalogItem>>(`/${kind}`, { ...q }),
-  sendContact: (input: ContactInput) => post<void>('/contacts', input),
-  me: () => get<Profile>('/me'),
-  updateMe: (input: ProfileInput) => put<Profile>('/me', input),
-  uploadAvatar: (file: File) => {
-    const form = new FormData()
-    form.set('file', file)
-    return request<Profile>('POST', '/me/avatar', { form })
+  me: () => get<Me>('/me'),
+  myOrders: () => get<Page<OrderSummary>>('/orders', { size: 100 }),
+  myOrder: (code: string) => get<OrderDetail>(`/orders/${encodeURIComponent(code)}`),
+  createOrder: (input: OrderRequest) => post<OrderDetail>('/orders', input),
+  // Not in the REST API yet: the legacy JSP form post (/contact) is used instead.
+  sendContact: async (input: ContactInput) => {
+    const res = await fetch('/contact', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ ...input }) })
+    if (!res.ok) throw new Error(res.statusText)
   },
-  myOrders: () => get<Order[]>('/orders'),
-  myOrder: (id: number) => get<Order>(`/orders/${id}`),
-  createOrder: (input: CreateOrderInput) => post<Order>('/orders', input),
 }
 
-// Admin endpoints (MATCH with phase A: /api/v1/admin/**, role admin)
+// Admin endpoints (role admin)
 export const adminApi = {
   stats: () => get<AdminStats>('/admin/stats'),
-  listCatalog: (kind: CatalogKind, q: PageParams) => get<Page<CatalogItem>>(`/admin/${kind}`, { ...q }),
+  listCatalog: (kind: CatalogKind, q: PageParams & { type?: string }) => get<Page<CatalogItem>>(`/admin/${kind}`, { ...q }),
   createCatalog: (kind: CatalogKind, input: CatalogInput) => post<CatalogItem>(`/admin/${kind}`, input),
-  updateCatalog: (kind: CatalogKind, id: number, input: CatalogInput) =>
-    put<CatalogItem>(`/admin/${kind}/${id}`, input),
+  updateCatalog: (kind: CatalogKind, id: number, input: CatalogInput) => put<CatalogItem>(`/admin/${kind}/${id}`, input),
   deleteCatalog: (kind: CatalogKind, id: number) => del(`/admin/${kind}/${id}`),
-  // returns the stored file name, to be put in CatalogInput.pic
-  uploadImage: (file: File) => {
+  // image belongs to an existing item, so a new item is created first
+  uploadImage: (kind: CatalogKind, id: number, file: File) => {
     const form = new FormData()
     form.set('file', file)
-    return request<{ filename: string }>('POST', '/admin/uploads', { form })
+    return request<CatalogItem>('POST', `/admin/${kind}/${id}/image`, { form })
   },
-  listOrders: (q: AdminOrderQuery) => get<Page<Order>>('/admin/orders', { ...q }),
-  getOrder: (id: number) => get<Order>(`/admin/orders/${id}`),
-  setOrderState: (id: number, state: OrderState) => patch<Order>(`/admin/orders/${id}/state`, { state }),
-  listCustomers: (q: PageParams) => get<Page<Customer>>('/admin/customers', { ...q }),
-  listEmployees: (q: PageParams) => get<Page<Employee>>('/admin/employees', { ...q }),
+  listOrders: (q: AdminOrderQuery) => get<Page<OrderSummary>>('/admin/orders', { ...q }),
+  getOrder: (id: number) => get<OrderDetail>(`/admin/orders/${id}`),
+  setOrderState: (id: number, state: OrderState) => patch<OrderDetail>(`/admin/orders/${id}/state`, { state }),
+  listCustomers: (q: PageParams) => get<Page<Account>>('/admin/customers', { ...q }),
+  listEmployees: (q: PageParams) => get<Page<Account>>('/admin/employees', { ...q }),
 }

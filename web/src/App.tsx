@@ -46,7 +46,7 @@ export function App() {
                   <Route path="cart" element={<Cart />} />
                   <Route path="checkout" element={<RequireAuth><Checkout /></RequireAuth>} />
                   <Route path="orders" element={<RequireAuth><OrderHistory /></RequireAuth>} />
-                  <Route path="orders/:id" element={<RequireAuth><OrderDetail /></RequireAuth>} />
+                  <Route path="orders/:code" element={<RequireAuth><OrderDetail /></RequireAuth>} />
                   <Route path="profile" element={<RequireAuth><Profile /></RequireAuth>} />
                   <Route path="contact" element={<Contact />} />
                   <Route path="about" element={<About />} />

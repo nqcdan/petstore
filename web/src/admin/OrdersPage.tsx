@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { useAdminOrder, useAdminOrders, useSetOrderState } from '@/api/queries'
-import type { Order, OrderState } from '@/api/types'
+import type { OrderState, OrderSummary } from '@/api/types'
 import { StateBadge } from '@/components/StateBadge'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -27,7 +27,7 @@ function OrderDialog({ id, onClose }: { id: number; onClose: () => void }) {
       <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle>{t('history.detail')} {data?.code}</DialogTitle>
-          <DialogDescription>{data && `${data.customerName} · ${formatDate(data.transactionDate)} · ${data.paymentMethod}`}</DialogDescription>
+          <DialogDescription>{data && `${data.customerName ?? '-'} · ${formatDate(data.transactionDate)}`}</DialogDescription>
         </DialogHeader>
         {!data ? <Skeleton className="h-40" /> : (
           <div className="space-y-4">
@@ -44,7 +44,7 @@ function OrderDialog({ id, onClose }: { id: number; onClose: () => void }) {
               <Table>
                 <TableHeader><TableRow><TableHead>{t('history.item')}</TableHead><TableHead className="text-right">{t('history.quantity')}</TableHead><TableHead className="text-right">{t('history.total')}</TableHead></TableRow></TableHeader>
                 <TableBody>
-                  {data.items?.map((it) => <TableRow key={it.id}><TableCell>{it.name}</TableCell><TableCell className="text-right">{it.quantity}</TableCell><TableCell className="text-right">{formatVnd(it.total)}</TableCell></TableRow>)}
+                  {data.items.map((it) => <TableRow key={it.name}><TableCell>{it.name}</TableCell><TableCell className="text-right">{it.quantity}</TableCell><TableCell className="text-right">{formatVnd(it.total)}</TableCell></TableRow>)}
                   <TableRow><TableCell colSpan={2} className="text-right font-semibold">{t('history.total')}</TableCell><TableCell className="text-right font-semibold">{formatVnd(data.total)}</TableCell></TableRow>
                 </TableBody>
               </Table>
@@ -75,7 +75,7 @@ export function OrdersPage() {
     setParams(p)
   }
 
-  const columns: ColumnDef<Order>[] = [
+  const columns: ColumnDef<OrderSummary>[] = [
     { accessorKey: 'code', header: t('admin.code'), cell: ({ row }) => <span className="font-mono text-xs">{row.original.code}</span> },
     { accessorKey: 'customerName', header: t('admin.customer') },
     { accessorKey: 'transactionDate', header: t('admin.date'), cell: ({ row }) => formatDate(row.original.transactionDate) },

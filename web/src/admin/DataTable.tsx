@@ -32,7 +32,7 @@ export function DataTable<T>({ columns, data, loading, page, onPageChange, searc
   // TanStack Table is not memoizable by the React compiler; fine here, rows are plain data.
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
-    data: data?.content ?? [],
+    data: data?.items ?? [],
     columns,
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
