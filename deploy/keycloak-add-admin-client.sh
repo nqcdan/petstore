@@ -20,9 +20,9 @@ else
 fi
 
 run sh -eu -s <<'EOF'
-KCADM="/opt/keycloak/bin/kcadm.sh --config /tmp/kcadm.config"
+kc() { /opt/keycloak/bin/kcadm.sh "$@" --config /tmp/kcadm.config; }
 trap 'rm -f /tmp/kcadm.config' EXIT
-$KCADM config credentials --server http://localhost:8080 --realm master \
+kc config credentials --server http://localhost:8080 --realm master \
   --user "$KC_BOOTSTRAP_ADMIN_USERNAME" --password "$KC_BOOTSTRAP_ADMIN_PASSWORD" >/dev/null
 
 REDIRECTS="\"$ORIGIN/*\""
@@ -38,20 +38,20 @@ BODY="{\"clientId\":\"petstore-admin\",\"name\":\"PetStore admin site (React)\",
 \"serviceAccountsEnabled\":false,\"redirectUris\":[$REDIRECTS],\"webOrigins\":[$ORIGINS],
 \"attributes\":{\"pkce.code.challenge.method\":\"S256\",\"post.logout.redirect.uris\":\"$LOGOUT\"}}"
 
-ID=$($KCADM get clients -r petstore -q clientId=petstore-admin --fields id --format csv --noquotes)
+ID=$(kc get clients -r petstore -q clientId=petstore-admin --fields id --format csv --noquotes)
 if [ -z "$ID" ]; then
-  echo "$BODY" | $KCADM create clients -r petstore -f - >/dev/null
-  ID=$($KCADM get clients -r petstore -q clientId=petstore-admin --fields id --format csv --noquotes)
+  echo "$BODY" | kc create clients -r petstore -f - >/dev/null
+  ID=$(kc get clients -r petstore -q clientId=petstore-admin --fields id --format csv --noquotes)
   echo "client petstore-admin: created ($ID)"
 else
-  echo "$BODY" | $KCADM update "clients/$ID" -r petstore -f -
+  echo "$BODY" | kc update "clients/$ID" -r petstore -f -
   echo "client petstore-admin: updated ($ID)"
 fi
 
-if $KCADM get "clients/$ID/protocol-mappers/models" -r petstore --fields name --format csv --noquotes | grep -qx petstore-api-audience; then
+if kc get "clients/$ID/protocol-mappers/models" -r petstore --fields name --format csv --noquotes | grep -qx petstore-api-audience; then
   echo "mapper petstore-api-audience: already there"
 else
-  $KCADM create "clients/$ID/protocol-mappers/models" -r petstore \
+  kc create "clients/$ID/protocol-mappers/models" -r petstore \
     -s name=petstore-api-audience -s protocol=openid-connect -s protocolMapper=oidc-audience-mapper \
     -s consentRequired=false -s 'config."included.client.audience"=petstore-api' \
     -s 'config."access.token.claim"=true' -s 'config."id.token.claim"=false' >/dev/null
