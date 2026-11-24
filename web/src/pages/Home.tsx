@@ -1,5 +1,5 @@
 import { ArrowRight } from 'lucide-react'
-import { useState } from 'react'
+import { useState, type CSSProperties } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { useAuth } from '@/auth/context'
@@ -9,7 +9,11 @@ import { Button } from '@/components/ui/button'
 import { posts } from '@/data/blog'
 import { formatDate } from '@/lib/format'
 
-const slideImages = ['/img/hero/1.jpg', '/img/hero/a.jpg']
+// object-position keeps the dog's head (eyes, nose) inside the crop; [mobile, desktop]
+const slideImages = [
+  { src: '/img/hero/1.jpg', pos: ['68% 38%', '60% 24%'] },
+  { src: '/img/hero/a.jpg', pos: ['100% 35%', '90% 25%'] },
+]
 const slideLinks = ['/shop/products', '/shop/foods']
 
 export function Home() {
@@ -21,13 +25,18 @@ export function Home() {
 
   return (
     <>
-      <section className="relative isolate overflow-hidden">
-        <img src={slideImages[i]} alt="" className="absolute inset-0 -z-10 size-full object-cover" />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-black/75 via-black/40 to-transparent" />
-        <div className="mx-auto flex min-h-[460px] max-w-6xl flex-col justify-center gap-5 px-4 py-16 text-white">
+      <section className="relative isolate h-[640px] overflow-hidden bg-neutral-900 md:h-[500px] lg:h-[540px]">
+        <div className="absolute inset-x-0 bottom-0 -z-10 h-[48%] [mask-image:linear-gradient(to_bottom,transparent,black_25%)] md:inset-y-0 md:left-auto md:right-0 md:h-full md:w-[62%] md:[mask-image:linear-gradient(to_right,transparent,black_40%)]">
+          {slideImages.map((img, n) => (
+            <img key={img.src} src={img.src} alt="" width={1600} height={n ? 1066 : 1299} fetchPriority={n === 0 ? 'high' : undefined}
+              style={{ '--pos-m': img.pos[0], '--pos-d': img.pos[1] } as CSSProperties}
+              className={`absolute inset-0 size-full object-cover [object-position:var(--pos-m)] transition-opacity duration-500 md:[object-position:var(--pos-d)] dark:brightness-90 ${n === i ? 'opacity-100' : 'opacity-0'}`} />
+          ))}
+        </div>
+        <div className="mx-auto flex h-full max-w-6xl flex-col gap-5 px-4 py-10 text-white md:justify-center md:py-16">
           <span className="w-fit rounded-full bg-primary/90 px-3 py-1 text-xs font-semibold tracking-widest">{slide.tag}</span>
-          <h1 className="max-w-xl text-4xl font-bold leading-tight tracking-tight md:text-5xl">{slide.title}</h1>
-          <p className="max-w-md text-lg text-white/85">{slide.text}</p>
+          <h1 className="max-w-xl text-4xl font-bold leading-tight tracking-tight md:max-w-xs lg:max-w-xl lg:text-5xl">{slide.title}</h1>
+          <p className="max-w-md text-lg text-white/85 md:max-w-xs lg:max-w-md">{slide.text}</p>
           <div className="flex items-center gap-6">
             <Button asChild size="lg" className="h-10 px-5 text-base"><Link to={slideLinks[i]}>{slide.cta} <ArrowRight /></Link></Button>
             <div className="flex gap-2" role="tablist">
