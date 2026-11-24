@@ -27,6 +27,12 @@ Copy `.env.example` to `.env` (git-ignored) and fill it in.
 | `MAIL_USERNAME`, `MAIL_PASSWORD` | no | SMTP login for the legacy JSP mail features |
 | `PETSTORE_VERSION` | no (`latest`) | Image tag |
 
+## Keycloak theme
+
+`../keycloak/themes/petstore` is mounted read-only into Keycloak. `start` caches themes: restart the `keycloak`
+service after changing them. `--import-realm` skips an existing realm, so on a running instance set the login and
+account theme to `petstore` once in the admin console (details in the root README, section Theme).
+
 ## Start
 
 ```sh

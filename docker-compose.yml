@@ -32,6 +32,8 @@ services:
       PETSTORE_WEB_ORIGIN_ALT: http://localhost:5173
     volumes:
       - ./keycloak/petstore-realm.json:/opt/keycloak/data/import/petstore-realm.json:ro
+      # start-dev does not cache themes: edit the files, refresh the browser
+      - ./keycloak/themes/petstore:/opt/keycloak/themes/petstore:ro
     ports:
       - "8180:8080"
     healthcheck:

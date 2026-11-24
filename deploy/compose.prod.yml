@@ -47,6 +47,8 @@ services:
       PETSTORE_WEB_ORIGIN_ALT: ${PETSTORE_WEB_ORIGIN}
     volumes:
       - ../keycloak/petstore-realm.json:/opt/keycloak/data/import/petstore-realm.json:ro
+      # Themes are cached in `start` mode (spi-theme--cache-themes=true): restart keycloak after changing them
+      - ../keycloak/themes/petstore:/opt/keycloak/themes/petstore:ro
     ports:
       - "127.0.0.1:8482:8080"
     healthcheck:
