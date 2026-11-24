@@ -1,0 +1,9 @@
+.git
+.github
+.idea
+.vscode
+target
+user-photos
+deploy
+keycloak
+*.md
