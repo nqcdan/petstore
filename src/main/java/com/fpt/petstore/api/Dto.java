@@ -5,6 +5,7 @@ import com.fpt.petstore.entities.BaseAccount.UserRole;
 import com.fpt.petstore.entities.Order;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -26,7 +27,7 @@ public final class Dto {
   public record CatalogItemRequest(
     @NotBlank @Size(max = 255) String name,
     @Size(max = 255) String sortName,
-    @Min(0) int price,
+    @Min(0) @Max(100_000_000) int price,
     @Size(max = 32768) String description,
     @NotBlank String type) {}
 
@@ -56,10 +57,10 @@ public final class Dto {
     List<OrderItemDto> items) {}
 
   /** type is FOOD or PRODUCT. */
-  public record CartLine(@NotBlank String type, @NotNull Long id, @Min(1) int quantity) {}
+  public record CartLine(@NotBlank String type, @NotNull Long id, @Min(1) @Max(100) int quantity) {}
 
   /** paymentMethod defaults to COD when omitted. */
-  public record OrderRequest(@NotEmpty List<@Valid CartLine> items, Order.PaymentMethod paymentMethod, @Size(max = 1000) String note) {}
+  public record OrderRequest(@NotEmpty @Size(max = 50) List<@Valid CartLine> items, Order.PaymentMethod paymentMethod, @Size(max = 1000) String note) {}
 
   public record ContactRequest(@NotBlank @Size(max = 100) String name, @NotBlank @Email @Size(max = 255) String email,
     @NotBlank @Size(max = 2000) String message) {}

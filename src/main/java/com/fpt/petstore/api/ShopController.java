@@ -59,11 +59,11 @@ public class ShopController {
   @GetMapping("/orders")
   @Operation(summary = "Own orders, newest first by default")
   public PageDto<OrderSummary> mine(@AuthenticationPrincipal Jwt jwt, @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-    return orders.mine(Claims.username(jwt), pageable);
+    return orders.mine(jwt.getSubject(), pageable);
   }
 
   @GetMapping("/orders/{code}")
   public OrderDetail mine(@AuthenticationPrincipal Jwt jwt, @PathVariable String code) {
-    return orders.mineByCode(Claims.username(jwt), code);
+    return orders.mineByCode(jwt.getSubject(), code);
   }
 }

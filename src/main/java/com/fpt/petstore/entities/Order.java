@@ -20,6 +20,7 @@ import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -73,6 +74,9 @@ public class Order extends AbstractPersistable<Long> {
   private String currency = "VND";
   @Enumerated(EnumType.STRING)
   private PaymentMethod paymentMethod;
+  /** Keycloak subject of the shopper who placed the order through the API; null for legacy orders. */
+  @JsonIgnore
+  private String ownerSub;
 
   @Enumerated(EnumType.STRING)
   private State state;

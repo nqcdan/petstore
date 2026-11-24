@@ -35,9 +35,9 @@ public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecific
   @Query(value = "select * from Orders where customerId= ?1",nativeQuery = true)
   public List<Order> listOrderbyId(Long id);
 
-  Page<Order> findByCustomerUsername(String username, Pageable pageable);
+  Page<Order> findByOwnerSub(String ownerSub, Pageable pageable);
 
-  Optional<Order> findByCodeAndCustomerUsername(String code, String username);
+  Optional<Order> findByCodeAndOwnerSub(String code, String ownerSub);
 
   @Modifying
   @Query("UPDATE Order o SET o.customer = null WHERE o.customer.id = :id")

@@ -32,6 +32,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 /** Cart pricing, order placement, order administration and dashboard statistics. */
@@ -41,6 +42,9 @@ public class OrderApiService {
 
   private static final String CURRENCY = "VND";
   private static final int STATS_DAYS = 30;
+  private static final int MAX_QUANTITY = 100;
+  /** DUE can be settled or cancelled, a PAID order can still be cancelled (refund), CANCEL is final. */
+  private static final Map<State, Set<State>> ALLOWED_NEXT = Map.of(State.DUE, Set.of(State.PAID, State.CANCEL), State.PAID, Set.of(State.CANCEL));
 
   private final OrderRepository orders;
   private final CustomerRepository customers;
@@ -59,7 +63,7 @@ public class OrderApiService {
   @Transactional(readOnly = true)
   public Quote quote(List<CartLine> lines) {
     List<OrderItem> items = priceLines(lines);
-    return new Quote(items.stream().map(this::toItem).toList(), items.stream().mapToInt(OrderItem::getTotal).sum(), CURRENCY);
+    return new Quote(items.stream().map(this::toItem).toList(), totalOf(items), CURRENCY);
   }
 
   public OrderDetail place(Jwt jwt, OrderRequest request) {
@@ -67,22 +71,23 @@ public class OrderApiService {
     List<OrderItem> items = priceLines(request.items());
     Order order = new Order("OD-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
     order.withCustomer(customer).withState(State.DUE);
+    order.setOwnerSub(jwt.getSubject());
     order.setPaymentMethod(request.paymentMethod() != null ? request.paymentMethod() : PaymentMethod.COD);
     order.setTransactionDate(new Date());
     order.setOrderItems(items);
-    order.setTotal(items.stream().mapToInt(OrderItem::getTotal).sum());
+    order.setTotal(totalOf(items));
     if (request.note() != null && !request.note().isBlank()) order.setNote(request.note().trim());
     return toDetail(orders.save(order));
   }
 
   @Transactional(readOnly = true)
-  public PageDto<OrderSummary> mine(String username, Pageable pageable) {
-    return toPage(orders.findByCustomerUsername(username, pageable));
+  public PageDto<OrderSummary> mine(String sub, Pageable pageable) {
+    return toPage(orders.findByOwnerSub(sub, pageable));
   }
 
   @Transactional(readOnly = true)
-  public OrderDetail mineByCode(String username, String code) {
-    return toDetail(orders.findByCodeAndCustomerUsername(code, username)
+  public OrderDetail mineByCode(String sub, String code) {
+    return toDetail(orders.findByCodeAndOwnerSub(code, sub)
       .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order " + code + " not found")));
   }
 
@@ -107,6 +112,10 @@ public class OrderApiService {
 
   public OrderDetail setState(Long id, State state) {
     Order order = find(id);
+    State current = order.getState();
+    if (current != null && current != state && !ALLOWED_NEXT.getOrDefault(current, Set.of()).contains(state)) {
+      throw new ResponseStatusException(HttpStatus.CONFLICT, "An order cannot go from " + current + " to " + state);
+    }
     order.setState(state);
     return toDetail(orders.save(order));
   }
@@ -134,12 +143,13 @@ public class OrderApiService {
     return orders.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order " + id + " not found"));
   }
 
-  /** Prices come from the catalog, never from the client; repeated lines are merged. */
+  /** Prices come from the catalog, never from the client; repeated lines are merged and every amount is overflow-checked. */
   private List<OrderItem> priceLines(List<CartLine> lines) {
     Map<String, Integer> merged = new LinkedHashMap<>();
     for (CartLine line : lines) merged.merge(line.type().toUpperCase() + ":" + line.id(), line.quantity(), Integer::sum);
     List<OrderItem> items = new ArrayList<>();
     merged.forEach((key, quantity) -> {
+      if (quantity > MAX_QUANTITY) throw tooMuch();
       String[] parts = key.split(":");
       Long id = Long.valueOf(parts[1]);
       OrderItem item = switch (parts[0]) {
@@ -147,24 +157,50 @@ public class OrderApiService {
         case "PRODUCT" -> new OrderItem().newOrderItem(products.findById(id).orElseThrow(() -> unknown("Product", id)));
         default -> throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "type must be FOOD or PRODUCT");
       };
-      int unitPrice = item.getTotal();
+      item.setTotal(multiply(item.getTotal(), quantity));
       item.setQuantity(quantity);
-      item.setTotal(unitPrice * quantity);
       items.add(item);
     });
+    totalOf(items);
     return items;
+  }
+
+  private int multiply(int unitPrice, int quantity) {
+    try {
+      return Math.multiplyExact(unitPrice, quantity);
+    } catch (ArithmeticException e) {
+      throw tooMuch();
+    }
+  }
+
+  private int totalOf(List<OrderItem> items) {
+    try {
+      int total = 0;
+      for (OrderItem item : items) total = Math.addExact(total, item.getTotal());
+      return total;
+    } catch (ArithmeticException e) {
+      throw tooMuch();
+    }
+  }
+
+  private ResponseStatusException tooMuch() {
+    return new ResponseStatusException(HttpStatus.BAD_REQUEST, "Quantity is limited to " + MAX_QUANTITY + " per item and the order total is too large");
   }
 
   private ResponseStatusException unknown(String what, Long id) {
     return new ResponseStatusException(HttpStatus.BAD_REQUEST, what + " " + id + " does not exist");
   }
 
-  /** Keycloak users get a local customer row on their first order, so orders keep their foreign key. */
+  /**
+   * Keycloak users get a local customer row on their first order, keyed by the token subject: usernames can be
+   * re-registered by someone else, the subject cannot.
+   */
   private Customer customerOf(Jwt jwt) {
+    Customer existing = customers.findByKeycloakSub(jwt.getSubject());
     String username = Claims.username(jwt);
-    Customer existing = customers.findByUsername(username);
     if (existing != null) return existing;
     Customer customer = new Customer(jwt.getClaimAsString("name") != null ? jwt.getClaimAsString("name") : username);
+    customer.setKeycloakSub(jwt.getSubject());
     customer.setUsername(username);
     customer.setEmail(jwt.getClaimAsString("email"));
     customer.setRole(UserRole.Read);

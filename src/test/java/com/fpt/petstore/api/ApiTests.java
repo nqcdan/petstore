@@ -39,8 +39,12 @@ class ApiTests {
 	}
 
 	static RequestPostProcessor customer(String username) {
+		return customer(username, "sub-" + username);
+	}
+
+	static RequestPostProcessor customer(String username, String sub) {
 		return SecurityMockMvcRequestPostProcessors.jwt()
-			.jwt(j -> j.claim("preferred_username", username).claim("name", "Test " + username).claim("email", username + "@example.com"))
+			.jwt(j -> j.subject(sub).claim("preferred_username", username).claim("name", "Test " + username).claim("email", username + "@example.com"))
 			.authorities(new SimpleGrantedAuthority("ROLE_CUSTOMER"));
 	}
 
@@ -101,6 +105,63 @@ class ApiTests {
 		assertEquals("PAID", paid.get("state").asText());
 		mvc.perform(get("/api/v1/admin/orders?state=PAID&q=alice").with(admin())).andExpect(status().isOk())
 			.andExpect(jsonPath("$.items[0].code").value(order.get("code").asText()));
+	}
+
+	@Test
+	void ordersBelongToTheTokenSubjectNotTheUsername() throws Exception {
+		String cart = "{\"items\":[{\"type\":\"PRODUCT\",\"id\":1,\"quantity\":1}]}";
+		JsonNode order = body(mvc.perform(post("/api/v1/orders").with(customer("reused-name", "sub-original")).contentType(MediaType.APPLICATION_JSON).content(cart))
+			.andExpect(status().isCreated()));
+		String code = order.get("code").asText();
+
+		// Someone else registers the same username later and gets a different subject
+		mvc.perform(get("/api/v1/orders").with(customer("reused-name", "sub-newcomer"))).andExpect(status().isOk()).andExpect(jsonPath("$.totalItems").value(0));
+		mvc.perform(get("/api/v1/orders/" + code).with(customer("reused-name", "sub-newcomer"))).andExpect(status().isNotFound());
+		mvc.perform(get("/api/v1/orders/" + code).with(customer("reused-name", "sub-original"))).andExpect(status().isOk());
+
+		mvc.perform(post("/api/v1/orders").with(customer("reused-name", "sub-newcomer")).contentType(MediaType.APPLICATION_JSON).content(cart))
+			.andExpect(status().isCreated());
+		mvc.perform(get("/api/v1/orders").with(customer("reused-name", "sub-newcomer"))).andExpect(jsonPath("$.totalItems").value(1));
+		mvc.perform(get("/api/v1/orders").with(customer("reused-name", "sub-original"))).andExpect(jsonPath("$.totalItems").value(1));
+	}
+
+	@Test
+	void quantityAndTotalsAreBounded() throws Exception {
+		String line = "{\"type\":\"PRODUCT\",\"id\":1,\"quantity\":%d}";
+		mvc.perform(post("/api/v1/cart/quote").with(customer("dave")).contentType(MediaType.APPLICATION_JSON)
+			.content("{\"items\":[" + line.formatted(100) + "]}")).andExpect(status().isOk());
+		mvc.perform(post("/api/v1/cart/quote").with(customer("dave")).contentType(MediaType.APPLICATION_JSON)
+			.content("{\"items\":[" + line.formatted(101) + "]}")).andExpect(status().isBadRequest());
+		mvc.perform(post("/api/v1/cart/quote").with(customer("dave")).contentType(MediaType.APPLICATION_JSON)
+			.content("{\"items\":[" + line.formatted(0) + "]}")).andExpect(status().isBadRequest());
+		mvc.perform(post("/api/v1/cart/quote").with(customer("dave")).contentType(MediaType.APPLICATION_JSON)
+			.content("{\"items\":[" + line.formatted(60) + "," + line.formatted(60) + "]}")).andExpect(status().isBadRequest());
+
+		// 100 x 100,000,000 VND no longer fits an int
+		String expensive = "{\"name\":\"Gold bowl\",\"price\":100000000,\"type\":\"dog\"}";
+		long id = body(mvc.perform(post("/api/v1/admin/products").with(admin()).contentType(MediaType.APPLICATION_JSON).content(expensive))
+			.andExpect(status().isCreated())).get("id").asLong();
+		mvc.perform(post("/api/v1/orders").with(customer("dave")).contentType(MediaType.APPLICATION_JSON)
+			.content("{\"items\":[{\"type\":\"PRODUCT\",\"id\":" + id + ",\"quantity\":100}]}")).andExpect(status().isBadRequest());
+		mvc.perform(post("/api/v1/orders").with(customer("dave")).contentType(MediaType.APPLICATION_JSON)
+			.content("{\"items\":[{\"type\":\"PRODUCT\",\"id\":" + id + ",\"quantity\":10}]}")).andExpect(status().isCreated())
+			.andExpect(jsonPath("$.total").value(1_000_000_000));
+		mvc.perform(post("/api/v1/orders").with(customer("dave")).contentType(MediaType.APPLICATION_JSON)
+			.content("{\"items\":[{\"type\":\"PRODUCT\",\"id\":" + id + ",\"quantity\":15},{\"type\":\"PRODUCT\",\"id\":" + id
+				+ ",\"quantity\":15}]}")).andExpect(status().isBadRequest());
+		mvc.perform(post("/api/v1/admin/products").with(admin()).contentType(MediaType.APPLICATION_JSON)
+			.content(expensive.replace("100000000", "100000001"))).andExpect(status().isBadRequest());
+	}
+
+	@Test
+	void orderStatesFollowTheLifecycle() throws Exception {
+		long id = body(mvc.perform(post("/api/v1/orders").with(customer("erin")).contentType(MediaType.APPLICATION_JSON)
+			.content("{\"items\":[{\"type\":\"PRODUCT\",\"id\":1,\"quantity\":1}]}")).andExpect(status().isCreated())).get("id").asLong();
+		String path = "/api/v1/admin/orders/" + id + "/state";
+		mvc.perform(patch(path).with(admin()).contentType(MediaType.APPLICATION_JSON).content("{\"state\":\"PAID\"}")).andExpect(status().isOk());
+		mvc.perform(patch(path).with(admin()).contentType(MediaType.APPLICATION_JSON).content("{\"state\":\"DUE\"}")).andExpect(status().isConflict());
+		mvc.perform(patch(path).with(admin()).contentType(MediaType.APPLICATION_JSON).content("{\"state\":\"CANCEL\"}")).andExpect(status().isOk());
+		mvc.perform(patch(path).with(admin()).contentType(MediaType.APPLICATION_JSON).content("{\"state\":\"PAID\"}")).andExpect(status().isConflict());
 	}
 
 	@Test

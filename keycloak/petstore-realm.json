@@ -99,6 +99,7 @@
   ],
   "users": [
     {
+      "id": "7c0e4a3a-5d11-4f6e-9a55-0d3a6f1b0001",
       "username": "demo-user",
       "enabled": true,
       "emailVerified": true,
@@ -119,6 +120,7 @@
       ]
     },
     {
+      "id": "7c0e4a3a-5d11-4f6e-9a55-0d3a6f1b0002",
       "username": "demo-admin",
       "enabled": true,
       "emailVerified": true,

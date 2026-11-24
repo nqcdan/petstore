@@ -22,6 +22,8 @@ public interface CustomerRepository extends JpaRepository<Customer, Long>, JpaSp
 
   boolean existsCustomersByUsername(String username);
   Customer findByEmail(String email);
+
+  Customer findByKeycloakSub(String keycloakSub);
   Customer findByUsername(String username);
 
   @Query(value = "Select * from Customer where email like ?1 and password like ?2",nativeQuery = true)

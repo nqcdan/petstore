@@ -93,3 +93,19 @@ databaseChangeLog:
               - column:
                   name: paymentmethod
                   type: varchar(10)
+  - changeSet:
+      id: 005-orders-owner-sub
+      author: dan
+      changes:
+        - addColumn:
+            tableName: orders
+            columns:
+              - column:
+                  name: ownersub
+                  type: varchar(64)
+        - createIndex:
+            tableName: orders
+            indexName: idx_orders_ownersub
+            columns:
+              - column:
+                  name: ownersub
