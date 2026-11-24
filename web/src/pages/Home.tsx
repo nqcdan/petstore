@@ -4,10 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { useAuth } from '@/auth/context'
 import { DemoAccounts } from '@/components/DemoAccounts'
-import { useCatalog } from '@/api/queries'
-import { ProductCard } from '@/components/ProductCard'
+import { FeaturedSection } from '@/components/FeaturedSection'
 import { Button } from '@/components/ui/button'
-import { Skeleton } from '@/components/ui/skeleton'
 import { posts } from '@/data/blog'
 import { formatDate } from '@/lib/format'
 
@@ -20,7 +18,6 @@ export function Home() {
   const [i, setI] = useState(0)
   const slide = slides[i]
   const { user } = useAuth()
-  const featured = useCatalog('products', { size: 4, page: 0, sort: 'price,desc' })
 
   return (
     <>
@@ -62,20 +59,8 @@ export function Home() {
         ))}
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 pb-12">
-        <div className="mb-6 flex items-end justify-between">
-          <div>
-            <h2 className="text-2xl font-semibold tracking-tight">{t('home.featured')}</h2>
-            <p className="text-muted-foreground">{t('home.featuredSub')}</p>
-          </div>
-          <Button asChild variant="ghost"><Link to="/shop/products">{t('home.banners.shop')} <ArrowRight /></Link></Button>
-        </div>
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-          {featured.isPending
-            ? Array.from({ length: 4 }, (_, n) => <Skeleton key={n} className="aspect-[3/4]" />)
-            : featured.data?.items.map((p) => <ProductCard key={p.id} kind="products" item={p} />)}
-        </div>
-      </section>
+      <FeaturedSection kind="products" title={t('home.featured')} sub={t('home.featuredSub')} count={8} />
+      <FeaturedSection kind="foods" title={t('home.featuredFoods')} sub={t('home.featuredFoodsSub')} count={4} />
 
       <section className="bg-muted/40 py-12">
         <div className="mx-auto max-w-6xl px-4">
