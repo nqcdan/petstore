@@ -17,13 +17,13 @@ function adminSite(): Plugin {
         .replace('<title>PETS Store</title>', '<title>PETS Admin</title>')
         .replace('<meta charset="UTF-8" />', '<meta charset="UTF-8" />\n    <meta name="robots" content="noindex, nofollow" />')
     },
-    // The shop's 8 MB of photos are not needed here; keep only the placeholder that imgUrl() falls back to.
+    // Keep only img/product: the API returns "/img/product/*.jpg" for seeded products and foods (incl. the snack.jpg
+    // fallback of imgUrl()). The shop's other photos (hero, blog, about...) are not used by the admin.
     writeBundle(options) {
       const dist = options.dir ?? 'dist'
       fs.rmSync(path.join(dist, 'favicon.svg'), { force: true })
       const img = path.join(dist, 'img')
       for (const e of fs.readdirSync(img)) if (e !== 'product') fs.rmSync(path.join(img, e), { recursive: true })
-      for (const e of fs.readdirSync(path.join(img, 'product'))) if (e !== 'snack.jpg') fs.rmSync(path.join(img, 'product', e))
     },
   }
 }
