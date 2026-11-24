@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Link, NavLink, Outlet } from 'react-router-dom'
 import { useAuth } from '@/auth/context'
 import { LangToggle, ThemeToggle } from '@/components/layout/Toggles'
+import { TooltipProvider } from '@/components/ui/tooltip'
 import { Separator } from '@/components/ui/separator'
 import {
   Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarHeader, SidebarInset, SidebarMenu,
@@ -22,6 +23,7 @@ export function AdminLayout() {
   const { t } = useTranslation()
   const { user, logout } = useAuth()
   return (
+    <TooltipProvider>
     <SidebarProvider>
       <Sidebar collapsible="icon">
         <SidebarHeader>
@@ -76,5 +78,6 @@ export function AdminLayout() {
         <div className="flex-1 space-y-6 p-4 md:p-6"><Outlet /></div>
       </SidebarInset>
     </SidebarProvider>
+    </TooltipProvider>
   )
 }

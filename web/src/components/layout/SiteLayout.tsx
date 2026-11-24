@@ -1,4 +1,4 @@
-import { LogIn, LogOut, Menu, ShoppingCart, User } from 'lucide-react'
+import { LogIn, LogOut, Menu, PawPrint, ShoppingCart, User } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useEffect, useState } from 'react'
@@ -23,7 +23,7 @@ const links = [
 function Brand() {
   return (
     <Link to="/" className="flex items-center gap-2 font-semibold tracking-tight">
-      <img src="/img/logopet.png" alt="" className="size-8 rounded-full object-cover" />
+      <span className="flex size-8 items-center justify-center rounded-full bg-primary text-primary-foreground"><PawPrint className="size-4" /></span>
       <span className="text-lg">PETS<span className="text-primary">Store</span></span>
     </Link>
   )
@@ -33,10 +33,10 @@ function UserMenu() {
   const { user, isAdmin, login, logout, mock } = useAuth()
   const { t } = useTranslation()
   if (!user) {
-    if (!mock) return <Button size="sm" onClick={() => login()}><LogIn /> {t('nav.login')}</Button>
+    if (!mock) return <Button size="sm" onClick={() => login()} aria-label={t('nav.login')}><LogIn /> <span className="hidden sm:inline">{t('nav.login')}</span></Button>
     return (
       <DropdownMenu>
-        <DropdownMenuTrigger asChild><Button size="sm"><LogIn /> {t('nav.login')}</Button></DropdownMenuTrigger>
+        <DropdownMenuTrigger asChild><Button size="sm" aria-label={t('nav.login')}><LogIn /> <span className="hidden sm:inline">{t('nav.login')}</span></Button></DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem onClick={() => login('customer')}>{t('auth.loginCustomer')}</DropdownMenuItem>
           <DropdownMenuItem onClick={() => login('admin')}>{t('auth.loginAdmin')}</DropdownMenuItem>
@@ -98,7 +98,7 @@ export function SiteLayout() {
               </NavLink>
             ))}
           </nav>
-          <div className="ml-auto flex items-center gap-1">
+          <div className="ml-auto flex items-center gap-0.5 sm:gap-1">
             <LangToggle />
             <ThemeToggle />
             <Button asChild variant="ghost" size="icon" className="relative" aria-label={t('nav.cart')}>

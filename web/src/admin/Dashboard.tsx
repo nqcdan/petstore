@@ -34,7 +34,7 @@ export function Dashboard() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {kpis.map((k) => (
           <Card key={k.label} data-testid="kpi">
-            <CardHeader className="flex-row items-center justify-between space-y-0">
+            <CardHeader className="flex items-center justify-between">
               <CardDescription>{k.label}</CardDescription>
               <k.icon className="size-4 text-muted-foreground" />
             </CardHeader>
