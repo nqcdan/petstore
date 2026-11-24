@@ -1,7 +1,12 @@
-# Local stack: app + PostgreSQL + Keycloak (dev mode). Start with: docker compose up --build
+# Local dev stack: PostgreSQL + Keycloak (dev mode) + app + web. Start with: make up
+# `build:` and `image:` name the same image `docker compose build` produces and `make images` publishes.
+x-git: &git
+  VERSION: ${VERSION:-dev}
+  GIT_SHA: ${GIT_SHA:-unknown}
+
 services:
   postgres:
-    image: postgres:16-alpine
+    image: postgres:16-alpine@sha256:f2f98726820d0342055351c6e9d36e705f5bfffb3dd53ff556325114b08afb6d
     environment:
       POSTGRES_DB: petstore
       POSTGRES_USER: petstore
@@ -15,33 +20,52 @@ services:
       retries: 10
 
   keycloak:
-    image: quay.io/keycloak/keycloak:26.4
+    image: quay.io/keycloak/keycloak:26.4@sha256:9409c59bdfb65dbffa20b11e6f18b8abb9281d480c7ca402f51ed3d5977e6007
     command: start-dev --import-realm
     environment:
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
       KC_HOSTNAME: http://localhost:8180
-      # Filled into the realm import (redirect URIs of the web client): React dev servers
+      KC_HEALTH_ENABLED: "true"
+      # Filled into the realm import (redirect URIs of the web client): the web container and Vite dev
       PETSTORE_WEB_ORIGIN: http://localhost:3000
       PETSTORE_WEB_ORIGIN_ALT: http://localhost:5173
     volumes:
       - ./keycloak/petstore-realm.json:/opt/keycloak/data/import/petstore-realm.json:ro
     ports:
       - "8180:8080"
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >-
+          exec 3<>/dev/tcp/127.0.0.1/9000 &&
+          printf 'GET /health/ready HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n' >&3 &&
+          grep -q '"status": "UP"' <&3
+      interval: 5s
+      timeout: 5s
+      retries: 40
+      start_period: 20s
 
   app:
-    build: .
+    build:
+      context: .
+      target: app
+      args: *git
+    image: petstore:${TAG:-dev}
     depends_on:
       postgres:
         condition: service_healthy
     environment:
+      # Default profile (not prod): Swagger UI on, cookies usable over plain http
+      SPRING_PROFILES_ACTIVE: ""
       DB_URL: jdbc:postgresql://postgres:5432/petstore
       DB_USERNAME: petstore
       DB_PASSWORD: petstore
       # Demo customers, employees and orders for local use; leave unset or false in production.
       PETSTORE_SEED_DEMO: "true"
+      PETSTORE_CORS_ORIGINS: http://localhost:3000,http://localhost:5173
       # Tokens carry the browser-facing issuer; signing keys are fetched over the compose network.
-      KEYCLOAK_ISSUER_URI: http://localhost:8180/realms/petstore
+      KEYCLOAK_ISSUER_URI: ${KEYCLOAK_ISSUER_URI:-http://localhost:8180/realms/petstore}
       SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:8080/realms/petstore/protocol/openid-connect/certs
       MAIL_USERNAME: ${MAIL_USERNAME:-}
       MAIL_PASSWORD: ${MAIL_PASSWORD:-}
@@ -49,6 +73,37 @@ services:
       - uploads:/app/user-photos
     ports:
       - "8081:8081"
+
+  web:
+    build:
+      context: ./web
+      target: web
+      args:
+        <<: *git
+        VITE_KEYCLOAK_URL: http://localhost:8180
+        VITE_SHOW_DEMO_ACCOUNTS: "true"
+    # Vite bakes the Keycloak URL in, so the dev web image is tagged apart from a deployable one
+    image: petstore-web:${TAG:-dev}-local
+    depends_on:
+      - app
+    volumes:
+      - ./deploy/dev/web.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "3000:80"
+
+  # Regenerates web/src/api/schema.d.ts from the running app: make gen-api
+  gen-api:
+    profiles: [tools]
+    build:
+      context: ./web
+      target: tools
+    image: petstore-web-tools:${TAG:-dev}
+    depends_on:
+      app:
+        condition: service_healthy
+    command: pnpm exec openapi-typescript http://app:8081/v3/api-docs -o src/api/schema.d.ts
+    volumes:
+      - ./web/src/api:/app/src/api
 
 volumes:
   pgdata:

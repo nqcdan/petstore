@@ -1,0 +1,35 @@
+# Backend tests in containers: make test. A throwaway PostgreSQL (tmpfs) next to a JDK container running mvnw verify.
+x-db: &db
+  DB_URL: jdbc:postgresql://postgres-test:5432/petstore
+  DB_USERNAME: petstore
+  DB_PASSWORD: petstore
+
+services:
+  postgres-test:
+    image: postgres:16-alpine@sha256:f2f98726820d0342055351c6e9d36e705f5bfffb3dd53ff556325114b08afb6d
+    environment:
+      POSTGRES_DB: petstore
+      POSTGRES_USER: petstore
+      POSTGRES_PASSWORD: petstore
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U petstore -d petstore"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  test-backend:
+    build:
+      context: .
+      target: test
+    image: petstore-test:${TAG:-dev}
+    depends_on:
+      postgres-test:
+        condition: service_healthy
+    environment: *db
+    volumes:
+      - m2:/root/.m2
+
+volumes:
+  m2:
