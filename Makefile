@@ -6,6 +6,8 @@ export VERSION    ?= $(TAG)
 export SOURCE_DATE_EPOCH ?= $(shell git log -1 --format=%ct)
 export REGISTRY   ?=
 PUSH              ?=
+PUSH_OPTS         = $(if $(PUSH),--set '*.output=type=image$(,)push=true$(,)rewrite-timestamp=true')
+, := ,
 
 DEV  = docker compose -p $(PROJECT)
 TEST = docker compose -p $(PROJECT)-test -f docker-compose.test.yml
@@ -38,5 +40,5 @@ builder:       ## one-time: buildx builder that can build several architectures
 	docker buildx inspect petstore >/dev/null 2>&1 || docker buildx create --name petstore --driver docker-container
 	docker buildx use petstore
 
-images:        ## app + web for linux/amd64,linux/arm64; PUSH=1 REGISTRY=ghcr.io/nqcdan/ pushes
-	docker buildx bake $(if $(PUSH),--push,) --progress plain
+images:        ## app + web for linux/amd64,linux/arm64; PUSH=1 REGISTRY=ghcr.io/nqcdan/ pushes (layer timestamps = commit time)
+	docker buildx bake --progress plain $(PUSH_OPTS)

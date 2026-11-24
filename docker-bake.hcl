@@ -14,7 +14,6 @@ group "default" { targets = ["app", "web"] }
 target "_common" {
   platforms = ["linux/amd64", "linux/arm64"]
   args = { VERSION = VERSION, GIT_SHA = TAG, SOURCE = SOURCE, SOURCE_DATE_EPOCH = SOURCE_DATE_EPOCH }
-  output = ["type=image,rewrite-timestamp=true"]
 }
 
 target "app" {
