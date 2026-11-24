@@ -19,9 +19,9 @@ export const vi = {
       { tag: 'VẬT DỤNG', title: 'Vật dụng dành cho thú cưng', text: 'Các loại vật dụng chất lượng cao, bảo hành 1 năm.', cta: 'Mua ngay' },
       { tag: 'THỨC ĂN', title: 'Đồ ăn cho thú cưng', text: 'Các loại hạt, pate, vitamin cho thú cưng.', cta: 'Mua ngay' },
     ],
-    featured: 'Sản phẩm nổi bật', featuredSub: 'Được khách hàng chọn nhiều nhất',
+    featured: 'Sản phẩm nổi bật', featuredSub: 'Được khách hàng chọn nhiều nhất', featuredFoods: 'Thức ăn nổi bật', featuredFoodsSub: 'Hạt, pate và bánh thưởng cho chó mèo', viewAll: 'Xem tất cả',
     banners: { products: 'Vật dụng', foods: 'Đồ ăn', spa: 'Dịch vụ tắm rửa thú cưng', shop: 'Mua ngay', spaCta: 'Trải nghiệm ngay' },
-    blog: 'Blog của chúng tôi', readMore: 'Đọc thêm', gallery: '#PETS_Coffee_And_Services',
+    blog: 'Blog của chúng tôi', readMore: 'Đọc thêm', gallery: '#PETSStore',
   },
   shop: {
     titleProducts: 'Vật phẩm thú cưng', titleFoods: 'Thức ăn cho vật nuôi', showing: 'Hiển thị {{count}} trên {{total}} kết quả',

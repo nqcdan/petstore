@@ -21,9 +21,9 @@ export const en: Resources = {
       { tag: 'ACCESSORIES', title: 'Everything for your pet', text: 'High-quality accessories with a 1-year warranty.', cta: 'Shop now' },
       { tag: 'FOOD', title: 'Food for your pet', text: 'Kibble, pate and vitamins for dogs and cats.', cta: 'Shop now' },
     ],
-    featured: 'Featured products', featuredSub: 'Most picked by our customers',
+    featured: 'Featured products', featuredSub: 'Most picked by our customers', featuredFoods: 'Featured food', featuredFoodsSub: 'Kibble, pate and treats for dogs and cats', viewAll: 'View all',
     banners: { products: 'Accessories', foods: 'Food', spa: 'Pet grooming service', shop: 'Shop now', spaCta: 'Try it now' },
-    blog: 'Our blog', readMore: 'Read more', gallery: '#PETS_Coffee_And_Services',
+    blog: 'Our blog', readMore: 'Read more', gallery: '#PETSStore',
   },
   shop: {
     titleProducts: 'Pet accessories', titleFoods: 'Pet food', showing: 'Showing {{count}} of {{total}} results',
