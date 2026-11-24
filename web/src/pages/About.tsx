@@ -4,9 +4,9 @@ import { PageHeader } from '@/components/PageHeader'
 const team = [
   { name: 'Nguyễn Tấn Trọng', img: 'team-1.jpg', leader: false },
   { name: 'Lưu Nguyễn Thanh Phương', img: 'team-2.jpg', leader: false },
-  { name: 'Nguyễn Thị Thanh Phương', img: 'team-3.jpg', leader: true },
+  { name: 'Nguyễn Thị Thanh Phương', img: 'team-3.jpg', leader: false },
   { name: 'Nguyễn Văn Nhật', img: 'team-4.jpg', leader: false },
-  { name: 'Lê Ngọc Đàn', img: 'team-5.jpg', leader: false },
+  { name: 'Lê Ngọc Đàn', img: 'team-5.jpg', leader: true },
 ]
 
 export function About() {
