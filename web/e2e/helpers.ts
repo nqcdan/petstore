@@ -21,5 +21,6 @@ export async function login(page: Page, username: 'demo-user' | 'demo-admin', fr
   await page.locator('#password').fill('Demo@123')
   await page.locator('#kc-login').click()
   await page.waitForURL((u) => u.origin === 'http://localhost:5173')
-  await expect(page.getByRole('button', { name: username === 'demo-admin' ? /demo-admin|Demo/i : /./ }).first()).toBeVisible()
+  // the account menu only renders once Keycloak init finished, i.e. the token source is ready
+  await expect(page.getByRole('button', { name: username === 'demo-admin' ? 'Demo Admin' : 'Demo User' })).toBeVisible()
 }

@@ -57,6 +57,33 @@ test('demo-user pays by ATM transfer', async ({ page }) => {
   await expect(page.getByText(/Thanh toán: Chuyển khoản ATM/)).toBeVisible()
 })
 
+test("demo-user cannot see another user's order", async ({ page, browser }) => {
+  // demo-admin places an order as a customer
+  const adminCtx = await browser.newContext()
+  const adminPage = await adminCtx.newPage()
+  await prefs(adminPage)
+  await login(adminPage, 'demo-admin')
+  const code = await adminPage.evaluate(async () => {
+    const { shopApi } = await import('/src/api/shop.ts')
+    const { items } = await shopApi.listCatalog('foods', { size: 1 })
+    return (await shopApi.createOrder({ items: [{ type: 'FOOD', id: items[0].id, quantity: 1 }] })).code
+  })
+  await adminCtx.close()
+
+  await prefs(page)
+  await login(page, 'demo-user')
+  await page.goto(`/orders/${code}`)
+  await expect(page.getByRole('alert')).toContainText('Không tìm thấy dữ liệu yêu cầu')
+  await page.goto('/orders')
+  await expect(page.getByRole('cell', { name: code })).toHaveCount(0)
+  await expect(page.getByRole('button', { name: 'Demo User' })).toBeVisible() // token ready
+  const status = await page.evaluate(async (c) => {
+    const { shopApi } = await import('/src/api/shop.ts')
+    try { await shopApi.myOrder(c); return 200 } catch (e) { return (e as { status: number }).status }
+  }, code)
+  expect(status).toBe(404)
+})
+
 test('demo-user is blocked from /admin', async ({ page }) => {
   await prefs(page)
   await login(page, 'demo-user')

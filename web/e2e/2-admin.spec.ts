@@ -100,6 +100,48 @@ test('demo-admin: accounts CRUD (customer and employee)', async ({ page }) => {
   }
 })
 
+test('demo-admin: upload limits and order lifecycle are enforced by the API (413, 415, 409)', async ({ page }) => {
+  await prefs(page)
+  await login(page, 'demo-admin', '/admin')
+  await page.goto('/admin/products')
+  await expect(page.getByRole('row').nth(1)).toBeVisible()
+
+  // The UI refuses these files first; here they go straight to the API to prove the server refuses them too.
+  const statuses = await page.evaluate(async () => {
+    const { adminApi } = await import('/src/api/shop.ts')
+    const { items } = await adminApi.listCatalog('products', { size: 1 })
+    const id = items[0].id
+    const attempt = async (file: File) => {
+      try { await adminApi.uploadImage('products', id, file); return 200 } catch (e) { return (e as { status: number }).status }
+    }
+    const png = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 0])
+    return {
+      wrongType: await attempt(new File(['<?php echo 1; ?>'], 'evil.png', { type: 'image/png' })),
+      tooLarge: await attempt(new File([png, new Uint8Array(2 * 1024 * 1024 + 10)], 'big.png', { type: 'image/png' })),
+    }
+  })
+  expect(statuses).toEqual({ wrongType: 415, tooLarge: 413 })
+
+  // CANCEL is final: PAID -> DUE style moves answer 409
+  const conflict = await page.evaluate(async () => {
+    const { adminApi } = await import('/src/api/shop.ts')
+    const { items } = await adminApi.listOrders({ state: 'CANCEL', size: 1 })
+    try { await adminApi.setOrderState(items[0].id, 'PAID'); return 200 } catch (e) { return (e as { status: number }).status }
+  })
+  expect(conflict).toBe(409)
+})
+
+test('demo-admin: the UI rejects a bad image file with a clear message', async ({ page }) => {
+  await prefs(page)
+  await login(page, 'demo-admin', '/admin/products')
+  await page.goto('/admin/products')
+  await page.getByRole('button', { name: 'Thêm mới' }).click()
+  await page.getByTestId('image-input').setInputFiles({ name: 'evil.png', mimeType: 'image/png', buffer: Buffer.from('<?php echo 1; ?>') })
+  await expect(page.getByText('Chỉ nhận ảnh PNG, JPEG hoặc WebP.')).toBeVisible()
+  await page.getByTestId('image-input').setInputFiles({ name: 'big.png', mimeType: 'image/png', buffer: Buffer.concat([Buffer.from([0x89, 0x50, 0x4e, 0x47]), Buffer.alloc(2 * 1024 * 1024 + 10)]) })
+  await expect(page.getByText('Ảnh quá lớn, tối đa 2 MB.')).toBeVisible()
+})
+
 // Last on purpose: the earlier tests mark today's order PAID (seed PAID orders are from 2020-21), giving the chart a data point.
 test('demo-admin: dashboard has real numbers', async ({ page }) => {
   await prefs(page)

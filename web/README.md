@@ -60,7 +60,12 @@ to the Spring app (`127.0.0.1:8481` on the VM); the web container is published a
 Backend contract (regenerated against dan-petstore-modernize ed5a50bc):
 - `POST /orders` takes `paymentMethod` (COD|ATM, default COD); orders return it and the order pages show it.
 - Contact form: `POST /api/v1/contact` (JSON `{name,email,message}`, 204) through `CONTACT_PATH`; uploaded images are served from
-  `/api/v1/photos/**`. Both live in `src/api/urls.ts` (`imgUrl()` also maps the legacy `/user-photos/` prefix).
+  `/api/v1/photos/catalog/**`. Both live in `src/api/urls.ts`.
+- Errors: 400/401/403/404/409/413/415 map to Vietnamese/English toasts in `src/api/errors.ts`. Limits mirrored in the UI (`src/lib/limits.ts`):
+  quantity 1..100, 50 lines per order, price <= 100 million, images <= 2 MB checked by content before upload (`src/lib/image.ts`).
+  Order states follow DUE -> PAID|CANCEL, PAID -> CANCEL (`src/lib/orderState.ts`), anything else is a 409.
+- Orders belong to the token `sub`; another user's order code answers 404.
+- The compose stack runs the `prod` profile, so OpenAPI is off: add `PETSTORE_API_DOCS=true` to the app (compose override) before `pnpm gen:api`.
 - Tokens must carry `aud=petstore-api` (the realm import adds the audience mapper to `petstore-web`).
 
 ## Real-stack e2e (Playwright, MSW off)
