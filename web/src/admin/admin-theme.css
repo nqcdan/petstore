@@ -1,0 +1,21 @@
+/* PETS Admin look: near-black sidebar and a deeper orange than the shop, in light and dark mode */
+html[data-app='admin'] {
+  --primary: oklch(0.55 0.18 40);
+  --ring: oklch(0.55 0.18 40);
+  --chart-1: oklch(0.55 0.18 40);
+  --sidebar: oklch(0.21 0.01 260);
+  --sidebar-foreground: oklch(0.96 0 0);
+  --sidebar-primary: oklch(0.62 0.19 42);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --sidebar-accent: oklch(0.29 0.012 260);
+  --sidebar-accent-foreground: oklch(0.98 0 0);
+  --sidebar-border: oklch(0.31 0.012 260);
+  --sidebar-ring: oklch(0.62 0.19 42);
+}
+html[data-app='admin'] [data-slot='sidebar-inner'] .text-muted-foreground { color: oklch(0.72 0.01 260); }
+html[data-app='admin'].dark {
+  --primary: oklch(0.66 0.18 42);
+  --ring: oklch(0.66 0.18 42);
+  --chart-1: oklch(0.66 0.18 42);
+  --sidebar: oklch(0.17 0.008 260);
+}

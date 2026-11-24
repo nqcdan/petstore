@@ -4,10 +4,11 @@ import { ShieldAlert } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { DemoAccounts } from '@/components/DemoAccounts'
+import { IS_ADMIN_APP } from '@/admin/base'
 import { useAuth } from './context'
 
 export function RequireAuth({ admin = false, children }: { admin?: boolean; children: ReactNode }) {
-  const { ready, user, isAdmin, login, mock } = useAuth()
+  const { ready, user, isAdmin, login, logout, mock } = useAuth()
   const { t } = useTranslation()
 
   // Real Keycloak: go straight to the SSO page. Mock mode shows a chooser instead.
@@ -36,7 +37,7 @@ export function RequireAuth({ admin = false, children }: { admin?: boolean; chil
         <ShieldAlert className="size-10 text-destructive" />
         <h1 className="text-2xl font-semibold">{t('auth.forbiddenTitle')}</h1>
         <p className="text-muted-foreground">{t('auth.forbidden')}</p>
-        <Button asChild><Link to="/">{t('nav.home')}</Link></Button>
+        {IS_ADMIN_APP ? <Button onClick={logout}>{t('nav.logout')}</Button> : <Button asChild><Link to="/">{t('nav.home')}</Link></Button>}
       </div>
     )
   }
