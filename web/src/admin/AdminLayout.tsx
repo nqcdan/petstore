@@ -1,7 +1,8 @@
-import { Boxes, LayoutDashboard, LogOut, Package, ReceiptText, Store, UserCog, Users, UtensilsCrossed } from 'lucide-react'
+import { Boxes, LayoutDashboard, LogOut, Package, ReceiptText, Store, UserCog, UserRound, Users, UtensilsCrossed } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link, NavLink, Outlet } from 'react-router-dom'
 import { useAuth } from '@/auth/context'
+import { Button } from '@/components/ui/button'
 import { LangToggle, ThemeToggle } from '@/components/layout/Toggles'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { Separator } from '@/components/ui/separator'
@@ -60,10 +61,13 @@ export function AdminLayout() {
         <SidebarFooter>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip={t('admin.backToShop')}><Link to="/"><Store /><span>{t('admin.backToShop')}</span></Link></SidebarMenuButton>
+              <SidebarMenuButton size="lg" className="pointer-events-none" tooltip={user?.name}>
+                <UserRound />
+                <div className="grid min-w-0 text-left leading-tight"><span className="truncate font-medium">{user?.name}</span><span className="truncate text-xs text-muted-foreground">{t('admin.roleAdmin')}</span></div>
+              </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton onClick={logout} tooltip={t('nav.logout')}><LogOut /><span className="truncate">{user?.name} · {t('nav.logout')}</span></SidebarMenuButton>
+              <SidebarMenuButton onClick={logout} tooltip={t('nav.logout')}><LogOut /><span>{t('nav.logout')}</span></SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarFooter>
@@ -73,7 +77,9 @@ export function AdminLayout() {
         <header className="flex h-14 items-center gap-2 border-b px-4">
           <SidebarTrigger />
           <Separator orientation="vertical" className="h-5" />
-          <div className="ml-auto flex items-center gap-1"><LangToggle /><ThemeToggle /></div>
+          <div className="ml-auto flex items-center gap-1">
+            <Button asChild variant="outline" size="sm"><Link to="/"><Store /> <span className="hidden sm:inline">{t('admin.backToShop')}</span></Link></Button>
+            <LangToggle /><ThemeToggle /></div>
         </header>
         <div className="flex-1 space-y-6 p-4 md:p-6"><Outlet /></div>
       </SidebarInset>

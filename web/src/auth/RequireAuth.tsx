@@ -1,5 +1,6 @@
 import { useEffect, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ShieldAlert } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { DemoAccounts } from '@/components/DemoAccounts'
@@ -32,7 +33,9 @@ export function RequireAuth({ admin = false, children }: { admin?: boolean; chil
   if (admin && !isAdmin) {
     return (
       <div className="mx-auto flex max-w-md flex-col items-center gap-4 py-24 text-center">
-        <h1 className="text-2xl font-semibold">{t('auth.forbidden')}</h1>
+        <ShieldAlert className="size-10 text-destructive" />
+        <h1 className="text-2xl font-semibold">{t('auth.forbiddenTitle')}</h1>
+        <p className="text-muted-foreground">{t('auth.forbidden')}</p>
         <Button asChild><Link to="/">{t('nav.home')}</Link></Button>
       </div>
     )

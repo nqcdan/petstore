@@ -11,7 +11,7 @@ export const vi = {
   },
   auth: {
     demoTitle: 'Tài khoản demo', copy: 'Sao chép',
-    required: 'Vui lòng đăng nhập để tiếp tục', forbidden: 'Bạn không có quyền truy cập trang này',
+    required: 'Vui lòng đăng nhập để tiếp tục', forbiddenTitle: 'Không có quyền', forbidden: 'Bạn không có quyền truy cập trang này',
     loginCustomer: 'Đăng nhập khách hàng (demo)', loginAdmin: 'Đăng nhập quản trị (demo)',
   },
   home: {
@@ -70,7 +70,7 @@ export const vi = {
   notFound: { title: 'Không tìm thấy trang', text: 'Trang bạn tìm không tồn tại.' },
   admin: {
     createAccount: 'Thêm tài khoản', editAccount: 'Sửa tài khoản', gender: 'Giới tính', male: 'Nam', female: 'Nữ', birthday: 'Ngày sinh', address: 'Địa chỉ', unset: 'Không chọn', phoneInvalid: 'Số điện thoại gồm 10 chữ số, bắt đầu bằng 0',
-    title: 'Quản trị', dashboard: 'Tổng quan', products: 'Vật phẩm', foods: 'Thức ăn', orders: 'Đơn hàng', customers: 'Khách hàng', employees: 'Nhân viên', backToShop: 'Về cửa hàng',
+    title: 'Quản trị', dashboard: 'Tổng quan', products: 'Vật phẩm', foods: 'Thức ăn', orders: 'Đơn hàng', customers: 'Khách hàng', employees: 'Nhân viên', roleAdmin: 'Quản trị viên', backToShop: 'Về cửa hàng',
     kpi: { revenue: 'Doanh thu 30 ngày', orders: 'Đơn hàng', customers: 'Khách hàng', avg: 'Giá trị đơn trung bình' },
     revenue30: 'Doanh thu 30 ngày (đơn đã thanh toán)', ordersByState: 'Đơn theo trạng thái', topItems: 'Sản phẩm bán chạy', sold: 'Đã bán',
     name: 'Tên', type: 'Loại', price: 'Giá', description: 'Mô tả', image: 'Ảnh', uploadImage: 'Tải ảnh lên', imageAfterSave: 'Ảnh tải lên sau khi lưu', verified: 'Xác minh', createItem: 'Thêm sản phẩm', editItem: 'Sửa sản phẩm',

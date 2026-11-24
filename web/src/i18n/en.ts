@@ -13,7 +13,7 @@ export const en: Resources = {
   },
   auth: {
     demoTitle: 'Demo accounts', copy: 'Copy',
-    required: 'Please sign in to continue', forbidden: 'You do not have access to this page',
+    required: 'Please sign in to continue', forbiddenTitle: 'No permission', forbidden: 'You do not have access to this page',
     loginCustomer: 'Sign in as customer (demo)', loginAdmin: 'Sign in as admin (demo)',
   },
   home: {
@@ -72,7 +72,7 @@ export const en: Resources = {
   notFound: { title: 'Page not found', text: 'The page you are looking for does not exist.' },
   admin: {
     createAccount: 'Add account', editAccount: 'Edit account', gender: 'Gender', male: 'Male', female: 'Female', birthday: 'Birthday', address: 'Address', unset: 'Not set', phoneInvalid: '10 digits starting with 0',
-    title: 'Admin', dashboard: 'Dashboard', products: 'Accessories', foods: 'Food', orders: 'Orders', customers: 'Customers', employees: 'Employees', backToShop: 'Back to shop',
+    title: 'Admin', dashboard: 'Dashboard', products: 'Accessories', foods: 'Food', orders: 'Orders', customers: 'Customers', employees: 'Employees', roleAdmin: 'Administrator', backToShop: 'Back to shop',
     kpi: { revenue: 'Revenue, 30 days', orders: 'Orders', customers: 'Customers', avg: 'Average order value' },
     revenue30: 'Revenue, last 30 days (paid orders)', ordersByState: 'Orders by status', topItems: 'Top items', sold: 'Sold',
     name: 'Name', type: 'Type', price: 'Price', description: 'Description', image: 'Image', uploadImage: 'Upload image', imageAfterSave: 'Image upload after saving', verified: 'Verified', createItem: 'Add item', editItem: 'Edit item',

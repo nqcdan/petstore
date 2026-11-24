@@ -18,6 +18,7 @@ test('anonymous: landing, shop and demo accounts box', async ({ page }) => {
 test('demo-user buys, reaches checkout and sees the order in history', async ({ page }) => {
   await prefs(page)
   await login(page, 'demo-user')
+  await expect(page.getByRole('link', { name: 'Quản trị', exact: true })).toHaveCount(0)
 
   await page.goto('/shop/foods')
   await expect(page.getByTestId('product-card').first()).toBeVisible()
