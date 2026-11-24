@@ -28,6 +28,4 @@ npm run build                     # writes both PDFs next to this README
   after the empty login form is captured. Customer, employee and username columns are blurred before the screenshot.
 - `build.mjs` holds the HTML/CSS template, the captions and the slide order. Inter is embedded from
   `@fontsource-variable/inter`; screenshots are re-encoded as JPEG so each PDF stays well under 12 MB.
-- The admin host does not serve `/img/*` yet (it answers with `index.html`), so the capture fetches product thumbnails
-  from the shop host through a Playwright route. Remove `borrowImagesFromShop` once the proxy is fixed.
 - After `shop-order`, restore the demo data with `deploy/reset-demo.sh` on the server.

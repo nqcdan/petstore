@@ -78,18 +78,8 @@ async function login(page, user, password) {
   await page.click('#kc-login')
 }
 
-// The admin host does not proxy /img yet (serves index.html), so product thumbnails come from the shop host.
-async function borrowImagesFromShop(ctx) {
-  await ctx.route(`${ADMIN}/img/**`, async (route) => {
-    const url = new URL(route.request().url())
-    const resp = await route.fetch({ url: `${SHOP}${url.pathname}` })
-    await route.fulfill({ response: resp })
-  })
-}
-
 async function admin(browser) {
   const ctx = await newContext(browser)
-  await borrowImagesFromShop(ctx)
   const page = await ctx.newPage()
   await page.goto(ADMIN)
   await toKeycloak(page, 'admin-01-keycloak', ['#kc-login', '#username'])
@@ -114,7 +104,7 @@ async function admin(browser) {
   await page.getByRole('button', { name: /Add new/i }).click()
   const dialog = page.getByRole('dialog')
   await dialog.waitFor()
-  const img = await ctx.request.get(`${SHOP}/img/product/product2.jpg`)
+  const img = await ctx.request.get(`${ADMIN}/img/product/product2.jpg`)
   await dialog.locator('input[type=file]').setInputFiles({ name: 'sample.jpg', mimeType: 'image/jpeg', buffer: await img.body() })
   await dialog.locator('input').first().fill('Sample dog bed')
   await sleep(600)
@@ -139,10 +129,14 @@ async function admin(browser) {
   await blurCells(page, ['customer'])
   await shot(page, 'admin-06b-orders-filtered')
 
-  // Order detail + status dropdown (open only, Escape closes without changing). The newest order is a demo-user one: no real names.
+  // Order detail + status dropdown (open only, Escape closes without changing). The customer name in the dialog is blurred.
   await page.getByRole('button', { name: 'View' }).first().click()
   const od = page.getByRole('dialog')
   await od.getByRole('combobox').waitFor()
+  // Customer name sits in the dialog subtitle and in the note: blur both.
+  await od.evaluate((el) => el.querySelectorAll('[data-slot="dialog-description"], p').forEach((p) => {
+    if (p.matches('[data-slot="dialog-description"]') || /^note/i.test(p.textContent.trim())) p.style.filter = 'blur(6px)'
+  }))
   await od.getByRole('combobox').click()
   await sleep(600)
   await shot(page, 'admin-07-order-detail', { marks: [page.locator('#state-select')] })
@@ -151,11 +145,15 @@ async function admin(browser) {
 
   await page.goto(`${ADMIN}/customers`)
   await page.getByRole('row').nth(1).waitFor()
+  await page.waitForLoadState('networkidle').catch(() => {})
+  await sleep(1200) // rows are re-rendered when data arrives; blur only after that
   await blurCells(page, ['full name', 'username', 'account', 'email', 'phone'])
   await shot(page, 'admin-08-customers')
 
   await page.goto(`${ADMIN}/employees`)
   await page.getByRole('row').nth(1).waitFor()
+  await page.waitForLoadState('networkidle').catch(() => {})
+  await sleep(1200)
   await blurCells(page, ['full name', 'account', 'email', 'phone', 'username'])
   await shot(page, 'admin-09-employees')
 
