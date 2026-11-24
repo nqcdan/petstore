@@ -40,6 +40,24 @@ test('demo-admin: create, edit and delete a product', async ({ page }) => {
   await expect(page.getByRole('row', { name: new RegExp(NAME) })).toHaveCount(0)
 })
 
+test('demo-admin: enters the admin from the shop header and goes back', async ({ page }) => {
+  await prefs(page)
+  await login(page, 'demo-admin')
+  await page.getByRole('link', { name: 'Quản trị', exact: true }).click()
+  await expect(page).toHaveURL(/\/admin$/)
+  await expect(page.getByText('Quản trị viên')).toBeVisible()
+  await page.getByRole('link', { name: 'Về cửa hàng' }).click()
+  await expect(page).toHaveURL('http://localhost:5173/')
+})
+
+test('demo-user: /admin shows no-permission page, not a blank page or a login loop', async ({ page }) => {
+  await prefs(page)
+  await login(page, 'demo-user')
+  await page.goto('/admin')
+  await expect(page.getByRole('heading', { name: 'Không có quyền' })).toBeVisible()
+  await expect(page).toHaveURL(/\/admin$/)
+})
+
 test('demo-admin: filter orders and change an order state', async ({ page }) => {
   await prefs(page)
   await login(page, 'demo-admin', '/admin/orders')

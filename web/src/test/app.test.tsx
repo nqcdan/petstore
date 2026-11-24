@@ -4,7 +4,9 @@ import { Route, Routes } from 'react-router-dom'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { adminApi, shopApi } from '@/api/shop'
 import { RequireAuth } from '@/auth/RequireAuth'
+import { AdminLayout } from '@/admin/AdminLayout'
 import { Dashboard } from '@/admin/Dashboard'
+import { SiteLayout } from '@/components/layout/SiteLayout'
 import { Cart } from '@/pages/Cart'
 import { Shop } from '@/pages/Shop'
 import { resetDb } from '@/mocks/db'
@@ -74,6 +76,13 @@ describe('access control', () => {
     expect(await screen.findByText('Bạn không có quyền truy cập trang này')).toBeInTheDocument()
   })
 
+  it('explains the missing permission to customers', async () => {
+    localStorage.setItem('petstore.mock-user', 'customer')
+    renderAt(page, '/admin')
+    expect(await screen.findByRole('heading', { name: 'Không có quyền' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Trang chủ' })).toHaveAttribute('href', '/')
+  })
+
   it('shows KPIs to admins', async () => {
     localStorage.setItem('petstore.mock-user', 'admin')
     renderAt(page, '/admin')
@@ -83,6 +92,44 @@ describe('access control', () => {
   it('API answers 403 for a customer token on /admin/**', async () => {
     localStorage.setItem('petstore.mock-user', 'customer')
     await expect(adminApi.stats()).rejects.toMatchObject({ status: 403 })
+  })
+})
+
+describe('admin entry', () => {
+  const site = <Routes><Route element={<SiteLayout />}><Route index element={<p>home</p>} /></Route></Routes>
+  const adminLinks = () => screen.queryAllByRole('link', { name: 'Quản trị' }).filter((a) => a.getAttribute('href') === '/admin')
+
+  it('hides the admin entry from guests', async () => {
+    const user = userEvent.setup()
+    renderAt(site)
+    expect(adminLinks()).toHaveLength(0)
+    await user.click(screen.getByRole('button', { name: 'Menu' }))
+    expect(adminLinks()).toHaveLength(0)
+  })
+
+  it('hides the admin entry from customers', async () => {
+    localStorage.setItem('petstore.mock-user', 'customer')
+    renderAt(site)
+    await screen.findByRole('button', { name: 'Nguyễn Văn An' })
+    expect(adminLinks()).toHaveLength(0)
+  })
+
+  it('shows the admin entry in the header and the mobile menu to admins', async () => {
+    const user = userEvent.setup()
+    localStorage.setItem('petstore.mock-user', 'admin')
+    renderAt(site)
+    expect(adminLinks()).toHaveLength(1)
+    await user.click(screen.getByRole('button', { name: 'Menu' }))
+    expect(within(await screen.findByRole('dialog')).getByRole('link', { name: 'Quản trị' })).toHaveAttribute('href', '/admin')
+  })
+
+  it('admin layout shows who is signed in, their role and a way back to the shop', async () => {
+    localStorage.setItem('petstore.mock-user', 'admin')
+    renderAt(<Routes><Route path="/admin" element={<AdminLayout />}><Route index element={<p>x</p>} /></Route></Routes>, '/admin')
+    expect(await screen.findByText('Trần Thị Bích')).toBeInTheDocument()
+    expect(screen.getByText('Quản trị viên')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Về cửa hàng' })).toHaveAttribute('href', '/')
+    expect(screen.getByRole('button', { name: 'Đăng xuất' })).toBeInTheDocument()
   })
 })
 
