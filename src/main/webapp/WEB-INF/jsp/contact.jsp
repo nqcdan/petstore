@@ -31,7 +31,7 @@
                         <ul>
                             <li>
                                 <h4>Chi Nhánh 1</h4>
-                                <p>Tòa Nhà Landmark 81 <br />Hotline: +84 928 494 156</p>
+                                <p>Tòa Nhà Landmark 81</p>
                             </li>
                             
                         </ul>

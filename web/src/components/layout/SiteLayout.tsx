@@ -136,7 +136,6 @@ export function SiteLayout() {
             {[['Facebook', 'https://www.facebook.com/PETS-Coffee-And-Services-100166812056116'], ['Instagram', 'https://www.instagram.com/petscoffeeandservices/'], ['Pinterest', 'https://www.pinterest.com/petscoffeeandservices/_saved/']].map(([n, h]) => (
               <a key={n} href={h} target="_blank" rel="noreferrer" className="block text-muted-foreground hover:text-foreground">{n}</a>
             ))}
-            <p className="pt-2 text-muted-foreground">Landmark 81 · +84 928 494 156</p>
           </div>
         </div>
         <div className="border-t py-4 text-center text-xs text-muted-foreground">© {new Date().getFullYear()} {t('footer.rights')}</div>
