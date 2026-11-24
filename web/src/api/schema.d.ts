@@ -86,6 +86,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/contact": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Contact form, public. Stored always, mailed to the store when SMTP is configured */
+        post: operations["send"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/cart/quote": {
         parameters: {
             query?: never;
@@ -428,6 +445,8 @@ export interface components {
         };
         OrderRequest: {
             items: components["schemas"]["CartLine"][];
+            /** @enum {string} */
+            paymentMethod?: "COD" | "ATM";
             note?: string;
         };
         OrderDetail: {
@@ -444,6 +463,8 @@ export interface components {
             customerName?: string;
             customerUsername?: string;
             employeeUsername?: string;
+            /** @enum {string} */
+            paymentMethod?: "COD" | "ATM";
             note?: string;
             items?: components["schemas"]["OrderItemDto"][];
         };
@@ -454,6 +475,12 @@ export interface components {
             quantity?: number;
             /** Format: int32 */
             total?: number;
+        };
+        ContactRequest: {
+            name: string;
+            /** Format: email */
+            email: string;
+            message: string;
         };
         Quote: {
             items?: components["schemas"]["OrderItemDto"][];
@@ -495,6 +522,8 @@ export interface components {
             /** Format: date-time */
             transactionDate?: string;
             customerName?: string;
+            /** @enum {string} */
+            paymentMethod?: "COD" | "ATM";
         };
         PageDtoOrderSummary: {
             items?: components["schemas"]["OrderSummary"][];
@@ -877,6 +906,28 @@ export interface operations {
                 content: {
                     "*/*": components["schemas"]["OrderDetail"];
                 };
+            };
+        };
+    };
+    send: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ContactRequest"];
+            };
+        };
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };

@@ -42,6 +42,7 @@ export interface CatalogQuery extends PageParams {
 }
 
 export type OrderState = 'DUE' | 'PAID' | 'CANCEL'
+export type PaymentMethod = 'COD' | 'ATM'
 
 export interface OrderItem {
   name: string
@@ -56,6 +57,7 @@ export interface OrderSummary {
   state: OrderState
   total: number
   currency: string
+  paymentMethod: PaymentMethod
   transactionDate: string // ISO-8601 instant
   customerName: string | null
 }
@@ -75,6 +77,7 @@ export interface CartLine {
 
 export interface OrderRequest {
   items: CartLine[]
+  paymentMethod?: PaymentMethod // server default COD
   note?: string
 }
 

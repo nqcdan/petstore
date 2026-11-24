@@ -23,4 +23,5 @@ export type RequestChecks = [
   Ok<T.OrderRequest, S['OrderRequest']>,
   Ok<{ state: T.OrderState }, S['StateRequest']>,
   Ok<T.AccountInput, S['AccountRequest']>,
+  Ok<T.ContactInput, S['ContactRequest']>,
 ]
