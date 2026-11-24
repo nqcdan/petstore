@@ -15,7 +15,7 @@ E2E  = docker compose -p $(PROJECT)-e2e -f docker-compose.yml -f docker-compose.
 
 .PHONY: up down test test-backend test-web e2e gen-api images builder
 
-up:            ## dev stack: web :3000, app :8081, Keycloak :8180, PostgreSQL
+up:            ## dev stack: web :3000, admin :3001, app :8081, Keycloak :8180, PostgreSQL
 	$(DEV) up -d --build --wait
 
 down:          ## stop the dev stack and delete its volumes
@@ -40,5 +40,5 @@ builder:       ## one-time: buildx builder that can build several architectures
 	docker buildx inspect petstore >/dev/null 2>&1 || docker buildx create --name petstore --driver docker-container
 	docker buildx use petstore
 
-images:        ## app + web for linux/amd64,linux/arm64; PUSH=1 REGISTRY=ghcr.io/nqcdan/ pushes (layer timestamps = commit time)
+images:        ## app + web + admin (petstore-admin) for linux/amd64,linux/arm64; PUSH=1 REGISTRY=ghcr.io/nqcdan/ pushes (layer timestamps = commit time)
 	docker buildx bake --progress plain $(PUSH_OPTS)
