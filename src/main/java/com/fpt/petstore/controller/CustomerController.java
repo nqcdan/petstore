@@ -17,7 +17,8 @@ import jakarta.transaction.Transactional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fpt.petstore.entities.BaseAccount;
 import com.fpt.petstore.services.CookieService;
-import com.fpt.petstore.services.FileUploadUtil;
+import com.fpt.petstore.services.ImageStore;
+import org.springframework.web.server.ResponseStatusException;
 import com.fpt.petstore.services.RandomString;
 import com.fpt.petstore.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,8 +45,8 @@ import static com.fpt.petstore.entities.ConstVariable.*;
 @Controller
 @SuppressWarnings("unchecked")
 public class CustomerController {
-    @org.springframework.beans.factory.annotation.Value("${petstore.upload-dir:user-photos}")
-    private String uploadDir;
+    @Autowired
+    private ImageStore imageStore;
     @Autowired
     private JavaMailSender mailSender;
     @Autowired
@@ -136,17 +136,21 @@ public class CustomerController {
         Customer sessionCustomer = (Customer) session.getAttribute("customer");
         String fullName = m.get("fullName");
         String phone = m.get("phoneNumber");
-        String avatarUrl = StringUtils.cleanPath(multipartFile.getOriginalFilename());
         String address = m.get("address");
         String birthday = m.get("birthday");
         Date birthdayFormat = DateUtil.parseDate(birthday);
-        if (avatarUrl.equals("")) {
-            petStoreService.updateCustomer(sessionCustomer.getId(), fullName, phone, address, sessionCustomer.getAvatarUrl(), birthdayFormat);
-        } else {
-            petStoreService.updateCustomer(sessionCustomer.getId(), fullName, phone, address, avatarUrl, birthdayFormat);
-            String uploadDir = this.uploadDir + "/" + sessionCustomer.getId();
-            FileUploadUtil.saveFile(uploadDir, avatarUrl, multipartFile);
+        String avatarUrl = sessionCustomer.getAvatarUrl();
+        if (!multipartFile.isEmpty()) {
+            try {
+                avatarUrl = imageStore.store("avatars/" + sessionCustomer.getId(), multipartFile);
+            } catch (ResponseStatusException e) {
+                redirectAttributes.addFlashAttribute(messageNotification, e.getReason());
+                redirectAttributes.addFlashAttribute(themeNotification, "error");
+                redirectAttributes.addFlashAttribute(titleNotification, "Lỗi");
+                return redirectRefer + referer;
+            }
         }
+        petStoreService.updateCustomer(sessionCustomer.getId(), fullName, phone, address, avatarUrl, birthdayFormat);
         redirectAttributes.addFlashAttribute(messageNotification, "Cập nhật tài khoản thành công");
         redirectAttributes.addFlashAttribute(themeNotification, "success");
         redirectAttributes.addFlashAttribute(titleNotification, "Thành công");

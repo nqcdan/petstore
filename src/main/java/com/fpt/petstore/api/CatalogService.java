@@ -10,8 +10,7 @@ import com.fpt.petstore.entities.Product;
 import com.fpt.petstore.entities.Product.ProductType;
 import com.fpt.petstore.repository.FoodRepository;
 import com.fpt.petstore.repository.ProductsRepository;
-import com.fpt.petstore.services.FileUploadUtil;
-import org.springframework.beans.factory.annotation.Value;
+import com.fpt.petstore.services.ImageStore;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -23,11 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.IOException;
 import java.text.Normalizer;
 import java.util.Locale;
-import java.util.Map;
-import java.util.UUID;
 
 /** Products and foods share one shape (BaseProduct), so one service handles both. */
 @Service
@@ -36,17 +32,15 @@ public class CatalogService {
 
   public enum Kind { PRODUCT, FOOD }
 
-  private static final Map<String, String> IMAGE_TYPES = Map.of("image/png", "png", "image/jpeg", "jpg", "image/webp", "webp");
-
   private final ProductsRepository products;
   private final FoodRepository foods;
 
-  private final String uploadDir;
+  private final ImageStore images;
 
-  public CatalogService(ProductsRepository products, FoodRepository foods, @Value("${petstore.upload-dir:user-photos}") String uploadDir) {
+  public CatalogService(ProductsRepository products, FoodRepository foods, ImageStore images) {
     this.products = products;
     this.foods = foods;
-    this.uploadDir = uploadDir;
+    this.images = images;
   }
 
   @Transactional(readOnly = true)
@@ -84,18 +78,8 @@ public class CatalogService {
   }
 
   public CatalogItem uploadImage(Kind kind, Long id, MultipartFile file) {
-    String extension = IMAGE_TYPES.get(file.getContentType());
-    if (extension == null) {
-      throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "Only PNG, JPEG or WebP images are accepted");
-    }
     BaseProduct entity = find(kind, id);
-    String name = UUID.randomUUID() + "." + extension;
-    try {
-      FileUploadUtil.saveFile(uploadDir + "/catalog", name, file);
-    } catch (IOException e) {
-      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not store the image", e);
-    }
-    entity.setPic("catalog/" + name);
+    entity.setPic("catalog/" + images.store("catalog", file));
     return toItem(repo(kind).save(entity));
   }
 

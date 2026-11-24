@@ -57,7 +57,7 @@ public class AdminCatalogController {
   }
 
   @PostMapping(value = "/products/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  @Operation(summary = "Upload a product image (PNG, JPEG or WebP, up to 5 MB) as multipart field `file`")
+  @Operation(summary = "Upload a product image (PNG, JPEG or WebP, up to 2 MB) as multipart field `file`")
   public CatalogItem productImage(@PathVariable Long id, @RequestPart("file") MultipartFile file) {
     return catalog.uploadImage(Kind.PRODUCT, id, file);
   }
@@ -91,7 +91,7 @@ public class AdminCatalogController {
   }
 
   @PostMapping(value = "/foods/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  @Operation(summary = "Upload a food image (PNG, JPEG or WebP, up to 5 MB) as multipart field `file`")
+  @Operation(summary = "Upload a food image (PNG, JPEG or WebP, up to 2 MB) as multipart field `file`")
   public CatalogItem foodImage(@PathVariable Long id, @RequestPart("file") MultipartFile file) {
     return catalog.uploadImage(Kind.FOOD, id, file);
   }

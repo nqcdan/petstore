@@ -117,7 +117,7 @@ class ApiTests {
 		mvc.perform(post("/api/v1/admin/products").with(admin()).contentType(MediaType.APPLICATION_JSON).content("{\"name\":\"\",\"price\":-1}"))
 			.andExpect(status().isBadRequest());
 
-		MockMultipartFile image = new MockMultipartFile("file", "a.png", "image/png", new byte[] { 1, 2, 3 });
+		MockMultipartFile image = new MockMultipartFile("file", "../../a.png", "image/png", new byte[] { (byte) 0x89, 'P', 'N', 'G', 13, 10, 26, 10, 0 });
 		mvc.perform(multipart("/api/v1/admin/products/" + id + "/image").file(image).with(admin())).andExpect(status().isOk())
 			.andExpect(jsonPath("$.imageUrl").value(org.hamcrest.Matchers.startsWith("/api/v1/photos/catalog/")));
 		String url = json.readTree(mvc.perform(get("/api/v1/admin/products/" + id).with(admin())).andReturn().getResponse().getContentAsString())
@@ -125,6 +125,8 @@ class ApiTests {
 		mvc.perform(get(url)).andExpect(status().isOk());
 		MockMultipartFile text = new MockMultipartFile("file", "a.txt", "text/plain", new byte[] { 1 });
 		mvc.perform(multipart("/api/v1/admin/products/" + id + "/image").file(text).with(admin())).andExpect(status().isUnsupportedMediaType());
+		MockMultipartFile spoofed = new MockMultipartFile("file", "a.png", "image/png", "<html>".getBytes());
+		mvc.perform(multipart("/api/v1/admin/products/" + id + "/image").file(spoofed).with(admin())).andExpect(status().isUnsupportedMediaType());
 
 		mvc.perform(delete("/api/v1/admin/products/" + id).with(admin())).andExpect(status().isNoContent());
 		mvc.perform(get("/api/v1/products/" + id)).andExpect(status().isNotFound());
