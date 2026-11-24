@@ -2,6 +2,7 @@ package com.fpt.petstore.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fpt.petstore.IsolatedDb;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -25,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest(properties = "petstore.upload-dir=target/test-uploads")
+@SpringBootTest(properties = { "petstore.upload-dir=target/test-uploads", IsolatedDb.URL + "api_tests", IsolatedDb.CREATE + "api_tests" })
 @AutoConfigureMockMvc
 class ApiTests {
 

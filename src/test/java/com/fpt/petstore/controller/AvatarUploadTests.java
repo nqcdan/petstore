@@ -1,5 +1,6 @@
 package com.fpt.petstore.controller;
 
+import com.fpt.petstore.IsolatedDb;
 import com.fpt.petstore.entities.Customer;
 import com.fpt.petstore.repository.CustomerRepository;
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /** Regression: the legacy avatar upload used the client file name, so "../../app.war" could overwrite any writable file. */
-@SpringBootTest(properties = "petstore.upload-dir=target/test-avatars/uploads")
+@SpringBootTest(properties = { "petstore.upload-dir=target/test-avatars/uploads", IsolatedDb.URL + "avatar_tests", IsolatedDb.CREATE + "avatar_tests" })
 @AutoConfigureMockMvc
 class AvatarUploadTests {
 
