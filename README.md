@@ -4,6 +4,26 @@ Online pet shop: a catalog of pet food and supplies, a cart, orders and an admin
 Started as a graduation project (Spring MVC + JSP), now being modernized into a product with a
 REST API for a React front end. The original JSP site still runs next to the API until React replaces it.
 
+## Live demo
+
+**https://petstore.nqcdan.com** (shop, cart, checkout, order history) and **https://petstore.nqcdan.com/admin** (back office).
+Sign in goes through Keycloak SSO. Use the shared demo accounts, they are public:
+
+| Account | Password | Can do |
+|---|---|---|
+| `demo-user` | `Demo@123` | Shop, cart, checkout, own orders |
+| `demo-admin` | `Demo@123` | Everything above plus `/admin`: dashboard, products and foods, orders, customers, employees |
+
+Data is demo data and is reset from time to time.
+
+| Shop | Admin dashboard |
+|---|---|
+| ![Shop](web/docs/02-shop.png) | ![Admin dashboard](web/docs/10-admin-dashboard.png) |
+
+More screenshots are in [`web/docs`](web/docs). Architecture and the SSO login flow:
+[deployment](docs/architecture/petstore-deployment-architecture.png),
+[SSO flow](docs/architecture/petstore-sso-login-flow.png).
+
 ## Stack
 
 - Java 21, Spring Boot 3.5 (Spring MVC, Spring Data JPA, Spring Security)
@@ -63,7 +83,6 @@ All settings are environment variables.
 |---|---|---|
 | `SPRING_PROFILES_ACTIVE` | none | `prod` (set in the image) hardens cookies, hides Swagger and removes the default DB password |
 | `DB_URL`, `DB_USERNAME`, `DB_PASSWORD` | `jdbc:postgresql://localhost:5432/petstore`, `petstore`, `petstore` | PostgreSQL connection (`prod` has no default password) |
-| `DB_URL`, `DB_USERNAME`, `DB_PASSWORD` | local PostgreSQL | Used by the `prod` profile |
 | `KEYCLOAK_ISSUER_URI` | `http://localhost:8180/realms/petstore` | Token issuer, must equal the `iss` claim |
 | `SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI` | derived from the issuer | Optional internal URL for the signing keys |
 | `KEYCLOAK_API_CLIENT_ID` | `petstore-api` | Required token audience; its client roles are also read from the token |
