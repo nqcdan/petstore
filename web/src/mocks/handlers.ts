@@ -56,8 +56,8 @@ function stats(): AdminStats {
   }
 }
 
-const summary = ({ id, code, state, total, currency, transactionDate, customerName }: OrderDetail): OrderSummary =>
-  ({ id, code, state, total, currency, transactionDate, customerName })
+const summary = ({ id, code, state, total, currency, paymentMethod, transactionDate, customerName }: OrderDetail): OrderSummary =>
+  ({ id, code, state, total, currency, paymentMethod, transactionDate, customerName })
 
 const catalogAdmin = (kind: CatalogKind): HttpHandler[] => [
   http.get(url(`/admin/${kind}`), withAdmin(({ request }) => HttpResponse.json(paginate(filterCatalog(kind, new URL(request.url).searchParams), new URL(request.url).searchParams)))),
@@ -135,7 +135,7 @@ export const handlers: HttpHandler[] = [
     })
     const me = db.customers[0]
     const order: OrderDetail = {
-      id: db.nextId++, code: `order_${Math.floor(500 + Math.random() * 59000)}`, state: 'DUE', total: items.reduce((s, i) => s + i.total, 0), currency: 'VND',
+      id: db.nextId++, code: `order_${Math.floor(500 + Math.random() * 59000)}`, state: 'DUE', total: items.reduce((s, i) => s + i.total, 0), currency: 'VND', paymentMethod: input.paymentMethod ?? 'COD',
       transactionDate: new Date().toISOString(), customerName: me.fullName, customerUsername: MOCK_USERNAME, employeeUsername: null,
       note: input.note || `Order for ${me.fullName}`, items,
     }

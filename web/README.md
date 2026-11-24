@@ -57,12 +57,11 @@ to the Spring app (`127.0.0.1:8481` on the VM); the web container is published a
   address, phone and avatar editing from the old JSP are gone.
 - Dashboard totals are derived client side from `GET /admin/stats` (30-day revenue, state counts, `totalCustomers`).
 
-Contract changes being made on the backend (not regenerated yet, client waits for the backend merge):
-- `POST /orders` will accept `paymentMethod`; until then the COD/ATM choice is written into the order note as `[COD] ...`.
-- Contact form: `POST /api/v1/contact` (JSON `{name,email,message}`) through `CONTACT_PATH`; uploaded images are served from
+Backend contract (regenerated against dan-petstore-modernize ed5a50bc):
+- `POST /orders` takes `paymentMethod` (COD|ATM, default COD); orders return it and the order pages show it.
+- Contact form: `POST /api/v1/contact` (JSON `{name,email,message}`, 204) through `CONTACT_PATH`; uploaded images are served from
   `/api/v1/photos/**`. Both live in `src/api/urls.ts` (`imgUrl()` also maps the legacy `/user-photos/` prefix).
-- Seed data: all PAID orders are from 2020-21, so the 30-day revenue chart is flat until a new order is marked PAID;
-  a few seeded orders have `state = null`.
+- Tokens must carry `aud=petstore-api` (the realm import adds the audience mapper to `petstore-web`).
 
 ## Real-stack e2e (Playwright, MSW off)
 

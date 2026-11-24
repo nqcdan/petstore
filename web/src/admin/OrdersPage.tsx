@@ -27,7 +27,7 @@ function OrderDialog({ id, onClose }: { id: number; onClose: () => void }) {
       <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle>{t('history.detail')} {data?.code}</DialogTitle>
-          <DialogDescription>{data && `${data.customerName ?? '-'} · ${formatDate(data.transactionDate)}`}</DialogDescription>
+          <DialogDescription>{data && `${data.customerName ?? '-'} · ${formatDate(data.transactionDate)} · ${data.paymentMethod}`}</DialogDescription>
         </DialogHeader>
         {!data ? <Skeleton className="h-40" /> : (
           <div className="space-y-4">

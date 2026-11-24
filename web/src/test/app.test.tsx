@@ -2,7 +2,7 @@ import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Route, Routes } from 'react-router-dom'
 import { beforeEach, describe, expect, it } from 'vitest'
-import { adminApi } from '@/api/shop'
+import { adminApi, shopApi } from '@/api/shop'
 import { RequireAuth } from '@/auth/RequireAuth'
 import { Dashboard } from '@/admin/Dashboard'
 import { Cart } from '@/pages/Cart'
@@ -83,6 +83,17 @@ describe('access control', () => {
   it('API answers 403 for a customer token on /admin/**', async () => {
     localStorage.setItem('petstore.mock-user', 'customer')
     await expect(adminApi.stats()).rejects.toMatchObject({ status: 403 })
+  })
+})
+
+describe('orders (mock contract)', () => {
+  it('sends the payment method and defaults to COD', async () => {
+    localStorage.setItem('petstore.mock-user', 'customer')
+    const atm = await shopApi.createOrder({ items: [{ type: 'FOOD', id: 1001, quantity: 1 }], paymentMethod: 'ATM' })
+    expect(atm.paymentMethod).toBe('ATM')
+    const cod = await shopApi.createOrder({ items: [{ type: 'FOOD', id: 1001, quantity: 1 }] })
+    expect(cod.paymentMethod).toBe('COD')
+    expect((await shopApi.myOrder(atm.code)).paymentMethod).toBe('ATM')
   })
 })
 

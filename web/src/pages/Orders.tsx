@@ -59,6 +59,7 @@ export function OrderDetail() {
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
               <StateBadge state={data.state} />
               <span>{formatDate(data.transactionDate)}</span>
+              <span>{t('history.payment')}: {t(`checkout.${data.paymentMethod.toLowerCase()}`)}</span>
               {data.note && <span className="text-muted-foreground">{t('history.note')}: {data.note}</span>}
             </div>
             <div className="overflow-x-auto rounded-lg border">

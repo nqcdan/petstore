@@ -59,6 +59,7 @@ function build(): Db {
       state: states[Math.floor(rand() * states.length)],
       total: items.reduce((s, x) => s + x.total, 0),
       currency: 'VND',
+      paymentMethod: rand() > 0.4 ? 'COD' : 'ATM',
       transactionDate: date.toISOString(),
       customerName: customer.fullName,
       customerUsername: customer.username,

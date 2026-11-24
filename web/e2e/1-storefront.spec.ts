@@ -37,11 +37,24 @@ test('demo-user buys, reaches checkout and sees the order in history', async ({ 
   const code = page.url().split('/').pop()!
   await expect(page.getByText('Chi tiết đơn hàng').first()).toBeVisible()
   await expect(page.getByText(code).first()).toBeVisible()
+  await expect(page.getByText(/Thanh toán: Thanh toán khi nhận hàng/)).toBeVisible()
   await shot(page, '05-order-detail')
 
   await page.goto('/orders')
   await expect(page.getByRole('cell', { name: code })).toBeVisible()
   await shot(page, '06-orders')
+})
+
+test('demo-user pays by ATM transfer', async ({ page }) => {
+  await prefs(page)
+  await login(page, 'demo-user')
+  await page.goto('/shop/products')
+  await page.getByTestId('product-card').first().getByRole('button').last().click()
+  await page.goto('/checkout')
+  await page.getByLabel(/Chuyển khoản ATM/).click()
+  await page.getByRole('button', { name: 'Đặt hàng' }).click()
+  await expect(page).toHaveURL(/\/orders\/OD-/)
+  await expect(page.getByText(/Thanh toán: Chuyển khoản ATM/)).toBeVisible()
 })
 
 test('demo-user is blocked from /admin', async ({ page }) => {
