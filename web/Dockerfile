@@ -23,7 +23,8 @@ RUN pnpm lint && pnpm test
 # Real-stack Playwright runner; `make e2e` starts it through compose next to the backend
 FROM ${PLAYWRIGHT} AS e2e
 WORKDIR /app
-RUN corepack enable
+# This image ships no corepack; keep in step with "packageManager" in package.json
+RUN npm install -g pnpm@10.34.9
 COPY package.json pnpm-lock.yaml ./
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm-store \
     pnpm install --frozen-lockfile --store-dir /pnpm-store
