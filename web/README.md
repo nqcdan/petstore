@@ -40,7 +40,7 @@ docker build -t petstore-web --build-arg VITE_KEYCLOAK_URL=https://sso.example.c
 docker run -p 8483:80 petstore-web
 ```
 
-nginx inside listens on 80 and only serves the SPA (history fallback). `/api`, `/rest`, `/user-photos` (uploaded images) and `/contact` (contact form) must be proxied by the host nginx
+nginx inside listens on 80 and only serves the SPA (history fallback). `/api` (REST, uploaded photos under `/api/v1/photos/**` and the contact form `POST /api/v1/contact`) and `/rest` must be proxied by the host nginx
 to the Spring app (`127.0.0.1:8481` on the VM); the web container is published as `127.0.0.1:8483`.
 
 ## API integration (matched with phase A, branch dan-petstore-modernize)
@@ -57,10 +57,10 @@ to the Spring app (`127.0.0.1:8481` on the VM); the web container is published a
   address, phone and avatar editing from the old JSP are gone.
 - Dashboard totals are derived client side from `GET /admin/stats` (30-day revenue, state counts, `totalCustomers`).
 
-Gaps in the API the UI works around (report to backend):
-- No payment method on `POST /orders`: the COD/ATM choice is written into the order note as `[COD] ...`.
-- No contact endpoint: the form posts to the legacy JSP `/contact` (urlencoded). Behind nginx, `/contact` and `/user-photos`
-  must be proxied to the app next to `/api`.
+Contract changes being made on the backend (not regenerated yet, client waits for the backend merge):
+- `POST /orders` will accept `paymentMethod`; until then the COD/ATM choice is written into the order note as `[COD] ...`.
+- Contact form: `POST /api/v1/contact` (JSON `{name,email,message}`) through `CONTACT_PATH`; uploaded images are served from
+  `/api/v1/photos/**`. Both live in `src/api/urls.ts` (`imgUrl()` also maps the legacy `/user-photos/` prefix).
 - Seed data: all PAID orders are from 2020-21, so the 30-day revenue chart is flat until a new order is marked PAID;
   a few seeded orders have `state = null`.
 
@@ -73,7 +73,7 @@ cd web && pnpm exec playwright install chromium && pnpm test:e2e         # Vite 
 ```
 
 `e2e/1-storefront.spec.ts` (demo-user: login, buy, checkout, history; blocked from `/admin`) runs before `e2e/2-admin.spec.ts`
-(demo-admin: create/edit/delete a product with image, change an order state, dashboard, lists). Both write `docs/*.png`
+(demo-admin: product CRUD with image, order state, customers and employees CRUD, dashboard). Both write `docs/*.png`
 from real data. Files are named so the storefront order exists before the admin dashboard screenshot.
 
 Blog is static sample content (`src/data/blog.ts`), as in the JSP; there is no blog API.
