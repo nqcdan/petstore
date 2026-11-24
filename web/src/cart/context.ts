@@ -1,0 +1,26 @@
+import { createContext, useContext } from 'react'
+import type { CatalogItem, CatalogKind } from '@/api/types'
+
+export interface CartLine {
+  kind: CatalogKind
+  item: CatalogItem
+  quantity: number
+}
+
+export interface CartState {
+  lines: CartLine[]
+  count: number
+  total: number
+  add: (kind: CatalogKind, item: CatalogItem) => void
+  setQuantity: (kind: CatalogKind, id: number, quantity: number) => void
+  remove: (kind: CatalogKind, id: number) => void
+  clear: () => void
+}
+
+export const CartContext = createContext<CartState | null>(null)
+
+export function useCart() {
+  const ctx = useContext(CartContext)
+  if (!ctx) throw new Error('useCart outside CartProvider')
+  return ctx
+}
