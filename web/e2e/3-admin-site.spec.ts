@@ -48,6 +48,19 @@ test('demo-admin: screens live at the root, not under /admin', async ({ page }) 
   await expect(page.getByText('404')).toBeVisible()
 })
 
+test('demo-admin: every product and food picture in the lists loads (no broken image)', async ({ page }) => {
+  await prefs(page)
+  await signIn(page, 'demo-admin')
+  for (const path of ['products', 'foods']) {
+    await page.goto(`/${path}`)
+    await expect(page.getByRole('row').nth(1)).toBeVisible()
+    const imgs = page.locator('table img')
+    expect(await imgs.count()).toBeGreaterThan(0)
+    // an <img> whose URL answers HTML (SPA fallback) or 404 ends with naturalWidth 0
+    await expect.poll(() => imgs.evaluateAll((els) => els.filter((e) => !(e as HTMLImageElement).complete || (e as HTMLImageElement).naturalWidth === 0).length)).toBe(0)
+  }
+})
+
 test('demo-user is blocked with "Không có quyền" and can sign out', async ({ page }) => {
   await prefs(page)
   await signIn(page, 'demo-user')
