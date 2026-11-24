@@ -1,4 +1,4 @@
-import { LogIn, LogOut, Menu, PawPrint, ShoppingCart, User } from 'lucide-react'
+import { LogIn, LogOut, Menu, PawPrint, ShieldCheck, ShoppingCart, User } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useEffect, useState } from 'react'
@@ -29,6 +29,13 @@ function Brand() {
   )
 }
 
+function AdminLink({ onClick, className }: { onClick?: () => void; className?: string }) {
+  const { isAdmin } = useAuth()
+  const { t } = useTranslation()
+  if (!isAdmin) return null
+  return <Link to="/admin" onClick={onClick} className={cn('flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium text-primary hover:bg-accent', className)}><ShieldCheck className="size-4" />{t('nav.admin')}</Link>
+}
+
 function UserMenu() {
   const { user, isAdmin, login, logout, mock } = useAuth()
   const { t } = useTranslation()
@@ -54,7 +61,7 @@ function UserMenu() {
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild><Link to="/profile">{t('nav.profile')}</Link></DropdownMenuItem>
         <DropdownMenuItem asChild><Link to="/orders">{t('nav.history')}</Link></DropdownMenuItem>
-        {isAdmin && <DropdownMenuItem asChild><Link to="/admin">{t('nav.admin')}</Link></DropdownMenuItem>}
+        {isAdmin && <DropdownMenuItem asChild><Link to="/admin"><ShieldCheck /> {t('nav.admin')}</Link></DropdownMenuItem>}
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={logout}><LogOut /> {t('nav.logout')}</DropdownMenuItem>
       </DropdownMenuContent>
@@ -86,6 +93,7 @@ export function SiteLayout() {
                     {t(l.key)}
                   </NavLink>
                 ))}
+                <AdminLink onClick={() => setOpen(false)} className="py-2" />
               </nav>
             </SheetContent>
           </Sheet>
@@ -97,6 +105,7 @@ export function SiteLayout() {
                 {t(l.key)}
               </NavLink>
             ))}
+            <AdminLink />
           </nav>
           <div className="ml-auto flex items-center gap-0.5 sm:gap-1">
             <LangToggle />
