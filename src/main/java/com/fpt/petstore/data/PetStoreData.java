@@ -51,7 +51,7 @@ public class PetStoreData {
           .withPassword("12345")
           .withBirthday("21/12/2000")
           .withAddress("248 Le Van Si")
-          .withPhone("0928494156")
+          .withPhone("0900000001")
           .withGender(BaseAccount.Gender.Male)
           .withUsername("phuonglnt@gmail.com");
   public Customer customer_7 =

@@ -48,7 +48,7 @@ export const vi = {
     username: 'Tài khoản', manage: 'Quản lý tài khoản và mật khẩu (Keycloak)',
   },
   contact: {
-    title: 'Liên hệ', sub: 'Mọi thắc mắc vui lòng liên hệ với chúng tôi.', branch: 'Chi nhánh 1', address: 'Tòa nhà Landmark 81', hotline: 'Hotline',
+    title: 'Liên hệ', sub: 'Mọi thắc mắc vui lòng liên hệ với chúng tôi.', branch: 'Chi nhánh 1', address: 'Tòa nhà Landmark 81',
     send: 'Gửi tin nhắn', name: 'Họ tên', email: 'Email', message: 'Nội dung', sent: 'Ý kiến của bạn đã được lưu', emailInvalid: 'Email không hợp lệ', required: 'Bắt buộc',
   },
   about: {

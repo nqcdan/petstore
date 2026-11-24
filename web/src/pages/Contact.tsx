@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
-import { MapPin, Phone } from 'lucide-react'
+import { MapPin } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
@@ -35,7 +35,6 @@ export function Contact() {
           <Card><CardContent className="space-y-2">
             <h2 className="font-semibold">{t('contact.branch')}</h2>
             <p className="flex items-center gap-2 text-sm text-muted-foreground"><MapPin className="size-4" /> {t('contact.address')}</p>
-            <p className="flex items-center gap-2 text-sm text-muted-foreground"><Phone className="size-4" /> {t('contact.hotline')}: +84 928 494 156</p>
           </CardContent></Card>
           <img src="/img/banner/t.jpg" alt="" className="hidden rounded-xl object-cover md:block" />
         </div>

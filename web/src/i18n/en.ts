@@ -50,7 +50,7 @@ export const en: Resources = {
     username: 'Username', manage: 'Manage account and password (Keycloak)',
   },
   contact: {
-    title: 'Contact', sub: 'Questions? Get in touch with us.', branch: 'Branch 1', address: 'Landmark 81 Tower', hotline: 'Hotline',
+    title: 'Contact', sub: 'Questions? Get in touch with us.', branch: 'Branch 1', address: 'Landmark 81 Tower',
     send: 'Send message', name: 'Name', email: 'Email', message: 'Message', sent: 'Your message has been saved', emailInvalid: 'Invalid email', required: 'Required',
   },
   about: {
