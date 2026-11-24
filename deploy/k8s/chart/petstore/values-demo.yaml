@@ -1,0 +1,33 @@
+# Demo environment: public hosts, single-replica data tier, small footprint.
+app:
+  image:
+    tag: main
+  replicas: 1
+  autoscaling:
+    minReplicas: 1
+    maxReplicas: 3
+web:
+  image:
+    tag: main
+  replicas: 1
+
+ingress:
+  webHost: petstore.nqcdan.com
+  authHost: petstore-auth.nqcdan.com
+
+keycloak:
+  realmJson: |
+    {
+      "realm": "petstore",
+      "enabled": true,
+      "sslRequired": "external",
+      "clients": [
+        {
+          "clientId": "petstore-web",
+          "publicClient": true,
+          "standardFlowEnabled": true,
+          "redirectUris": ["https://petstore.nqcdan.com/*"],
+          "webOrigins": ["https://petstore.nqcdan.com"]
+        }
+      ]
+    }

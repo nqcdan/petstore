@@ -1,0 +1,6 @@
+apiVersion: v2
+name: petstore
+description: Petstore (Spring Boot API + nginx web + Postgres + Keycloak)
+type: application
+version: 0.1.0
+appVersion: "latest"
