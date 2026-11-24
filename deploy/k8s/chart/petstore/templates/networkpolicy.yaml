@@ -1,0 +1,96 @@
+{{- if .Values.networkPolicy.enabled }}
+# Ingress-only policies; egress stays open (SMTP, JWKS, image-internal calls).
+{{- $ing := dict "namespaceSelector" (dict "matchLabels" (dict "kubernetes.io/metadata.name" .Values.networkPolicy.ingressControllerNamespace)) }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Release.Name }}-default-deny
+  labels:
+    {{- include "petstore.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  policyTypes: [Ingress]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Release.Name }}-allow-ingress-controller
+  labels:
+    {{- include "petstore.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ .Release.Name }}
+    matchExpressions:
+      - { key: app.kubernetes.io/component, operator: In, values: [web, app, keycloak] }
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - {{- toYaml $ing | nindent 10 }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Release.Name }}-allow-postgres
+  labels:
+    {{- include "petstore.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "petstore.selector" (dict "root" . "component" "postgres") | nindent 6 }}
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: {{ .Release.Name }}
+              app.kubernetes.io/component: app
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: {{ .Release.Name }}
+              app.kubernetes.io/component: keycloak
+      ports:
+        - { port: 5432, protocol: TCP }
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Release.Name }}-allow-app-to-keycloak
+  labels:
+    {{- include "petstore.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "petstore.selector" (dict "root" . "component" "keycloak") | nindent 6 }}
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: {{ .Release.Name }}
+              app.kubernetes.io/component: app
+      ports:
+        - { port: 8080, protocol: TCP }
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Release.Name }}-allow-web-to-app
+  labels:
+    {{- include "petstore.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "petstore.selector" (dict "root" . "component" "app") | nindent 6 }}
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: {{ .Release.Name }}
+              app.kubernetes.io/component: web
+      ports:
+        - { port: {{ .Values.app.port }}, protocol: TCP }
+{{- end }}

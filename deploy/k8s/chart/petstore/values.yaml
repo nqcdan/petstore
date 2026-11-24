@@ -1,0 +1,89 @@
+# Defaults are generic; per-environment overrides go in values-<env>.yaml.
+
+# Secret must exist before install (see ../../README.md). Keys:
+#   postgres-password, keycloak-admin-password, mail-password
+existingSecret: petstore-secrets
+
+app:
+  image:
+    repository: ghcr.io/nqcdan/petstore-api
+    tag: latest
+    pullPolicy: IfNotPresent
+  port: 8081
+  replicas: 2
+  env: {}            # extra plain env vars, name: value
+  resources:
+    requests: { cpu: 200m, memory: 512Mi }
+    limits: { memory: 1Gi }
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 70
+
+web:
+  image:
+    repository: ghcr.io/nqcdan/petstore-web
+    tag: latest
+    pullPolicy: IfNotPresent
+  port: 80
+  replicas: 2
+  resources:
+    requests: { cpu: 50m, memory: 64Mi }
+    limits: { memory: 128Mi }
+
+postgres:
+  image: postgres:16-alpine
+  database: petstore
+  username: petstore
+  storage: 5Gi
+  storageClassName: ""   # empty = cluster default
+  resources:
+    requests: { cpu: 100m, memory: 256Mi }
+    limits: { memory: 512Mi }
+
+keycloak:
+  image: quay.io/keycloak/keycloak:26.0
+  database: keycloak
+  realm: petstore
+  adminUser: admin
+  resources:
+    requests: { cpu: 200m, memory: 768Mi }
+    limits: { memory: 1280Mi }
+  # Placeholder realm: replace with a real export (clients, roles, users without credentials).
+  realmJson: |
+    {
+      "realm": "petstore",
+      "enabled": true,
+      "sslRequired": "external",
+      "clients": [
+        {
+          "clientId": "petstore-web",
+          "publicClient": true,
+          "standardFlowEnabled": true,
+          "redirectUris": ["https://petstore.example.com/*"],
+          "webOrigins": ["https://petstore.example.com"]
+        }
+      ]
+    }
+
+ingress:
+  enabled: true
+  className: nginx
+  webHost: petstore.example.com
+  authHost: petstore-auth.example.com
+  tls:
+    enabled: true
+    secretName: petstore-tls
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+
+networkPolicy:
+  enabled: true
+  # Namespace of the ingress controller allowed to reach web/api/keycloak.
+  ingressControllerNamespace: ingress-nginx
+
+podSecurityContext:
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault

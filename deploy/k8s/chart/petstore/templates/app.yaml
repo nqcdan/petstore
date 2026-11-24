@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-app
+  labels:
+    {{- include "petstore.labels" . | nindent 4 }}
+    app.kubernetes.io/component: app
+spec:
+  {{- if not .Values.app.autoscaling.enabled }}
+  replicas: {{ .Values.app.replicas }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "petstore.selector" (dict "root" . "component" "app") | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "petstore.labels" . | nindent 8 }}
+        app.kubernetes.io/component: app
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      containers:
+        - name: app
+          image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
+          imagePullPolicy: {{ .Values.app.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.app.port }}
+          env:
+            - name: SERVER_PORT
+              value: {{ .Values.app.port | quote }}
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://{{ .Release.Name }}-postgres:5432/{{ .Values.postgres.database }}
+            - name: SPRING_DATASOURCE_USERNAME
+              value: {{ .Values.postgres.username | quote }}
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef: { name: {{ .Values.existingSecret }}, key: postgres-password }
+            - name: SPRING_MAIL_PASSWORD
+              valueFrom:
+                secretKeyRef: { name: {{ .Values.existingSecret }}, key: mail-password }
+            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+              value: https://{{ .Values.ingress.authHost }}/realms/{{ .Values.keycloak.realm }}
+            # Enables /actuator/health/liveness and /readiness.
+            - name: MANAGEMENT_ENDPOINT_HEALTH_PROBES_ENABLED
+              value: "true"
+            - name: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
+              value: health
+            {{- range $k, $v := .Values.app.env }}
+            - name: {{ $k }}
+              value: {{ $v | quote }}
+            {{- end }}
+          startupProbe:
+            httpGet: { path: /actuator/health/liveness, port: http }
+            periodSeconds: 5
+            failureThreshold: 36
+          livenessProbe:
+            httpGet: { path: /actuator/health/liveness, port: http }
+            periodSeconds: 10
+          readinessProbe:
+            httpGet: { path: /actuator/health/readiness, port: http }
+            periodSeconds: 10
+          resources:
+            {{- toYaml .Values.app.resources | nindent 12 }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: [ALL] }
+          volumeMounts:
+            - { name: tmp, mountPath: /tmp }
+      volumes:
+        - name: tmp
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-app
+  labels:
+    {{- include "petstore.labels" . | nindent 4 }}
+spec:
+  selector:
+    {{- include "petstore.selector" (dict "root" . "component" "app") | nindent 4 }}
+  ports:
+    - name: http
+      port: {{ .Values.app.port }}
+      targetPort: http
