@@ -3,10 +3,6 @@
  */
 package com.fpt.petstore.services;
 
-import com.fpt.petstore.core.dao.DAOService;
-import com.fpt.petstore.core.dao.query.SimpleFilter;
-import com.fpt.petstore.core.dao.query.SqlQueryParams;
-import com.fpt.petstore.core.dao.query.SqlQueryTemplate;
 import com.fpt.petstore.entities.Food;
 import com.fpt.petstore.entities.Food.FoodType;
 import com.fpt.petstore.repository.FoodRepository;
@@ -18,16 +14,14 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
-import static com.fpt.petstore.core.dao.query.Filter.FilterType.STRING_LIKE;
 
 /**
  * @author linuss
  */
 
 @Component
-public class FoodLogic extends DAOService {
+public class FoodLogic {
 
   @Autowired
   FoodRepository repo;
@@ -65,23 +59,6 @@ public class FoodLogic extends DAOService {
 
   public Integer countFood(){
     return repo.countFood();
-  }
-
-  SqlQueryTemplate createFoodQuery(SqlQueryParams params) {
-    SqlQueryTemplate.EntityTable TABLE = new SqlQueryTemplate.EntityTable(Food.class, "m");
-    SqlQueryTemplate query = new SqlQueryTemplate("petstore", "food", "Search foods").
-      SELECT_FROM(TABLE).
-      FILTER(new SimpleFilter("search", STRING_LIKE, "m.code LIKE :search")).
-      ORDERBY(new String[] { "code" }, "code", "DESC");
-    if (params != null) {
-      query.mergeValue(params);
-    }
-    return query;
-  }
-
-  public List<Map<String, Object>> searchFoods(SqlQueryParams params) {
-    SqlQueryTemplate query = createFoodQuery(params);
-    return query(query).getMapRecords();
   }
 
   public Page<Food> listFoodbyPage(Pageable pageable) {
