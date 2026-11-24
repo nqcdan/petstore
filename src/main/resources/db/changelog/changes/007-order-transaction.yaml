@@ -1,0 +1,54 @@
+databaseChangeLog:
+  - changeSet:
+      id: 007-order-transaction-table
+      author: dan
+      changes:
+        - createTable:
+            tableName: order_transaction
+            columns:
+                - column:
+                    name: id
+                    type: bigint
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      nullable: false
+                - column:
+                    name: createdtime
+                    type: datetime
+                - column:
+                    name: updatedtime
+                    type: datetime
+                - column:
+                    name: bankaccountid
+                    type: varchar(255)
+                    constraints:
+                      nullable: false
+                - column:
+                    name: amount
+                    type: double
+                    constraints:
+                      nullable: false
+                - column:
+                    name: transactiontype
+                    type: varchar(255)
+                - column:
+                    name: currency
+                    type: varchar(255)
+                - column:
+                    name: transactiondate
+                    type: datetime
+                - column:
+                    name: orderid
+                    type: bigint
+  - changeSet:
+      id: 007-order-transaction-fk
+      author: dan
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: order_transaction
+            baseColumnNames: orderid
+            referencedTableName: orders
+            referencedColumnNames: id
+            constraintName: fk_order_transaction_order
+

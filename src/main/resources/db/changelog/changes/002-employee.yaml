@@ -1,0 +1,73 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-employee-table
+      author: dan
+      changes:
+        - createTable:
+            tableName: employee
+            columns:
+                - column:
+                    name: id
+                    type: bigint
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      nullable: false
+                - column:
+                    name: createdtime
+                    type: datetime
+                - column:
+                    name: updatedtime
+                    type: datetime
+                - column:
+                    name: username
+                    type: varchar(255)
+                - column:
+                    name: password
+                    type: varchar(255)
+                - column:
+                    name: fullname
+                    type: varchar(255)
+                - column:
+                    name: email
+                    type: varchar(255)
+                - column:
+                    name: phone
+                    type: varchar(255)
+                - column:
+                    name: birthday
+                    type: datetime
+                - column:
+                    name: avatarurl
+                    type: varchar(64)
+                - column:
+                    name: gender
+                    type: varchar(255)
+                - column:
+                    name: address
+                    type: varchar(255)
+                - column:
+                    name: height
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: weight
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: isverified
+                    type: boolean
+                    constraints:
+                      nullable: false
+                - column:
+                    name: personal_id
+                    type: varchar(255)
+                - column:
+                    name: marital_status
+                    type: varchar(255)
+                - column:
+                    name: role
+                    type: varchar(255)
+

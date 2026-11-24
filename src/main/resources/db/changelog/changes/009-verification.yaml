@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: 009-verification-table
+      author: dan
+      changes:
+        - createTable:
+            tableName: verification
+            columns:
+                - column:
+                    name: id
+                    type: bigint
+                    constraints:
+                      primaryKey: true
+                      nullable: false
+                - column:
+                    name: username
+                    type: varchar(255)
+  - changeSet:
+      id: 009-verification-sequence
+      author: dan
+      changes:
+        - createSequence:
+            sequenceName: verification_seq
+            incrementBy: 50
+            startValue: 1
+
