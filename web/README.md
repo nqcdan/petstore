@@ -23,7 +23,7 @@ real mode talks to Keycloak and the app through the compose stack.
 
 With `VITE_SHOW_DEMO_ACCOUNTS=true` the landing page (signed-out) and the "please sign in" prompt show a small
 "Tài khoản demo" box: `demo-user` and `demo-admin`, both with password `Demo@123`, each value with a copy button.
-Default is off (`false` in the Dockerfile, `true` in `.env.development`). The accounts must exist in the Keycloak
+Default is off (`false` in the Dockerfile, bake file and Docker example; `true` only in `.env.development` and the local dev compose). Do not enable it on a deployed site. The accounts must exist in the Keycloak
 realm (`demo-admin` with role `admin`); the box only displays them.
 
 ## Keycloak
@@ -37,7 +37,7 @@ Valid redirect URIs and web origins: the site origin (`http://127.0.0.1:8483` on
 
 ```bash
 docker build -t petstore-web --build-arg VITE_KEYCLOAK_URL=https://sso.example.com \
-  --build-arg VITE_SHOW_DEMO_ACCOUNTS=true .
+  --build-arg VITE_SHOW_DEMO_ACCOUNTS=false .
 docker run -p 8483:80 petstore-web
 ```
 
