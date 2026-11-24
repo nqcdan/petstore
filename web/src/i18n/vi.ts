@@ -10,6 +10,7 @@ export const vi = {
     theme: 'Giao diện', light: 'Sáng', dark: 'Tối', system: 'Theo hệ thống', language: 'Ngôn ngữ', menu: 'Menu',
   },
   auth: {
+    demoTitle: 'Tài khoản demo', copy: 'Sao chép',
     required: 'Vui lòng đăng nhập để tiếp tục', forbidden: 'Bạn không có quyền truy cập trang này',
     loginCustomer: 'Đăng nhập khách hàng (demo)', loginAdmin: 'Đăng nhập quản trị (demo)',
   },

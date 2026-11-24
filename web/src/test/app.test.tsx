@@ -57,6 +57,17 @@ describe('access control', () => {
     expect(await screen.findByText('Vui lòng đăng nhập để tiếp tục')).toBeInTheDocument()
   })
 
+  it('shows demo accounts with copy buttons on the sign-in prompt', async () => {
+    const user = userEvent.setup()
+    renderAt(page, '/admin')
+    const box = await screen.findByTestId('demo-accounts')
+    expect(box).toHaveTextContent('demo-user')
+    expect(box).toHaveTextContent('demo-admin')
+    expect(box).toHaveTextContent('Demo@123')
+    await user.click(within(box).getByRole('button', { name: 'Sao chép demo-admin password' }))
+    expect(await navigator.clipboard.readText()).toBe('Demo@123')
+  })
+
   it('rejects customers without the admin role', async () => {
     localStorage.setItem('petstore.mock-user', 'customer')
     renderAt(page, '/admin')

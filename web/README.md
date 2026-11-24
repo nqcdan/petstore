@@ -17,6 +17,13 @@ pnpm shots          # Playwright, regenerates docs/*.png
 Mock mode (`.env.development`): the header login menu offers "customer" and "admin" demo users.
 Real mode: copy `.env.example` to `.env.local`, set `VITE_MOCK=false` and the Keycloak values.
 
+## Demo accounts box
+
+With `VITE_SHOW_DEMO_ACCOUNTS=true` the landing page (signed-out) and the "please sign in" prompt show a small
+"Tài khoản demo" box: `demo-user` and `demo-admin`, both with password `Demo@123`, each value with a copy button.
+Default is off (`false` in the Dockerfile, `true` in `.env.development`). The accounts must exist in the Keycloak
+realm (`demo-admin` with role `admin`); the box only displays them.
+
 ## Keycloak
 
 Public client `petstore-web` in realm `petstore`: Standard flow on, PKCE `S256`, no secret.
@@ -27,7 +34,8 @@ Valid redirect URIs and web origins: the site origin (`http://127.0.0.1:8483` on
 ## Docker
 
 ```bash
-docker build -t petstore-web --build-arg VITE_KEYCLOAK_URL=https://sso.example.com .
+docker build -t petstore-web --build-arg VITE_KEYCLOAK_URL=https://sso.example.com \
+  --build-arg VITE_SHOW_DEMO_ACCOUNTS=true .
 docker run -p 8483:80 petstore-web
 ```
 

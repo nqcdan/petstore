@@ -2,6 +2,8 @@ import { ArrowRight } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
+import { useAuth } from '@/auth/context'
+import { DemoAccounts } from '@/components/DemoAccounts'
 import { useCatalog } from '@/api/queries'
 import { ProductCard } from '@/components/ProductCard'
 import { Button } from '@/components/ui/button'
@@ -17,6 +19,7 @@ export function Home() {
   const slides = t('home.slides', { returnObjects: true }) as { tag: string; title: string; text: string; cta: string }[]
   const [i, setI] = useState(0)
   const slide = slides[i]
+  const { user } = useAuth()
   const featured = useCatalog('products', { size: 4, page: 0, sort: 'price,desc' })
 
   return (
@@ -39,6 +42,8 @@ export function Home() {
           </div>
         </div>
       </section>
+
+      {!user && <div className="mx-auto max-w-6xl px-4 pt-8"><DemoAccounts className="w-fit" /></div>}
 
       <section className="mx-auto grid max-w-6xl gap-4 px-4 py-12 md:grid-cols-3">
         {[

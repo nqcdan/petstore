@@ -86,6 +86,14 @@ test('admin', async ({ page }) => {
   await shot(page, '15-admin-customers')
 })
 
+test('demo accounts box', async ({ page }) => {
+  await as(page, null)
+  await page.goto('/')
+  await expect(page.getByTestId('demo-accounts')).toBeVisible()
+  await page.waitForLoadState('networkidle')
+  await shot(page, '09-landing-demo-accounts')
+})
+
 test('customer cannot open admin', async ({ page }) => {
   await as(page, 'customer')
   await page.goto('/admin')

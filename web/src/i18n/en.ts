@@ -12,6 +12,7 @@ export const en: Resources = {
     theme: 'Theme', light: 'Light', dark: 'Dark', system: 'System', language: 'Language', menu: 'Menu',
   },
   auth: {
+    demoTitle: 'Demo accounts', copy: 'Copy',
     required: 'Please sign in to continue', forbidden: 'You do not have access to this page',
     loginCustomer: 'Sign in as customer (demo)', loginAdmin: 'Sign in as admin (demo)',
   },
