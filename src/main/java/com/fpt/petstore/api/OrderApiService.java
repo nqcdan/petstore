@@ -5,6 +5,7 @@ import com.fpt.petstore.entities.BaseAccount.UserRole;
 import com.fpt.petstore.entities.Customer;
 import com.fpt.petstore.entities.Food;
 import com.fpt.petstore.entities.Order;
+import com.fpt.petstore.entities.Order.PaymentMethod;
 import com.fpt.petstore.entities.Order.State;
 import com.fpt.petstore.entities.OrderItem;
 import com.fpt.petstore.entities.OrderItem.ItemType;
@@ -66,6 +67,7 @@ public class OrderApiService {
     List<OrderItem> items = priceLines(request.items());
     Order order = new Order("OD-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
     order.withCustomer(customer).withState(State.DUE);
+    order.setPaymentMethod(request.paymentMethod() != null ? request.paymentMethod() : PaymentMethod.COD);
     order.setTransactionDate(new Date());
     order.setOrderItems(items);
     order.setTotal(items.stream().mapToInt(OrderItem::getTotal).sum());
@@ -182,7 +184,7 @@ public class OrderApiService {
   private PageDto<OrderSummary> toPage(Page<Order> page) {
     List<OrderSummary> items = page.getContent().stream().map(o -> new OrderSummary(o.getId(), o.getCode(), o.getState(), o.getTotal(),
       o.getCurrency(), o.getTransactionDate() == null ? null : o.getTransactionDate().toInstant(),
-      o.getCustomer() == null ? null : o.getCustomer().getFullName())).toList();
+      o.getCustomer() == null ? null : o.getCustomer().getFullName(), o.getPaymentMethod())).toList();
     return new PageDto<>(items, page.getNumber(), page.getSize(), page.getTotalElements(), page.getTotalPages());
   }
 
@@ -192,6 +194,6 @@ public class OrderApiService {
     return new OrderDetail(o.getId(), o.getCode(), o.getState(), o.getTotal(), o.getCurrency(),
       o.getTransactionDate() == null ? null : o.getTransactionDate().toInstant(),
       c == null ? null : c.getFullName(), c == null ? null : c.getUsername(),
-      o.getEmployee() == null ? null : o.getEmployee().getUsername(), o.getNote(), items);
+      o.getEmployee() == null ? null : o.getEmployee().getUsername(), o.getPaymentMethod(), o.getNote(), items);
   }
 }

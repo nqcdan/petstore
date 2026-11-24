@@ -136,7 +136,7 @@ public class CatalogService {
   private CatalogItem toItem(BaseProduct e) {
     Enum<?> type = e instanceof Product p ? p.getType() : ((Food) e).getType();
     String pic = e.getPic();
-    String imageUrl = pic == null ? null : pic.contains("/") ? "/user-photos/" + pic : "/img/product/" + pic;
+    String imageUrl = pic == null ? null : pic.contains("/") ? "/api/v1/photos/" + pic : "/img/product/" + pic;
     return new CatalogItem(e.getId(), e.getName(), e.getSortName(), e.getPrice(), imageUrl, e.getDescription(), type == null ? null : type.name());
   }
 

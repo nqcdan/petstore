@@ -36,7 +36,8 @@ public class ApiSecurityConfig {
     http.securityMatcher("/api/**")
       .authorizeHttpRequests(a -> a
         .requestMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
-        .requestMatchers(HttpMethod.GET, "/api/v1/products/**", "/api/v1/foods/**").permitAll()
+        .requestMatchers(HttpMethod.GET, "/api/v1/products/**", "/api/v1/foods/**", "/api/v1/photos/**").permitAll()
+        .requestMatchers(HttpMethod.POST, "/api/v1/contact").permitAll()
         .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
         .anyRequest().hasAnyRole("CUSTOMER", "ADMIN"))
       .oauth2ResourceServer(o -> o.jwt(j -> j.jwtAuthenticationConverter(jwtConverter)))

@@ -83,3 +83,13 @@ databaseChangeLog:
               - column:
                   name: transactiondate
 
+  - changeSet:
+      id: 005-orders-payment-method
+      author: dan
+      changes:
+        - addColumn:
+            tableName: orders
+            columns:
+              - column:
+                  name: paymentmethod
+                  type: varchar(10)

@@ -26,3 +26,11 @@ databaseChangeLog:
                     name: contactdate
                     type: datetime
 
+  - changeSet:
+      id: 008-contact-message-length
+      author: dan
+      changes:
+        - modifyDataType:
+            tableName: contact
+            columnName: message
+            newDataType: varchar(2000)

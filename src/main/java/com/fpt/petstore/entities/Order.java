@@ -40,6 +40,7 @@ import lombok.Setter;
 public class Order extends AbstractPersistable<Long> {
 
   static public enum State { PAID, DUE, CANCEL };
+  static public enum PaymentMethod { COD, ATM };
 
   @NotNull
   private String code;
@@ -70,6 +71,8 @@ public class Order extends AbstractPersistable<Long> {
   private String note;
 
   private String currency = "VND";
+  @Enumerated(EnumType.STRING)
+  private PaymentMethod paymentMethod;
 
   @Enumerated(EnumType.STRING)
   private State state;

@@ -75,7 +75,7 @@ class ApiTests {
 	void customerPlacesAndReadsOwnOrder() throws Exception {
 		JsonNode food = body(mvc.perform(get("/api/v1/foods?size=1")).andExpect(status().isOk())).get("items").get(0);
 		String cart = "{\"items\":[{\"type\":\"FOOD\",\"id\":" + food.get("id") + ",\"quantity\":2},{\"type\":\"FOOD\",\"id\":" + food.get("id")
-			+ ",\"quantity\":1}],\"note\":\"leave at door\"}";
+			+ ",\"quantity\":1}],\"paymentMethod\":\"ATM\",\"note\":\"leave at door\"}";
 		int expected = food.get("price").asInt() * 3;
 
 		JsonNode quote = body(mvc.perform(post("/api/v1/cart/quote").with(customer("alice")).contentType(MediaType.APPLICATION_JSON).content(cart))
@@ -86,6 +86,7 @@ class ApiTests {
 		JsonNode order = body(mvc.perform(post("/api/v1/orders").with(customer("alice")).contentType(MediaType.APPLICATION_JSON).content(cart))
 			.andExpect(status().isCreated()));
 		assertEquals("DUE", order.get("state").asText());
+		assertEquals("ATM", order.get("paymentMethod").asText());
 		assertEquals(expected, order.get("total").asInt());
 
 		mvc.perform(get("/api/v1/orders").with(customer("alice"))).andExpect(status().isOk()).andExpect(jsonPath("$.totalItems").value(1));
@@ -118,7 +119,10 @@ class ApiTests {
 
 		MockMultipartFile image = new MockMultipartFile("file", "a.png", "image/png", new byte[] { 1, 2, 3 });
 		mvc.perform(multipart("/api/v1/admin/products/" + id + "/image").file(image).with(admin())).andExpect(status().isOk())
-			.andExpect(jsonPath("$.imageUrl").value(org.hamcrest.Matchers.startsWith("/user-photos/catalog/")));
+			.andExpect(jsonPath("$.imageUrl").value(org.hamcrest.Matchers.startsWith("/api/v1/photos/catalog/")));
+		String url = json.readTree(mvc.perform(get("/api/v1/admin/products/" + id).with(admin())).andReturn().getResponse().getContentAsString())
+			.get("imageUrl").asText();
+		mvc.perform(get(url)).andExpect(status().isOk());
 		MockMultipartFile text = new MockMultipartFile("file", "a.txt", "text/plain", new byte[] { 1 });
 		mvc.perform(multipart("/api/v1/admin/products/" + id + "/image").file(text).with(admin())).andExpect(status().isUnsupportedMediaType());
 
@@ -136,6 +140,23 @@ class ApiTests {
 		mvc.perform(get("/api/v1/admin/customers?q=NEW.USER").with(admin())).andExpect(jsonPath("$.totalItems").value(1));
 		mvc.perform(delete("/api/v1/admin/customers/" + created.get("id")).with(admin())).andExpect(status().isNoContent());
 		mvc.perform(get("/api/v1/admin/employees").with(admin())).andExpect(status().isOk());
+	}
+
+	@Test
+	void paymentMethodDefaultsToCod() throws Exception {
+		JsonNode order = body(mvc.perform(post("/api/v1/orders").with(customer("carol")).contentType(MediaType.APPLICATION_JSON)
+			.content("{\"items\":[{\"type\":\"PRODUCT\",\"id\":1,\"quantity\":1}]}")).andExpect(status().isCreated()));
+		assertEquals("COD", order.get("paymentMethod").asText());
+		mvc.perform(post("/api/v1/orders").with(customer("carol")).contentType(MediaType.APPLICATION_JSON)
+			.content("{\"items\":[{\"type\":\"PRODUCT\",\"id\":1,\"quantity\":1}],\"paymentMethod\":\"BITCOIN\"}")).andExpect(status().isBadRequest());
+	}
+
+	@Test
+	void contactFormIsPublicAndValidated() throws Exception {
+		mvc.perform(post("/api/v1/contact").contentType(MediaType.APPLICATION_JSON)
+			.content("{\"name\":\"Ann\",\"email\":\"ann@example.com\",\"message\":\"Hello shop\"}")).andExpect(status().isNoContent());
+		mvc.perform(post("/api/v1/contact").contentType(MediaType.APPLICATION_JSON)
+			.content("{\"name\":\"Ann\",\"email\":\"not-an-email\",\"message\":\"\"}")).andExpect(status().isBadRequest());
 	}
 
 	@Test

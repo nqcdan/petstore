@@ -21,6 +21,7 @@ public class Contact {
     private int id;
     private String email;
     private String name;
+    @Column(length = 2000)
     private String message;
     private Date contactDate;
 

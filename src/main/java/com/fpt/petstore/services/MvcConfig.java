@@ -1,27 +1,25 @@
 package com.fpt.petstore.services;
 
-
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
-/**
- * Created by Nizis on 1/21/2021.
- */
+/** Serves uploaded product images and avatars under /api/v1/photos so a proxy only has to forward /api. */
 @Configuration
-public class MvcConfig implements WebMvcConfigurer{
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry){
-        exposeDirectory("user-photos",registry);
+public class MvcConfig implements WebMvcConfigurer {
+
+    private final String uploadDir;
+
+    public MvcConfig(@Value("${petstore.upload-dir:user-photos}") String uploadDir) {
+        this.uploadDir = uploadDir;
     }
 
-    private void exposeDirectory(String dirName,ResourceHandlerRegistry registry){
-        Path uploadDir = Paths.get(dirName);
-        String uploadPath = uploadDir.toFile().getAbsolutePath();
-        if(dirName.startsWith("../")) dirName=dirName.replace("../","");
-        registry.addResourceHandler("/"+dirName+"/**").addResourceLocations("file:/"+uploadPath+"/");
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/api/v1/photos/**")
+            .addResourceLocations("file:" + Paths.get(uploadDir).toAbsolutePath() + "/");
     }
 }

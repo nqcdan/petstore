@@ -47,16 +47,22 @@ public final class Dto {
   public record OrderItemDto(String name, String type, int quantity, int total) {}
 
   public record OrderSummary(
-    Long id, String code, Order.State state, int total, String currency, Instant transactionDate, String customerName) {}
+    Long id, String code, Order.State state, int total, String currency, Instant transactionDate, String customerName,
+    Order.PaymentMethod paymentMethod) {}
 
   public record OrderDetail(
     Long id, String code, Order.State state, int total, String currency, Instant transactionDate,
-    String customerName, String customerUsername, String employeeUsername, String note, List<OrderItemDto> items) {}
+    String customerName, String customerUsername, String employeeUsername, Order.PaymentMethod paymentMethod, String note,
+    List<OrderItemDto> items) {}
 
   /** type is FOOD or PRODUCT. */
   public record CartLine(@NotBlank String type, @NotNull Long id, @Min(1) int quantity) {}
 
-  public record OrderRequest(@NotEmpty List<@Valid CartLine> items, @Size(max = 1000) String note) {}
+  /** paymentMethod defaults to COD when omitted. */
+  public record OrderRequest(@NotEmpty List<@Valid CartLine> items, Order.PaymentMethod paymentMethod, @Size(max = 1000) String note) {}
+
+  public record ContactRequest(@NotBlank @Size(max = 100) String name, @NotBlank @Email @Size(max = 255) String email,
+    @NotBlank @Size(max = 2000) String message) {}
 
   public record Quote(List<OrderItemDto> items, int total, String currency) {}
 

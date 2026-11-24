@@ -45,6 +45,8 @@ import static com.fpt.petstore.entities.ConstVariable.*;
 @Controller
 @SuppressWarnings("unchecked")
 public class CustomerController {
+    @org.springframework.beans.factory.annotation.Value("${petstore.upload-dir:user-photos}")
+    private String uploadDir;
     @Autowired
     private JavaMailSender mailSender;
     @Autowired
@@ -142,7 +144,7 @@ public class CustomerController {
             petStoreService.updateCustomer(sessionCustomer.getId(), fullName, phone, address, sessionCustomer.getAvatarUrl(), birthdayFormat);
         } else {
             petStoreService.updateCustomer(sessionCustomer.getId(), fullName, phone, address, avatarUrl, birthdayFormat);
-            String uploadDir = "user-photos/" + sessionCustomer.getId();
+            String uploadDir = this.uploadDir + "/" + sessionCustomer.getId();
             FileUploadUtil.saveFile(uploadDir, avatarUrl, multipartFile);
         }
         redirectAttributes.addFlashAttribute(messageNotification, "Cập nhật tài khoản thành công");
