@@ -14,9 +14,12 @@ function readMock(): AuthUser | null {
   return role ? (MOCK_USERS[role] ?? null) : null
 }
 
+// Set at module load so child queries (whose effects run before the provider's) already see it.
+if (MOCK) setTokenSource(async () => (localStorage.getItem(MOCK_KEY) ? 'mock-token' : undefined))
+
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [ready, setReady] = useState(false)
-  const [user, setUser] = useState<AuthUser | null>(null)
+  const [ready, setReady] = useState(MOCK)
+  const [user, setUser] = useState<AuthUser | null>(MOCK ? readMock() : null)
   const started = useRef(false)
 
   const syncFromKeycloak = useCallback(() => {
@@ -28,12 +31,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (started.current) return
     started.current = true
-    if (MOCK) {
-      setTokenSource(async () => (localStorage.getItem(MOCK_KEY) ? 'mock-token' : undefined))
-      setUser(readMock())
-      setReady(true)
-      return
-    }
+    if (MOCK) return
     setTokenSource(async () => {
       if (!keycloak.authenticated) return undefined
       await keycloak.updateToken(30).catch(() => keycloak.login())

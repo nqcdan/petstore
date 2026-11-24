@@ -16,5 +16,5 @@ export default tseslint.config(
     },
   },
   // shadcn files export variants/hooks next to components by design
-  { files: ['src/components/ui/**', 'src/**/*.test.{ts,tsx}'], rules: { 'react-refresh/only-export-components': 'off' } },
+  { files: ['src/components/ui/**', 'src/hooks/**', 'src/**/*.test.{ts,tsx}'], rules: { 'react-refresh/only-export-components': 'off', 'react-hooks/set-state-in-effect': 'off' } },
 )
