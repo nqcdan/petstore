@@ -46,3 +46,7 @@ dependency-reduced-pom.xml
 **/out-tsc
 **/nbproject/
 **/nb-configuration.xml
+
+# Deployment secrets
+.env
+deploy/.env

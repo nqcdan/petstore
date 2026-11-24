@@ -1,0 +1,142 @@
+{
+  "realm": "petstore",
+  "enabled": true,
+  "displayName": "PetStore",
+  "sslRequired": "external",
+  "registrationAllowed": true,
+  "registrationEmailAsUsername": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": true,
+  "bruteForceProtected": true,
+  "accessTokenLifespan": 300,
+  "roles": {
+    "realm": [
+      {
+        "name": "customer",
+        "description": "Shopper"
+      },
+      {
+        "name": "admin",
+        "description": "Store administrator"
+      },
+      {
+        "name": "default-roles-petstore",
+        "description": "Roles every new user gets",
+        "composite": true,
+        "composites": {
+          "realm": [
+            "offline_access",
+            "uma_authorization",
+            "customer"
+          ]
+        }
+      },
+      {
+        "name": "offline_access",
+        "description": "Offline access"
+      },
+      {
+        "name": "uma_authorization",
+        "description": "UMA authorization"
+      }
+    ]
+  },
+  "defaultRole": {
+    "name": "default-roles-petstore",
+    "description": "Roles every new user gets",
+    "composite": true,
+    "clientRole": false
+  },
+  "clients": [
+    {
+      "clientId": "petstore-web",
+      "name": "PetStore web (React)",
+      "enabled": true,
+      "publicClient": true,
+      "protocol": "openid-connect",
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "redirectUris": [
+        "${PETSTORE_WEB_ORIGIN}/*",
+        "${PETSTORE_WEB_ORIGIN_ALT}/*"
+      ],
+      "webOrigins": [
+        "${PETSTORE_WEB_ORIGIN}",
+        "${PETSTORE_WEB_ORIGIN_ALT}"
+      ],
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "${PETSTORE_WEB_ORIGIN}/*##${PETSTORE_WEB_ORIGIN_ALT}/*"
+      },
+      "protocolMappers": [
+        {
+          "name": "petstore-api-audience",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "consentRequired": false,
+          "config": {
+            "included.client.audience": "petstore-api",
+            "id.token.claim": "false",
+            "access.token.claim": "true"
+          }
+        }
+      ]
+    },
+    {
+      "clientId": "petstore-api",
+      "name": "PetStore API (resource server)",
+      "enabled": true,
+      "publicClient": false,
+      "bearerOnly": true,
+      "protocol": "openid-connect",
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false
+    }
+  ],
+  "users": [
+    {
+      "username": "demo-user",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Demo",
+      "lastName": "User",
+      "email": "demo-user@example.com",
+      "requiredActions": [],
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Demo@123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "default-roles-petstore",
+        "customer"
+      ]
+    },
+    {
+      "username": "demo-admin",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Demo",
+      "lastName": "Admin",
+      "email": "demo-admin@example.com",
+      "requiredActions": [],
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Demo@123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "default-roles-petstore",
+        "admin"
+      ]
+    }
+  ]
+}
