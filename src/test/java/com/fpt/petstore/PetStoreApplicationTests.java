@@ -1,105 +1,60 @@
 package com.fpt.petstore;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.List;
-import java.util.Map;
-
-import com.fpt.petstore.core.dao.query.Filter;
-import com.fpt.petstore.core.dao.query.OptionFilter;
-import com.fpt.petstore.core.dao.query.SimpleFilter;
-import com.fpt.petstore.core.dao.query.SqlQueryParams;
-import com.fpt.petstore.services.FoodLogic;
-import com.fpt.petstore.services.OrderLogic;
+import com.fpt.petstore.api.OrderApiService;
+import com.fpt.petstore.data.FoodData;
+import com.fpt.petstore.data.ProductData;
+import com.fpt.petstore.entities.Food.FoodType;
+import com.fpt.petstore.entities.Order;
+import com.fpt.petstore.entities.Product.ProductType;
+import com.fpt.petstore.repository.CustomerRepository;
+import com.fpt.petstore.repository.FoodRepository;
+import com.fpt.petstore.repository.OrderRepository;
+import com.fpt.petstore.repository.ProductsRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.fpt.petstore.entities.Food;
-import com.fpt.petstore.entities.Food.FoodType;
-import com.fpt.petstore.entities.Order;
-import com.fpt.petstore.entities.Product;
-import com.fpt.petstore.entities.Product.ProductType;
-import com.fpt.petstore.repository.FoodRepository;
-import com.fpt.petstore.repository.OrderRepository;
-import com.fpt.petstore.repository.ProductsRepository;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 class PetStoreApplicationTests {
 
 	@Autowired
 	FoodRepository foodRepo;
-
 	@Autowired
 	ProductsRepository productRepo;
-
+	@Autowired
+	CustomerRepository customerRepo;
 	@Autowired
 	OrderRepository orderRepo;
-
 	@Autowired
-	OrderLogic orderLogic;
-
-	@Autowired
-	FoodLogic foodLogic;
+	OrderApiService orderApi;
 
 	@Test
-	public void testFood() throws Exception {
-		List<Food> foods = foodRepo.findByType(FoodType.DRY);
-		System.out.println(foods);
-		assertNotNull(foods);
-		assertTrue(foods.size() > 0);
+	void liquibaseSeedsCatalog() {
+		assertEquals(new FoodData().ALL_FOODS.length, foodRepo.count());
+		assertEquals(new ProductData().ALL_PRODUCTS.length, productRepo.count());
+		assertFalse(foodRepo.findByType(FoodType.DRY).isEmpty());
+		assertFalse(productRepo.findByType(ProductType.DOG).isEmpty());
 	}
 
 	@Test
-	public void testProduct() throws Exception {
-		List<Product> products = productRepo.findByType(ProductType.CLOTHES);
-		System.out.println(products);
-		assertNotNull(products);
-		assertTrue(products.size() > 0);
-
+	void demoOrdersAreRecentAndHaveStates() {
+		var all = orderRepo.findAll();
+		assertTrue(all.stream().noneMatch(o -> o.getState() == null));
+		assertTrue(all.stream().noneMatch(o -> o.getTransactionDate().before(java.sql.Timestamp.valueOf(java.time.LocalDateTime.now().minusDays(31)))));
+		var states = all.stream().map(o -> o.getState()).collect(java.util.stream.Collectors.toSet());
+		assertEquals(java.util.Set.of(Order.State.PAID, Order.State.DUE, Order.State.CANCEL), states);
+		var stats = orderApi.stats();
+		assertTrue(stats.revenueByDay().stream().filter(d -> d.revenue() > 0).count() >= 15);
+		assertFalse(stats.topProducts().isEmpty());
 	}
 
 	@Test
-	public void testOrders() throws Exception {
-		List<Order> orders = orderRepo.findOrdersByEmployee("phamvohoaianh");
-		System.out.println("==========================================");
-		System.out.println(orders.size());
-		assertNotNull(orders);
-		assertTrue(orders.size() == 20);
-	}
-
-	@Test
-	public void testSearch() throws Exception {
-		SqlQueryParams searchParams =
-			new SqlQueryParams().
-				FILTER(new SimpleFilter("search", Filter.FilterType.STRING_LIKE).withValue("*")).
-				ORDERBY(new String[] { "code" }, "code", "DESC");
-		List<Map<String, Object>> maps = foodLogic.searchFoods(searchParams);
-		assertNotNull(maps);
-		System.out.println(maps);
-	}
-
-	@Test
-	public void testSearchOrder() throws Exception {
-		SqlQueryParams searchParams =
-			new SqlQueryParams().
-				FILTER(new SimpleFilter("search", Filter.FilterType.STRING_LIKE).withValue("*")).
-				FILTER(new OptionFilter("state", Filter.FilterType.STRING).withOption(Order.State.CANCEL)).
-				ORDERBY(new String[] { "code" }, "code", "DESC");
-
-		List<Map<String, Object>> orders = orderLogic.searchOrders(searchParams);
-		System.out.println(orders.size());
-		assertNotNull(orders);
-		assertTrue(orders.size() > 0);
-
-
-		SqlQueryParams searchParams2 =
-			new SqlQueryParams().
-				FILTER(new SimpleFilter("search", Filter.FilterType.STRING_LIKE).withValue("*")).
-				ORDERBY(new String[] { "code" }, "code", "DESC");
-
-		List<Map<String, Object>> listOrders = orderLogic.searchOrders(searchParams2);
-		System.out.println(listOrders.size());
+	void demoDataIsLoaded() {
+		assertFalse(customerRepo.findAll().isEmpty());
+		assertFalse(orderRepo.findOrdersByEmployee("admin").isEmpty());
 	}
 }

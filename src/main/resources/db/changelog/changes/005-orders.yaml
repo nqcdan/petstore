@@ -1,0 +1,111 @@
+databaseChangeLog:
+  - changeSet:
+      id: 005-orders-table
+      author: dan
+      changes:
+        - createTable:
+            tableName: orders
+            columns:
+                - column:
+                    name: id
+                    type: bigint
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      nullable: false
+                - column:
+                    name: createdtime
+                    type: datetime
+                - column:
+                    name: updatedtime
+                    type: datetime
+                - column:
+                    name: code
+                    type: varchar(255)
+                    constraints:
+                      nullable: false
+                      unique: true
+                      uniqueConstraintName: uk_orders_code
+                - column:
+                    name: label
+                    type: varchar(255)
+                - column:
+                    name: customerid
+                    type: bigint
+                - column:
+                    name: employeeid
+                    type: bigint
+                - column:
+                    name: total
+                    type: int
+                    constraints:
+                      nullable: false
+                - column:
+                    name: note
+                    type: varchar(32768)
+                - column:
+                    name: currency
+                    type: varchar(255)
+                - column:
+                    name: state
+                    type: varchar(255)
+                - column:
+                    name: transactiondate
+                    type: datetime
+  - changeSet:
+      id: 005-orders-foreign-keys
+      author: dan
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: orders
+            baseColumnNames: customerid
+            referencedTableName: customer
+            referencedColumnNames: id
+            constraintName: fk_orders_customer
+        - addForeignKeyConstraint:
+            baseTableName: orders
+            baseColumnNames: employeeid
+            referencedTableName: employee
+            referencedColumnNames: id
+            constraintName: fk_orders_employee
+        - createIndex:
+            tableName: orders
+            indexName: idx_orders_customerid
+            columns:
+              - column:
+                  name: customerid
+        - createIndex:
+            tableName: orders
+            indexName: idx_orders_state_date
+            columns:
+              - column:
+                  name: state
+              - column:
+                  name: transactiondate
+
+  - changeSet:
+      id: 005-orders-payment-method
+      author: dan
+      changes:
+        - addColumn:
+            tableName: orders
+            columns:
+              - column:
+                  name: paymentmethod
+                  type: varchar(10)
+  - changeSet:
+      id: 005-orders-owner-sub
+      author: dan
+      changes:
+        - addColumn:
+            tableName: orders
+            columns:
+              - column:
+                  name: ownersub
+                  type: varchar(64)
+        - createIndex:
+            tableName: orders
+            indexName: idx_orders_ownersub
+            columns:
+              - column:
+                  name: ownersub

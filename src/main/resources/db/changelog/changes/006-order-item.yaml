@@ -1,0 +1,68 @@
+databaseChangeLog:
+  - changeSet:
+      id: 006-order-item-table
+      author: dan
+      changes:
+        - createTable:
+            tableName: order_item
+            columns:
+                - column:
+                    name: id
+                    type: bigint
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      nullable: false
+                - column:
+                    name: createdtime
+                    type: datetime
+                - column:
+                    name: updatedtime
+                    type: datetime
+                - column:
+                    name: name
+                    type: varchar(255)
+                    constraints:
+                      nullable: false
+                - column:
+                    name: label
+                    type: varchar(255)
+                - column:
+                    name: description
+                    type: varchar(32768)
+                - column:
+                    name: quantity
+                    type: int
+                    constraints:
+                      nullable: false
+                - column:
+                    name: total
+                    type: int
+                    constraints:
+                      nullable: false
+                - column:
+                    name: type
+                    type: varchar(255)
+                - column:
+                    name: currency
+                    type: varchar(255)
+                - column:
+                    name: orderid
+                    type: bigint
+  - changeSet:
+      id: 006-order-item-constraints
+      author: dan
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: order_item
+            baseColumnNames: orderid
+            referencedTableName: orders
+            referencedColumnNames: id
+            constraintName: fk_order_item_order
+        - createIndex:
+            tableName: order_item
+            indexName: idx_order_item_name
+            columns:
+              - column:
+                  name: name
+

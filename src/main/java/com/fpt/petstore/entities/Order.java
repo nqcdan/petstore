@@ -6,20 +6,21 @@ import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -40,6 +41,7 @@ import lombok.Setter;
 public class Order extends AbstractPersistable<Long> {
 
   static public enum State { PAID, DUE, CANCEL };
+  static public enum PaymentMethod { COD, ATM };
 
   @NotNull
   private String code;
@@ -70,6 +72,11 @@ public class Order extends AbstractPersistable<Long> {
   private String note;
 
   private String currency = "VND";
+  @Enumerated(EnumType.STRING)
+  private PaymentMethod paymentMethod;
+  /** Keycloak subject of the shopper who placed the order through the API; null for legacy orders. */
+  @JsonIgnore
+  private String ownerSub;
 
   @Enumerated(EnumType.STRING)
   private State state;

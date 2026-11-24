@@ -2,6 +2,7 @@ package com.fpt.petstore.repository;
 
 import com.fpt.petstore.entities.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,13 +15,15 @@ import java.util.Date;
  */
 
 @Repository
-public interface CustomerRepository extends JpaRepository<Customer, Long> {
+public interface CustomerRepository extends JpaRepository<Customer, Long>, JpaSpecificationExecutor<Customer> {
 
   @Query( "SELECT c FROM Customer c WHERE c.username = :username")
   Customer getByUsername(@Param("username") String username);
 
   boolean existsCustomersByUsername(String username);
   Customer findByEmail(String email);
+
+  Customer findByKeycloakSub(String keycloakSub);
   Customer findByUsername(String username);
 
   @Query(value = "Select * from Customer where email like ?1 and password like ?2",nativeQuery = true)

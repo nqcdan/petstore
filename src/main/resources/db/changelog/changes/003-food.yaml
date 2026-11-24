@@ -1,0 +1,47 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-food-table
+      author: dan
+      changes:
+        - createTable:
+            tableName: food
+            columns:
+                - column:
+                    name: id
+                    type: bigint
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      nullable: false
+                - column:
+                    name: createdtime
+                    type: datetime
+                - column:
+                    name: updatedtime
+                    type: datetime
+                - column:
+                    name: code
+                    type: varchar(255)
+                - column:
+                    name: name
+                    type: varchar(255)
+                    constraints:
+                      nullable: false
+                - column:
+                    name: sortname
+                    type: varchar(255)
+                - column:
+                    name: price
+                    type: int
+                    constraints:
+                      nullable: false
+                - column:
+                    name: pic
+                    type: varchar(255)
+                - column:
+                    name: description
+                    type: varchar(32768)
+                - column:
+                    name: type
+                    type: varchar(255)
+

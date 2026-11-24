@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: 008-contact-table
+      author: dan
+      changes:
+        - createTable:
+            tableName: contact
+            columns:
+                - column:
+                    name: id
+                    type: int
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      nullable: false
+                - column:
+                    name: email
+                    type: varchar(255)
+                - column:
+                    name: name
+                    type: varchar(255)
+                - column:
+                    name: message
+                    type: varchar(255)
+                - column:
+                    name: contactdate
+                    type: datetime
+
+  - changeSet:
+      id: 008-contact-message-length
+      author: dan
+      changes:
+        - modifyDataType:
+            tableName: contact
+            columnName: message
+            newDataType: varchar(2000)

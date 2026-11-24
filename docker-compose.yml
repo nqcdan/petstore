@@ -1,0 +1,55 @@
+# Local stack: app + PostgreSQL + Keycloak (dev mode). Start with: docker compose up --build
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: petstore
+      POSTGRES_USER: petstore
+      POSTGRES_PASSWORD: petstore
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U petstore -d petstore"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.4
+    command: start-dev --import-realm
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_HOSTNAME: http://localhost:8180
+      # Filled into the realm import (redirect URIs of the web client): React dev servers
+      PETSTORE_WEB_ORIGIN: http://localhost:3000
+      PETSTORE_WEB_ORIGIN_ALT: http://localhost:5173
+    volumes:
+      - ./keycloak/petstore-realm.json:/opt/keycloak/data/import/petstore-realm.json:ro
+    ports:
+      - "8180:8080"
+
+  app:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/petstore
+      DB_USERNAME: petstore
+      DB_PASSWORD: petstore
+      # Demo customers, employees and orders for local use; leave unset or false in production.
+      PETSTORE_SEED_DEMO: "true"
+      # Tokens carry the browser-facing issuer; signing keys are fetched over the compose network.
+      KEYCLOAK_ISSUER_URI: http://localhost:8180/realms/petstore
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:8080/realms/petstore/protocol/openid-connect/certs
+      MAIL_USERNAME: ${MAIL_USERNAME:-}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+    volumes:
+      - uploads:/app/user-photos
+    ports:
+      - "8081:8081"
+
+volumes:
+  pgdata:
+  uploads:

@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - changeSet:
+      id: 011-seed-products
+      author: dan
+      changes:
+        - loadData:
+            tableName: product
+            file: db/changelog/data/products.csv
+            relativeToChangelogFile: false
+            separator: ","
+            quotchar: '"'
+            encoding: UTF-8
+            columns:
+              - column: {name: name, type: STRING}
+              - column: {name: sortname, type: STRING}
+              - column: {name: price, type: NUMERIC}
+              - column: {name: pic, type: STRING}
+              - column: {name: description, type: STRING}
+              - column: {name: type, type: STRING}

@@ -6,9 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * @author linuss
@@ -25,7 +25,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @Setter @Getter
 public class OrderItem extends AbstractPersistable<Long> {
-	static enum ItemType { FOOD, PRODUCT};
+	public enum ItemType { FOOD, PRODUCT};
 
 	@NotNull
 	String name;

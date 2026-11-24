@@ -1,4 +1,4 @@
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <%@ page pageEncoding="UTF-8" %>
 
 <!-- Js Plugins -->

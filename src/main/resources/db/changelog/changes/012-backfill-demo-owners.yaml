@@ -1,0 +1,23 @@
+databaseChangeLog:
+  # Orders placed through the API before ownership moved from username to the Keycloak subject.
+  # Only the demo users have a known subject (fixed ids in keycloak/petstore-realm.json).
+  - changeSet:
+      id: 012-backfill-demo-customer-subs
+      author: dan
+      changes:
+        - sql:
+            sql: >-
+              UPDATE customer SET keycloaksub = '7c0e4a3a-5d11-4f6e-9a55-0d3a6f1b0001'
+              WHERE id = (SELECT MIN(id) FROM customer WHERE username = 'demo-user') AND keycloaksub IS NULL
+        - sql:
+            sql: >-
+              UPDATE customer SET keycloaksub = '7c0e4a3a-5d11-4f6e-9a55-0d3a6f1b0002'
+              WHERE id = (SELECT MIN(id) FROM customer WHERE username = 'demo-admin') AND keycloaksub IS NULL
+  - changeSet:
+      id: 012-backfill-demo-order-owners
+      author: dan
+      changes:
+        - sql:
+            sql: >-
+              UPDATE orders SET ownersub = (SELECT c.keycloaksub FROM customer c WHERE c.id = orders.customerid)
+              WHERE ownersub IS NULL AND customerid IN (SELECT id FROM customer WHERE keycloaksub IS NOT NULL)

@@ -3,8 +3,8 @@ package com.fpt.petstore.validation;
 
 import com.fpt.petstore.request.CustomerRegisterRequest;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 public class PasswordConfirmedValidator implements ConstraintValidator<PasswordConfirmed, Object> {
 

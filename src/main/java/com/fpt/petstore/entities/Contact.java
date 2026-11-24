@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Date;
 
 /**
@@ -21,6 +21,7 @@ public class Contact {
     private int id;
     private String email;
     private String name;
+    @Column(length = 2000)
     private String message;
     private Date contactDate;
 
