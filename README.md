@@ -55,7 +55,7 @@ All settings are environment variables.
 | `SPRING_PROFILES_ACTIVE` | none (H2) | `prod` switches to PostgreSQL |
 | `DB_URL`, `DB_USERNAME`, `DB_PASSWORD` | local PostgreSQL | Used by the `prod` profile |
 | `KEYCLOAK_ISSUER_URI` | `http://localhost:8180/realms/petstore` | Token issuer, must equal the `iss` claim |
-| `KEYCLOAK_JWK_SET_URI` | derived from the issuer | Optional internal URL for the signing keys |
+| `SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI` | derived from the issuer | Optional internal URL for the signing keys |
 | `KEYCLOAK_API_CLIENT_ID` | `petstore-api` | Client whose roles are also read from the token |
 | `PETSTORE_CORS_ORIGINS` | `http://localhost:3000,http://localhost:5173` | Allowed front-end origins |
 | `PETSTORE_SEED_DEMO` | `true` (H2), `false` (`prod`) | Load demo customers, employees and orders on an empty database |

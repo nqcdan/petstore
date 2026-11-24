@@ -42,7 +42,7 @@ services:
       PETSTORE_SEED_DEMO: "true"
       # Tokens carry the browser-facing issuer; signing keys are fetched over the compose network.
       KEYCLOAK_ISSUER_URI: http://localhost:8180/realms/petstore
-      KEYCLOAK_JWK_SET_URI: http://keycloak:8080/realms/petstore/protocol/openid-connect/certs
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:8080/realms/petstore/protocol/openid-connect/certs
       MAIL_USERNAME: ${MAIL_USERNAME:-}
       MAIL_PASSWORD: ${MAIL_PASSWORD:-}
     volumes:

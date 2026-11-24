@@ -78,7 +78,7 @@ services:
       # Must equal the token issuer, i.e. the public Keycloak URL including /realms/petstore
       KEYCLOAK_ISSUER_URI: ${KEYCLOAK_ISSUER_URI:?set KEYCLOAK_ISSUER_URI}
       # Keys are fetched inside the compose network, no round trip through Cloudflare
-      KEYCLOAK_JWK_SET_URI: http://keycloak:8080/realms/petstore/protocol/openid-connect/certs
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:8080/realms/petstore/protocol/openid-connect/certs
       PETSTORE_CORS_ORIGINS: ${PETSTORE_WEB_ORIGIN}
       MAIL_USERNAME: ${MAIL_USERNAME:-}
       MAIL_PASSWORD: ${MAIL_PASSWORD:-}
