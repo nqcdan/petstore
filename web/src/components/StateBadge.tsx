@@ -9,7 +9,8 @@ const style: Record<OrderState, string> = {
   CANCEL: 'bg-red-500/15 text-red-700 dark:text-red-400',
 }
 
-export function StateBadge({ state }: { state: OrderState }) {
+export function StateBadge({ state }: { state: OrderState | null }) {
   const { t } = useTranslation()
+  if (!state) return <span className="text-muted-foreground">-</span>
   return <Badge variant="outline" className={cn('border-transparent', style[state])}>{t(`state.${state}`)}</Badge>
 }

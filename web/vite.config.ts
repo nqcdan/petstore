@@ -5,6 +5,12 @@ import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  server: {
+    // Real-backend dev/e2e: same-origin calls to the Spring app (no CORS, uploaded images, legacy contact form)
+    proxy: Object.fromEntries(
+      ['/api', '/user-photos', '/contact'].map((p) => [p, { target: process.env.PETSTORE_API ?? 'http://localhost:8081', changeOrigin: true }]),
+    ),
+  },
   resolve: { alias: { '@': path.resolve(import.meta.dirname, 'src') } },
   test: {
     environment: 'jsdom',

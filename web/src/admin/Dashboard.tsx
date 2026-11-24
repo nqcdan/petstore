@@ -19,6 +19,8 @@ export function Dashboard() {
   if (isPending) return <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">{Array.from({ length: 4 }, (_, i) => <Skeleton key={i} className="h-28" />)}</div>
 
   // The API returns no grand totals: derive them from the 30-day series and the state counts.
+  // seed data has a few orders without a state; the API sends them as null
+  const byState = data.ordersByState.filter((s) => s.state)
   const revenue = data.revenueByDay.reduce((s, d) => s + d.revenue, 0)
   const paidOrders = data.revenueByDay.reduce((s, d) => s + d.orders, 0)
   const kpis = [
@@ -66,8 +68,8 @@ export function Dashboard() {
             <ChartContainer config={stateConfig} className="mx-auto h-64 w-full">
               <PieChart>
                 <ChartTooltip content={<ChartTooltipContent nameKey="state" hideLabel />} />
-                <Pie data={data.ordersByState} dataKey="count" nameKey="state" innerRadius={50} strokeWidth={2}>
-                  {data.ordersByState.map((s) => <Cell key={s.state} fill={stateColor[s.state]} />)}
+                <Pie data={byState} dataKey="count" nameKey="state" innerRadius={50} strokeWidth={2}>
+                  {byState.map((s) => <Cell key={s.state} fill={stateColor[s.state]} />)}
                 </Pie>
                 <ChartLegend content={<ChartLegendContent nameKey="state" />} />
               </PieChart>

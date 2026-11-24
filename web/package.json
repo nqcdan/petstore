@@ -10,7 +10,6 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "shots": "playwright test e2e/screenshots.spec.ts",
     "gen:api": "openapi-typescript http://localhost:8081/v3/api-docs -o src/api/schema.d.ts"
   },
   "dependencies": {

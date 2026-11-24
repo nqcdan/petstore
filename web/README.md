@@ -11,11 +11,12 @@ pnpm dev            # http://localhost:5173, VITE_MOCK=true: MSW answers /api/v1
 pnpm build          # tsc -b && vite build
 pnpm lint
 pnpm test           # vitest (jsdom + MSW node server)
-pnpm shots          # Playwright, regenerates docs/*.png
+pnpm test:e2e       # Playwright against the real stack, regenerates docs/*.png (see below)
+pnpm gen:api        # regenerate src/api/schema.d.ts from the backend OpenAPI
 ```
 
-Mock mode (`.env.development`): the header login menu offers "customer" and "admin" demo users.
-Real mode: copy `.env.example` to `.env.local`, set `VITE_MOCK=false` and the Keycloak values.
+Mock mode (`.env.development`, MSW): the header login menu offers "customer" and "admin" demo users.
+Real mode: `pnpm exec vite --mode e2e` uses `.env.e2e` (local Keycloak :8180, proxy to the app :8081), or copy `.env.example` to `.env.local` and set `VITE_MOCK=false` plus the Keycloak values.
 
 ## Demo accounts box
 
@@ -39,27 +40,41 @@ docker build -t petstore-web --build-arg VITE_KEYCLOAK_URL=https://sso.example.c
 docker run -p 8483:80 petstore-web
 ```
 
-nginx inside listens on 80 and only serves the SPA (history fallback). `/api` and `/rest` are proxied by the host nginx
+nginx inside listens on 80 and only serves the SPA (history fallback). `/api`, `/rest`, `/user-photos` (uploaded images) and `/contact` (contact form) must be proxied by the host nginx
 to the Spring app (`127.0.0.1:8481` on the VM); the web container is published as `127.0.0.1:8483`.
 
-## API contract to re-check when phase A merges
+## API integration (matched with phase A, branch dan-petstore-modernize)
 
-The client in `src/api` (`types.ts`, `shop.ts`) and the MSW handlers in `src/mocks/handlers.ts` were written from the JSP
-controllers and JPA entities, before `/api/v1` exists. Every place to re-check is marked `MATCH` in `src/api/types.ts`. Open points:
+- `src/api/schema.d.ts` is generated from the live OpenAPI (`pnpm gen:api`, needs the backend on :8081; a copy of the
+  document is in `openapi/petstore-v1.json`). `src/api/types.ts` holds the UI types and `src/api/contract.ts` makes `tsc`
+  fail if the two drift apart. `src/api/shop.ts` is the thin typed client, `src/mocks/handlers.ts` mirrors the same contract
+  for MSW (dev without backend, vitest).
+- Lists are `{items,page,size,totalItems,totalPages}` with zero-based `page`; errors are RFC 7807 (`detail` is shown in toasts).
+- Catalog items carry `imageUrl` (`/img/product/x.jpg` bundled, `/user-photos/...` uploaded). Admin image upload is
+  `POST /admin/{products|foods}/{id}/image`, so the form uploads after saving.
+- Cart stays client side; `POST /orders {items:[{type:FOOD|PRODUCT,id,quantity}],note}`; customer orders are read by `code`.
+- `/me` returns only the token identity. The profile page is read-only with a link to the Keycloak account console;
+  address, phone and avatar editing from the old JSP are gone.
+- Dashboard totals are derived client side from `GET /admin/stats` (30-day revenue, state counts, `totalCustomers`).
 
-- Base path `/api/v1`, Spring `Page` flattened as `{content,totalElements,totalPages,page,size}` with zero-based `page`.
-- Products and foods stay two resources (`/products`, `/foods`, `/admin/products`, `/admin/foods`) with the same shape
-  (`id,name,sortName,price,pic,description,type`); the old `sortName` URL key is no longer used by the UI.
-- Cart is client side (localStorage) and sent once as `POST /orders {items:[{kind,id,quantity}],paymentMethod,note}`;
-  the server must price from the catalog, not trust the client. Old session cart + cookie are gone.
-- Customer: `GET/PUT /me`, `POST /me/avatar` (multipart `file`), `GET /orders`, `GET /orders/{id}`, `POST /contacts`.
-  Password change and password reset move to Keycloak (old `/updatePassword`, `/quen-mat-khau/{token}` mail flow dropped).
-- Admin (`/admin/**`, role admin): `GET /admin/stats` (`totals`, `revenueByDay` 30 days, `ordersByState`, `topItems`),
-  CRUD + `?page&size&q` on products/foods, `POST /admin/uploads` (returns `{filename}`; the UI shows it under `/img/product/`),
-  `GET /admin/orders?state&q`, `GET /admin/orders/{id}`, `PATCH /admin/orders/{id}/state {state}`,
-  `GET /admin/customers`, `GET /admin/employees` (read only).
-- Order `state` enum `DUE|PAID|CANCEL`, `paymentMethod` `COD|ATM`, `transactionDate` ISO-8601.
-- Once an OpenAPI document exists, replace `src/api/types.ts` + `shop.ts` with a generated client and keep the MSW handlers as test doubles.
+Gaps in the API the UI works around (report to backend):
+- No payment method on `POST /orders`: the COD/ATM choice is written into the order note as `[COD] ...`.
+- No contact endpoint: the form posts to the legacy JSP `/contact` (urlencoded). Behind nginx, `/contact` and `/user-photos`
+  must be proxied to the app next to `/api`.
+- Seed data: all PAID orders are from 2020-21, so the 30-day revenue chart is flat until a new order is marked PAID;
+  a few seeded orders have `state = null`.
+
+## Real-stack e2e (Playwright, MSW off)
+
+```bash
+cd <phase A worktree> && docker compose -p petstore-web up --build -d   # app :8081, Keycloak :8180 (realm import), Postgres
+cd web && pnpm exec playwright install chromium && pnpm test:e2e         # Vite in --mode e2e (.env.e2e) proxies /api to :8081
+# cleanup:  docker compose -p petstore-web down -v --remove-orphans
+```
+
+`e2e/1-storefront.spec.ts` (demo-user: login, buy, checkout, history; blocked from `/admin`) runs before `e2e/2-admin.spec.ts`
+(demo-admin: create/edit/delete a product with image, change an order state, dashboard, lists). Both write `docs/*.png`
+from real data. Files are named so the storefront order exists before the admin dashboard screenshot.
 
 Blog is static sample content (`src/data/blog.ts`), as in the JSP; there is no blog API.
 Images are copied from `src/main/resources/static/img` into `public/img`.
