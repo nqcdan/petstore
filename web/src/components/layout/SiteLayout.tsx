@@ -2,6 +2,7 @@ import { LogIn, LogOut, Menu, PawPrint, ShieldCheck, ShoppingCart, User } from '
 import { useTranslation } from 'react-i18next'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useEffect, useState } from 'react'
+import { ADMIN_URL } from '@/admin/base'
 import { useAuth } from '@/auth/context'
 import { useCart } from '@/cart/context'
 import { Badge } from '@/components/ui/badge'
@@ -29,11 +30,18 @@ function Brand() {
   )
 }
 
+// VITE_ADMIN_URL: absolute = the separate admin site, otherwise the built-in /admin
+function AdminAnchor({ className, onClick, children }: { className?: string; onClick?: () => void; children: React.ReactNode }) {
+  return /^https?:\/\//.test(ADMIN_URL)
+    ? <a href={ADMIN_URL} onClick={onClick} className={className}>{children}</a>
+    : <Link to={ADMIN_URL} onClick={onClick} className={className}>{children}</Link>
+}
+
 function AdminLink({ onClick, className }: { onClick?: () => void; className?: string }) {
   const { isAdmin } = useAuth()
   const { t } = useTranslation()
   if (!isAdmin) return null
-  return <Link to="/admin" onClick={onClick} className={cn('flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium text-primary hover:bg-accent', className)}><ShieldCheck className="size-4" />{t('nav.admin')}</Link>
+  return <AdminAnchor onClick={onClick} className={cn('flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium text-primary hover:bg-accent', className)}><ShieldCheck className="size-4" />{t('nav.admin')}</AdminAnchor>
 }
 
 function UserMenu() {
@@ -61,7 +69,7 @@ function UserMenu() {
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild><Link to="/profile">{t('nav.profile')}</Link></DropdownMenuItem>
         <DropdownMenuItem asChild><Link to="/orders">{t('nav.history')}</Link></DropdownMenuItem>
-        {isAdmin && <DropdownMenuItem asChild><Link to="/admin"><ShieldCheck /> {t('nav.admin')}</Link></DropdownMenuItem>}
+        {isAdmin && <DropdownMenuItem asChild><AdminAnchor><ShieldCheck /> {t('nav.admin')}</AdminAnchor></DropdownMenuItem>}
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={logout}><LogOut /> {t('nav.logout')}</DropdownMenuItem>
       </DropdownMenuContent>
