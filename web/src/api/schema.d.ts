@@ -145,7 +145,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Upload a product image (PNG, JPEG or WebP, up to 5 MB) as multipart field `file` */
+        /** Upload a product image (PNG, JPEG or WebP, up to 2 MB) as multipart field `file` */
         post: operations["productImage"];
         delete?: never;
         options?: never;
@@ -178,7 +178,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Upload a food image (PNG, JPEG or WebP, up to 5 MB) as multipart field `file` */
+        /** Upload a food image (PNG, JPEG or WebP, up to 2 MB) as multipart field `file` */
         post: operations["foodImage"];
         delete?: never;
         options?: never;
