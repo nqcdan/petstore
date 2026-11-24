@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 
 // The API has no "featured" flag: take the priciest items and deal them out one type at a time (DOG, CAT, ...).
-export function mixByType(items: CatalogItem[], count: number): CatalogItem[] {
+function mixByType(items: CatalogItem[], count: number): CatalogItem[] {
   const groups = new Map<string, CatalogItem[]>()
   for (const it of items) groups.set(it.type ?? '', [...(groups.get(it.type ?? '') ?? []), it])
   const queues = [...groups.values()]
