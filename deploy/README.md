@@ -22,7 +22,8 @@ Copy `.env.example` to `.env` (git-ignored) and fill it in.
 | `KEYCLOAK_ADMIN_PASSWORD` | yes | Password of that admin; keep the real admin password out of the repo |
 | `KEYCLOAK_ISSUER_URI` | yes | Public URL of the realm, for example `https://auth.example.com/realms/petstore`; must equal the token issuer |
 | `PETSTORE_WEB_ORIGIN` | yes | Public origin of the web front end, no trailing slash; used for CORS and the Keycloak redirect URIs |
-| `PETSTORE_SEED_DEMO` | no (`true`) | Keep demo customers and orders (shared public demo); set `false` for a real store |
+| `PETSTORE_SEED_DEMO` | no (`false`) | `true` loads demo customers and orders (shared public demo only); `reset-demo.sh` always loads them |
+| `PETSTORE_API_DOCS` | no (`false`) | `true` publishes the OpenAPI document and Swagger UI |
 | `MAIL_USERNAME`, `MAIL_PASSWORD` | no | SMTP login for the legacy JSP mail features |
 | `PETSTORE_VERSION` | no (`latest`) | Image tag |
 
@@ -44,7 +45,14 @@ The image builds natively for the VM architecture (all base images are multi-arc
 - Keycloak runs with `--proxy-headers xforwarded --hostname-strict=false`, so nginx must send `X-Forwarded-For`, `X-Forwarded-Proto` and `X-Forwarded-Host` (and `Host`) unchanged.
 - The app validates tokens against `KEYCLOAK_ISSUER_URI` but fetches signing keys over the compose network
   (`http://keycloak:8080/...`), so it needs no outbound round trip through Cloudflare.
-- Expose only `/realms/` and `/resources/` of Keycloak publicly if you can; keep `/admin/` restricted.
+- Expose only `/realms/` and `/resources/` of Keycloak publicly and keep the admin console and master realm private, for example on the auth host:
+
+  ```nginx
+  location ~ ^/(realms/master|admin|metrics|health) { return 404; }
+  location / { proxy_pass http://127.0.0.1:8482; ... }   # plus the X-Forwarded-* headers above
+  ```
+  Reach the admin console through an SSH tunnel to `127.0.0.1:8482/admin`.
+- The app and keycloak containers drop all Linux capabilities and cannot gain privileges. The legacy JSP session cookie is HTTPS-only in the `prod` profile, so the JSP pages need the HTTPS proxy.
 
 ## Keycloak realm and demo accounts
 

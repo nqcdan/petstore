@@ -28,6 +28,8 @@ services:
     image: quay.io/keycloak/keycloak:26.4
     restart: unless-stopped
     mem_limit: 1g
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
     depends_on:
       postgres:
         condition: service_healthy
@@ -65,6 +67,8 @@ services:
     image: petstore:${PETSTORE_VERSION:-latest}
     restart: unless-stopped
     mem_limit: 768m
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
     depends_on:
       postgres:
         condition: service_healthy
@@ -73,8 +77,9 @@ services:
       DB_URL: jdbc:postgresql://postgres:5432/petstore
       DB_USERNAME: petstore
       DB_PASSWORD: ${PETSTORE_DB_PASSWORD}
-      # Shared public demo: seed demo customers/orders on an empty database (reset-demo.sh restores it)
-      PETSTORE_SEED_DEMO: ${PETSTORE_SEED_DEMO:-true}
+      # Shared public demo only: seed demo customers/orders on an empty database (reset-demo.sh restores it)
+      PETSTORE_SEED_DEMO: ${PETSTORE_SEED_DEMO:-false}
+      PETSTORE_API_DOCS: ${PETSTORE_API_DOCS:-false}
       # Must equal the token issuer, i.e. the public Keycloak URL including /realms/petstore
       KEYCLOAK_ISSUER_URI: ${KEYCLOAK_ISSUER_URI:?set KEYCLOAK_ISSUER_URI}
       # Keys are fetched inside the compose network, no round trip through Cloudflare

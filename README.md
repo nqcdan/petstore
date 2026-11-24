@@ -60,6 +60,7 @@ All settings are environment variables.
 | `PETSTORE_CORS_ORIGINS` | `http://localhost:3000,http://localhost:5173` | Allowed front-end origins |
 | `PETSTORE_SEED_DEMO` | `true` (H2), `false` (`prod`) | Load demo customers, employees and orders (dated over the last 30 days from the start time) on an empty database |
 | `MAIL_USERNAME`, `MAIL_PASSWORD` | empty | SMTP login for the legacy JSP mail features (for Gmail use an app password) |
+| `PETSTORE_API_DOCS` | `true` (H2), `false` (`prod`) | Publish the OpenAPI document and Swagger UI |
 | `SERVER_PORT` | `8081` | HTTP port |
 
 The product and food catalog is always seeded by Liquibase (`src/main/resources/db/changelog`).
@@ -75,7 +76,7 @@ Base path `/api/v1`, JSON, paginated lists take `page`, `size` and `sort`.
 | Admin | `/admin/products`, `/admin/foods`, `/admin/customers`, `/admin/employees` (CRUD, search, product images via multipart `POST .../{id}/image`), `/admin/orders` (list by state, detail, `PATCH .../state`), `GET /admin/stats` | role `admin` |
 
 Access tokens must carry `petstore-api` in `aud` (the realm adds it to tokens of `petstore-web` with an audience mapper). Keycloak realm roles `customer` and `admin` (and client roles of `petstore-api`) map to `ROLE_CUSTOMER` and `ROLE_ADMIN`.
-Everything the front end needs is under `/api`, so a reverse proxy only has to forward that prefix. The contact form is always stored and also mailed to `MAIL_USERNAME` when SMTP is set. The cart lives in the client; `POST /cart/quote` prices it with catalog prices and `POST /orders` always re-prices server side.
+Everything the front end needs is under `/api`, so a reverse proxy only has to forward that prefix. The contact form is always stored and also mailed to `MAIL_USERNAME` when SMTP is set. Orders belong to the Keycloak subject (`sub`) of the token, never to a username. Quantity is 1 to 100 per item and an order total must fit an integer (400 otherwise); order states move DUE to PAID or CANCEL, PAID to CANCEL, CANCEL is final (409 otherwise). Uploaded images must be PNG, JPEG or WebP (checked by content, up to 2 MB). The cart lives in the client; `POST /cart/quote` prices it with catalog prices and `POST /orders` always re-prices server side.
 
 The React front end signs in with the public client `petstore-web` (authorization code flow with PKCE, for example with
 `keycloak-js` or `oidc-client-ts`) and sends the access token as `Authorization: Bearer <token>`.
