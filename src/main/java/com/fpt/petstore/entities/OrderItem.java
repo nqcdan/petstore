@@ -25,7 +25,7 @@ import jakarta.validation.constraints.NotNull;
 @NoArgsConstructor
 @Setter @Getter
 public class OrderItem extends AbstractPersistable<Long> {
-	static enum ItemType { FOOD, PRODUCT};
+	public enum ItemType { FOOD, PRODUCT};
 
 	@NotNull
 	String name;
