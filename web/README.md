@@ -5,18 +5,19 @@ Router: react-router. Data: TanStack Query. Forms: react-hook-form + zod. i18n: 
 
 ## Run
 
+Everything runs in containers, from the repository root (only Docker is needed, see the root README):
+
 ```bash
-pnpm install
-pnpm dev            # http://localhost:5173, VITE_MOCK=true: MSW answers /api/v1, login is a stub
-pnpm build          # tsc -b && vite build
-pnpm lint
-pnpm test           # vitest (jsdom + MSW node server)
-pnpm test:e2e       # Playwright against the real stack, regenerates docs/*.png (see below)
-pnpm gen:api        # regenerate src/api/schema.d.ts from the backend OpenAPI
+make up             # whole stack with this web built into an nginx image: http://localhost:3000
+make test           # lint + vitest (target `check` of web/Dockerfile) and the backend tests
+make e2e            # Playwright against the real stack in containers, regenerates docs/*.png (see below)
+make gen-api        # regenerate src/api/schema.d.ts from the running backend OpenAPI
+make images         # petstore-web image for linux/amd64 and linux/arm64
 ```
 
-Mock mode (`.env.development`, MSW): the header login menu offers "customer" and "admin" demo users.
-Real mode: `pnpm exec vite --mode e2e` uses `.env.e2e` (local Keycloak :8180, proxy to the app :8081), or copy `.env.example` to `.env.local` and set `VITE_MOCK=false` plus the Keycloak values.
+The scripts in `package.json` (`dev`, `build`, `lint`, `test`, `test:e2e`) are what the containers run; `pnpm` is not
+needed on the host. In mock mode (`VITE_MOCK=true`, MSW) the header login menu offers "customer" and "admin" demo users;
+real mode talks to Keycloak and the app through the compose stack.
 
 ## Demo accounts box
 
@@ -45,7 +46,7 @@ to the Spring app (`127.0.0.1:8481` on the VM); the web container is published a
 
 ## API integration (matched with phase A, branch dan-petstore-modernize)
 
-- `src/api/schema.d.ts` is generated from the live OpenAPI (`pnpm gen:api`, needs the backend on :8081; a copy of the
+- `src/api/schema.d.ts` is generated from the live OpenAPI (`make gen-api` after `make up`; a copy of the
   document is in `openapi/petstore-v1.json`). `src/api/types.ts` holds the UI types and `src/api/contract.ts` makes `tsc`
   fail if the two drift apart. `src/api/shop.ts` is the thin typed client, `src/mocks/handlers.ts` mirrors the same contract
   for MSW (dev without backend, vitest).
@@ -65,16 +66,16 @@ Backend contract (regenerated against dan-petstore-modernize ed5a50bc):
   quantity 1..100, 50 lines per order, price <= 100 million, images <= 2 MB checked by content before upload (`src/lib/image.ts`).
   Order states follow DUE -> PAID|CANCEL, PAID -> CANCEL (`src/lib/orderState.ts`), anything else is a 409.
 - Orders belong to the token `sub`; another user's order code answers 404.
-- The compose stack runs the `prod` profile, so OpenAPI is off: add `PETSTORE_API_DOCS=true` to the app (compose override) before `pnpm gen:api`.
+- The dev compose stack runs the default profile, so the OpenAPI document is on for `make gen-api`; a deployed `prod` profile has it off.
 - Tokens must carry `aud=petstore-api` (the realm import adds the audience mapper to `petstore-web`).
 
 ## Real-stack e2e (Playwright, MSW off)
 
 ```bash
-cd <phase A worktree> && docker compose -p petstore-web up --build -d   # app :8081, Keycloak :8180 (realm import), Postgres
-cd web && pnpm exec playwright install chromium && pnpm test:e2e         # Vite in --mode e2e (.env.e2e) proxies /api to :8081
-# cleanup:  docker compose -p petstore-web down -v --remove-orphans
+make e2e   # postgres + keycloak + app + a Playwright container (image mcr.microsoft.com/playwright, Vite in --mode e2e); cleans up after itself
 ```
+
+In the container Keycloak's public URL is `http://keycloak:8080` (see `docker-compose.e2e.yml`) and Vite proxies `/api` to `http://app:8081`; `.env.e2e` is the same setup for a host-side run.
 
 `e2e/1-storefront.spec.ts` (demo-user: login, buy, checkout, history; blocked from `/admin`) runs before `e2e/2-admin.spec.ts`
 (demo-admin: product CRUD with image, order state, customers and employees CRUD, dashboard). Both write `docs/*.png`

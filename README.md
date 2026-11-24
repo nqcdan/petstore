@@ -8,33 +8,42 @@ REST API for a React front end. The original JSP site still runs next to the API
 
 - Java 21, Spring Boot 3.5 (Spring MVC, Spring Data JPA, Spring Security)
 - Auth: Keycloak (OIDC). The API is an OAuth2 resource server and never issues tokens
-- Database: PostgreSQL in production, H2 (in memory) for local development and tests, schema managed by Liquibase
+- Database: PostgreSQL in every environment (dev, tests, production), schema managed by Liquibase
 - API docs: springdoc OpenAPI
 - Packaging: executable WAR (the legacy JSP views need it), Docker image for linux/amd64 and linux/arm64
 
 ## Quick start
 
-Requires JDK 21. The Maven wrapper downloads Maven on first use.
+The only requirement is Docker (with buildx and compose v2): no JDK, Maven, Node or pnpm on the machine.
+Every build, test, lint, e2e and code generation step runs in a container, and `make` is the single entry point
+(CI runs the same targets).
 
 ```sh
-./mvnw spring-boot:run          # H2 in memory, http://localhost:8081
-./mvnw verify                   # compile, tests, package
-```
-
-With Docker (app + PostgreSQL + Keycloak):
-
-```sh
-docker compose up --build
+make up         # PostgreSQL + Keycloak + app + web, built from the Dockerfiles
+make test       # web lint + vitest, backend mvnw verify against a throwaway PostgreSQL
+make e2e        # Playwright against the real stack (rewrites web/docs/*.png)
+make gen-api    # regenerate web/src/api/schema.d.ts from the running app (after make up)
+make images     # app + web images for linux/amd64 and linux/arm64, tagged with the git sha and latest
+make down       # stop the stack and delete its volumes
 ```
 
 | Service | URL |
 |---|---|
+| Web (React) | http://localhost:3000 |
 | Legacy JSP site | http://localhost:8081 |
 | OpenAPI UI | http://localhost:8081/swagger-ui.html |
 | OpenAPI JSON | http://localhost:8081/v3/api-docs |
 | Keycloak (dev mode) | http://localhost:8180 |
 
-When running with `./mvnw spring-boot:run` start a Keycloak separately, or only call the public catalog endpoints.
+Images come only from `docker buildx` with the Dockerfiles (`Dockerfile`, `web/Dockerfile`): base images are pinned by
+digest, the build is multi-stage with a BuildKit cache for Maven and pnpm, the runtime stage is non-root, and the OCI
+labels (`revision`, `version`) carry the git sha. `docker-compose.yml` names the same images (`petstore:<sha>`), so
+`docker compose build` produces what `make images` publishes. `make images PUSH=1 REGISTRY=ghcr.io/<owner>/` pushes;
+the web image bakes the Keycloak URL in, set `VITE_KEYCLOAK_URL` for the target environment
+(`VITE_KEYCLOAK_URL=https://sso.example.com make images`).
+
+The first multi-architecture build needs QEMU for the foreign architecture (Docker Desktop and OrbStack include it).
+If `make images` complains about the driver, run `make builder` once.
 
 ## Shared public demo accounts
 
@@ -52,15 +61,16 @@ All settings are environment variables.
 
 | Variable | Default | Purpose |
 |---|---|---|
-| `SPRING_PROFILES_ACTIVE` | none (H2) | `prod` switches to PostgreSQL |
+| `SPRING_PROFILES_ACTIVE` | none | `prod` (set in the image) hardens cookies, hides Swagger and removes the default DB password |
+| `DB_URL`, `DB_USERNAME`, `DB_PASSWORD` | `jdbc:postgresql://localhost:5432/petstore`, `petstore`, `petstore` | PostgreSQL connection (`prod` has no default password) |
 | `DB_URL`, `DB_USERNAME`, `DB_PASSWORD` | local PostgreSQL | Used by the `prod` profile |
 | `KEYCLOAK_ISSUER_URI` | `http://localhost:8180/realms/petstore` | Token issuer, must equal the `iss` claim |
 | `SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI` | derived from the issuer | Optional internal URL for the signing keys |
 | `KEYCLOAK_API_CLIENT_ID` | `petstore-api` | Required token audience; its client roles are also read from the token |
 | `PETSTORE_CORS_ORIGINS` | `http://localhost:3000,http://localhost:5173` | Allowed front-end origins |
-| `PETSTORE_SEED_DEMO` | `true` (H2), `false` (`prod`) | Load demo customers, employees and orders (dated over the last 30 days from the start time) on an empty database |
+| `PETSTORE_SEED_DEMO` | `true`, `false` (`prod`) | Load demo customers, employees and orders (dated over the last 30 days from the start time) on an empty database |
 | `MAIL_USERNAME`, `MAIL_PASSWORD` | empty | SMTP login for the legacy JSP mail features (for Gmail use an app password) |
-| `PETSTORE_API_DOCS` | `true` (H2), `false` (`prod`) | Publish the OpenAPI document and Swagger UI |
+| `PETSTORE_API_DOCS` | `true`, `false` (`prod`) | Publish the OpenAPI document and Swagger UI |
 | `SERVER_PORT` | `8081` | HTTP port |
 
 The product and food catalog is always seeded by Liquibase (`src/main/resources/db/changelog`).
@@ -89,8 +99,11 @@ The React front end signs in with the public client `petstore-web` (authorizatio
 
 ## Tests
 
-`./mvnw verify` starts the full application on H2 and covers the Liquibase seed, public catalog, token handling
-(JWT test fixtures, no Keycloak needed), 401/403 rules, admin CRUD, image upload, contact form, demo data and statistics. CI runs the suite on H2 and on a PostgreSQL service.
+`make test` runs the web lint and vitest suite, then `./mvnw verify` in a JDK container next to a throwaway
+PostgreSQL 16 (tmpfs, removed afterwards). The backend suite starts the full application and covers the Liquibase
+seed, public catalog, token handling (JWT test fixtures, no Keycloak needed), 401/403 rules, admin CRUD, image upload,
+contact form, demo data and statistics. `make e2e` drives the React app in Playwright against the real stack
+(PostgreSQL, Keycloak, app) with the demo accounts.
 
 ## Deployment
 
@@ -106,7 +119,9 @@ src/main/java/com/fpt/petstore
 src/main/resources/db/changelog     Liquibase changelog and catalog seed data
 src/main/webapp/WEB-INF/jsp         legacy JSP views
 keycloak/       realm import
-deploy/         production compose file and runbook
+deploy/         production compose file and runbook, dev nginx conf
+web/            React front end
+Dockerfile, web/Dockerfile, docker-bake.hcl, docker-compose*.yml, Makefile   build, test and run
 ```
 
 ## Notes

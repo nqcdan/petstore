@@ -1,0 +1,33 @@
+# Playwright e2e against the real stack: make e2e. Layered over docker-compose.yml, nothing is published to the host.
+# The browser runs in the e2e container, so Keycloak's public URL is its compose hostname instead of localhost:8180.
+services:
+  keycloak:
+    ports: !reset []
+    environment:
+      KC_HOSTNAME: http://keycloak:8080
+  app:
+    ports: !reset []
+    environment:
+      KEYCLOAK_ISSUER_URI: http://keycloak:8080/realms/petstore
+  e2e:
+    build:
+      context: ./web
+      target: e2e
+    image: petstore-web-e2e:${TAG:-dev}
+    depends_on:
+      keycloak:
+        condition: service_healthy
+      app:
+        condition: service_healthy
+    environment:
+      CI: "true"
+      PETSTORE_API: http://app:8081
+      VITE_KEYCLOAK_URL: http://keycloak:8080
+      VITE_KEYCLOAK_REALM: petstore
+      VITE_KEYCLOAK_CLIENT_ID: petstore-web
+      VITE_API_BASE: /api/v1
+      VITE_MOCK: "false"
+      VITE_SHOW_DEMO_ACCOUNTS: "true"
+    # The specs regenerate the README screenshots in docs/
+    volumes:
+      - ./web/docs:/app/docs
