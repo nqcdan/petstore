@@ -50,9 +50,9 @@ public class DemoDataSeeder implements CommandLineRunner {
       int daysAgo = random.nextInt(30);
       Date when = Date.from(now.minus(daysAgo, ChronoUnit.DAYS).minus(random.nextInt(24 * 60), ChronoUnit.MINUTES));
       int roll = random.nextInt(100);
-      boolean recent = daysAgo <= 4;
+      boolean recent = daysAgo <= 6;
       order.setTransactionDate(when);
-      order.setState(recent ? (roll < 45 ? State.PAID : roll < 90 ? State.DUE : State.CANCEL) : (roll < 85 ? State.PAID : State.CANCEL));
+      order.setState(recent ? (roll < 40 ? State.PAID : roll < 90 ? State.DUE : State.CANCEL) : (roll < 85 ? State.PAID : State.CANCEL));
       order.setPaymentMethod(random.nextInt(100) < 60 ? PaymentMethod.COD : PaymentMethod.ATM);
       if (order.getPayments() != null) order.getPayments().forEach(p -> p.setTransactionDate(when));
     }

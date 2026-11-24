@@ -56,9 +56,9 @@ All settings are environment variables.
 | `DB_URL`, `DB_USERNAME`, `DB_PASSWORD` | local PostgreSQL | Used by the `prod` profile |
 | `KEYCLOAK_ISSUER_URI` | `http://localhost:8180/realms/petstore` | Token issuer, must equal the `iss` claim |
 | `SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI` | derived from the issuer | Optional internal URL for the signing keys |
-| `KEYCLOAK_API_CLIENT_ID` | `petstore-api` | Client whose roles are also read from the token |
+| `KEYCLOAK_API_CLIENT_ID` | `petstore-api` | Required token audience; its client roles are also read from the token |
 | `PETSTORE_CORS_ORIGINS` | `http://localhost:3000,http://localhost:5173` | Allowed front-end origins |
-| `PETSTORE_SEED_DEMO` | `true` (H2), `false` (`prod`) | Load demo customers, employees and orders on an empty database |
+| `PETSTORE_SEED_DEMO` | `true` (H2), `false` (`prod`) | Load demo customers, employees and orders (dated over the last 30 days from the start time) on an empty database |
 | `MAIL_USERNAME`, `MAIL_PASSWORD` | empty | SMTP login for the legacy JSP mail features (for Gmail use an app password) |
 | `SERVER_PORT` | `8081` | HTTP port |
 
@@ -70,12 +70,12 @@ Base path `/api/v1`, JSON, paginated lists take `page`, `size` and `sort`.
 
 | Area | Endpoints | Access |
 |---|---|---|
-| Catalog | `GET /products`, `/products/{id}`, `/foods`, `/foods/{id}` (filters `q`, `type`) | public |
-| Shop | `GET /me`, `POST /cart/quote`, `POST /orders`, `GET /orders`, `GET /orders/{code}` | role `customer` or `admin` |
+| Catalog | `GET /products`, `/products/{id}`, `/foods`, `/foods/{id}` (filters `q`, `type`), `GET /photos/**` (uploaded images), `POST /contact` (contact form) | public |
+| Shop | `GET /me`, `POST /cart/quote`, `POST /orders` (optional `paymentMethod` COD or ATM, default COD), `GET /orders`, `GET /orders/{code}` | role `customer` or `admin` |
 | Admin | `/admin/products`, `/admin/foods`, `/admin/customers`, `/admin/employees` (CRUD, search, product images via multipart `POST .../{id}/image`), `/admin/orders` (list by state, detail, `PATCH .../state`), `GET /admin/stats` | role `admin` |
 
-Keycloak realm roles `customer` and `admin` (and client roles of `petstore-api`) map to `ROLE_CUSTOMER` and `ROLE_ADMIN`.
-The cart lives in the client; `POST /cart/quote` prices it with catalog prices and `POST /orders` always re-prices server side.
+Access tokens must carry `petstore-api` in `aud` (the realm adds it to tokens of `petstore-web` with an audience mapper). Keycloak realm roles `customer` and `admin` (and client roles of `petstore-api`) map to `ROLE_CUSTOMER` and `ROLE_ADMIN`.
+Everything the front end needs is under `/api`, so a reverse proxy only has to forward that prefix. The contact form is always stored and also mailed to `MAIL_USERNAME` when SMTP is set. The cart lives in the client; `POST /cart/quote` prices it with catalog prices and `POST /orders` always re-prices server side.
 
 The React front end signs in with the public client `petstore-web` (authorization code flow with PKCE, for example with
 `keycloak-js` or `oidc-client-ts`) and sends the access token as `Authorization: Bearer <token>`.
@@ -89,7 +89,7 @@ The React front end signs in with the public client `petstore-web` (authorizatio
 ## Tests
 
 `./mvnw verify` starts the full application on H2 and covers the Liquibase seed, public catalog, token handling
-(JWT test fixtures, no Keycloak needed), 401/403 rules, admin CRUD, image upload and statistics.
+(JWT test fixtures, no Keycloak needed), 401/403 rules, admin CRUD, image upload, contact form, demo data and statistics. CI runs the suite on H2 and on a PostgreSQL service.
 
 ## Deployment
 

@@ -39,6 +39,7 @@ The image builds natively for the VM architecture (all base images are multi-arc
 
 ## Reverse proxy
 
+- The web host only needs to proxy `/api` (REST API, product photos and the contact form) to `127.0.0.1:8481`; the SPA container serves the rest.
 - Forward `app.example.com` to `127.0.0.1:8481` and `auth.example.com` to `127.0.0.1:8482`.
 - Keycloak runs with `--proxy-headers xforwarded --hostname-strict=false`, so nginx must send `X-Forwarded-For`, `X-Forwarded-Proto` and `X-Forwarded-Host` (and `Host`) unchanged.
 - The app validates tokens against `KEYCLOAK_ISSUER_URI` but fetches signing keys over the compose network
@@ -66,7 +67,7 @@ Create the real administrator there too; its password never goes into this repos
 ```
 
 The script stops the app, drops and recreates the `petstore` schema, clears uploaded images and restarts the app, so Liquibase
-recreates the schema and catalog and the demo customers, employees and orders are loaded again. Keycloak users are not touched.
+recreates the schema and catalog and the demo customers, employees and orders are loaded again, with order dates spread over the 30 days before the reset. Keycloak users are not touched.
 The app answers its health check a few seconds before the demo seeding finishes.
 
 ## Operations
