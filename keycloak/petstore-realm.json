@@ -91,6 +91,42 @@
       ]
     },
     {
+      "clientId": "petstore-admin",
+      "name": "PetStore admin site (React)",
+      "enabled": true,
+      "publicClient": true,
+      "protocol": "openid-connect",
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "redirectUris": [
+        "https://petstore-admin.nqcdan.com/*",
+        "http://localhost:3001/*"
+      ],
+      "webOrigins": [
+        "https://petstore-admin.nqcdan.com",
+        "http://localhost:3001"
+      ],
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "https://petstore-admin.nqcdan.com/*##http://localhost:3001/*"
+      },
+      "protocolMappers": [
+        {
+          "name": "petstore-api-audience",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "consentRequired": false,
+          "config": {
+            "included.client.audience": "petstore-api",
+            "id.token.claim": "false",
+            "access.token.claim": "true"
+          }
+        }
+      ]
+    },
+    {
       "clientId": "petstore-api",
       "name": "PetStore API (resource server)",
       "enabled": true,
