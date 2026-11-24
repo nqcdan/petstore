@@ -116,6 +116,42 @@ The React front end signs in with the public client `petstore-web` (authorizatio
 2. Set `KEYCLOAK_ISSUER_URI` to `https://<keycloak-host>/realms/petstore`.
 3. Remove the two demo users if the instance is not a public demo.
 
+## Theme
+
+The Keycloak sign-in pages carry the store's look: paw logo and PETS**Store** wordmark, orange primary, Geist font, 10 px
+radius, a pet photo behind the card, light and dark by `prefers-color-scheme`. Vietnamese is picked from the browser
+language (English is one click away in the card header). Keycloak 26.4 ships no Vietnamese bundle, so
+`messages_vi.properties` carries the translations.
+
+| Path | What it is |
+|---|---|
+| `keycloak/themes/petstore/login` | Login theme (login, register, forgot and reset password, update profile, OTP, email verification, logout, info, error). `parent=keycloak.v2`, CSS and messages only, no FTL: a Keycloak upgrade does not need a theme merge |
+| `keycloak/themes/petstore/account` | Account console: PatternFly tokens only (colour, logo, font); texts stay English because Keycloak has no Vietnamese account bundle |
+| `.../login/resources/css/petstore.css` | All login styling; tokens at the top mirror `web/src/index.css` |
+| `.../login/messages/messages_{vi,en}.properties` | Brand title, headings and Vietnamese texts; keys missing here fall back to the Keycloak English bundle |
+
+The realm sets `loginTheme` and `accountTheme` to `petstore` and enables `vi` and `en`. Both compose files mount the folder
+read-only at `/opt/keycloak/themes/petstore`. There is no email theme: mails keep the stock template.
+
+![login, light](docs/keycloak-theme/01-login-light-1280.png)
+![login error, dark](docs/keycloak-theme/02-login-error-dark-1280.png)
+![register, tablet](docs/keycloak-theme/03-register-light-768.png)
+![phones](docs/keycloak-theme/04-mobile-390.png)
+![account console](docs/keycloak-theme/05-account-console.png)
+
+### Changing the theme
+
+- **Dev** (`make up`, `start-dev`): theme caching is off. Edit the files, reload the browser tab.
+- **Prod** (`start`): Keycloak caches themes (`--spi-theme--cache-themes` defaults to `true`), so after any change to
+  `keycloak/themes/petstore` **restart Keycloak**: `docker compose -f compose.prod.yml restart keycloak`. The browser
+  may also hold the old CSS for a while; hard-reload to check.
+- `--import-realm` skips a realm that already exists. On an existing instance set **Realm settings > Themes > Login theme /
+  Account theme = petstore** once in the admin console (and enable Vietnamese under Localization), or `kcadm.sh update realms/petstore -s loginTheme=petstore -s accountTheme=petstore`.
+- Colours: `--ps-brand-strong` (buttons, links) is the web's orange darkened to 4.95:1 against white text; keep AA when
+  changing it. Dark mode overrides sit under `html.pf-v5-theme-dark`, the class `keycloak.v2` sets from `prefers-color-scheme`.
+- Background photos in `resources/img` are resized copies of `web/public/img/hero`; Geist is under the SIL OFL (licence in `resources/fonts`).
+- Try a page without a user: `http://localhost:8180/realms/petstore/account` (login), `.../protocol/openid-connect/logout` (logout confirm).
+
 ## Tests
 
 `make test` runs the web lint and vitest suite, then `./mvnw verify` in a JDK container next to a throwaway
@@ -137,7 +173,7 @@ src/main/java/com/fpt/petstore
   entities/ repository/ services/   domain model and persistence
 src/main/resources/db/changelog     Liquibase changelog and catalog seed data
 src/main/webapp/WEB-INF/jsp         legacy JSP views
-keycloak/       realm import
+keycloak/       realm import, themes/petstore (login and account theme)
 deploy/         production compose file and runbook, dev nginx conf
 web/            React front end
 Dockerfile, web/Dockerfile, docker-bake.hcl, docker-compose*.yml, Makefile   build, test and run
